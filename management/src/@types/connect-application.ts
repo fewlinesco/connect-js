@@ -1,4 +1,4 @@
-export type Application = {
+export type ConnectApplication = {
   id: string;
   name: string;
   description: string;
@@ -6,6 +6,6 @@ export type Application = {
   redirectUris: string[];
 };
 
-export type ProviderApplication = {
-  application: Application;
+export type ConnectProviderApplication = {
+  application: ConnectApplication;
 };

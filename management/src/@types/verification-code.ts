@@ -5,7 +5,7 @@ export type CheckVerificationCodeInput = {
   eventId: string;
 };
 
-enum CheckVerificationCodeStatus {
+export enum CheckVerificationCodeStatus {
   EXPIRED = "EXPIRED",
   INVALID = "INVALID",
   NOT_FOUND = "NOT_FOUND",

@@ -1,10 +1,25 @@
-export { IdentityTypes, IdentityStatus } from "./Identity";
-export type { IdentityInput, Identity } from "./Identity";
-export type { IdentityCommandProps } from "./identity-command-props";
-export type { ProviderUser, SingleIdentityProviderUser } from "./provider-user";
+export type {
+  ConnectApplication,
+  ConnectProviderApplication,
+} from "./connect-application";
+export {
+  Identity,
+  IdentityCommandProps,
+  IdentityInput,
+  IdentityValueInput,
+  IdentityStatus,
+  IdentityTypes,
+} from "./Identity";
 export type {
   CheckVerificationCodeInput,
   CheckVerificationCodeResult,
-  SendIdentityVerificationCodeInput,
+  CheckVerificationCodeStatus,
   SendIdentityValidationCodeResult,
+  SendIdentityVerificationCodeInput,
 } from "./verification-code";
+export type { ProviderUser, SingleIdentityProviderUser } from "./provider-user";
+export type {
+  ProviderUserPasswordSet,
+  SetPasswordError,
+  SetPasswordErrorRules,
+} from "./password";
