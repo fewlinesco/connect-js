@@ -1,11 +1,11 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetchManagement";
+import { fetchManagement } from "../../src/utils/fetch-management";
 import type {
   CreateUserWithIdentitiesInput,
   User,
-} from "../@types/ProviderUser";
+} from "../@types/provider-user";
 
 const CREATE_USER_WITH_IDENTITIES_MUTATION = gql`
   mutation createUserWithIdentities(

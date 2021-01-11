@@ -1,9 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetchManagement";
+import { fetchManagement } from "../../src/utils/fetch-management";
 import type { IdentityValueInput } from "../@types/Identity";
-import type { ProviderUserId } from "../@types/ProviderUser";
+import type { ProviderUserId } from "../@types/provider-user";
 
 const GET_USER_ID_FROM_IDENTITY_VALUE_QUERY = gql`
   query getUser($identities: IdentityInput!) {

@@ -1,11 +1,11 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetchManagement";
+import { fetchManagement } from "../../src/utils/fetch-management";
 import {
   SendIdentityValidationCodeResult,
   SendIdentityVerificationCodeInput,
-} from "../@types/VerificationCode";
+} from "../@types/verification-code";
 
 const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
   mutation sendIdentityValidationCode(
