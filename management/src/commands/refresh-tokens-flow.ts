@@ -3,7 +3,10 @@ import { RefreshTokenResponse } from "@src/@types/oauth2/oauth2-tokens";
 import { oauth2Client, config } from "@src/config";
 import { fetchJson } from "@src/utils/fetch-json";
 
+import { ManagementCredentials } from "../@types/management";
+
 export async function refreshTokensFlow(
+  managementCredentials: ManagementCredentials,
   refresh_token: string,
 ): Promise<RefreshTokenResponse> {
   const payload = {

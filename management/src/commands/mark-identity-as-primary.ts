@@ -1,8 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetch-management";
-import { Identity } from "@lib/@types";
+import { Identity } from "../@types/identity";
+import { ManagementCredentials } from "../@types/management";
+import { fetchManagement } from "../fetch-management";
 
 const MARK_IDENTITY_AS_PRIMARY_MUTATION = gql`
   mutation markIdentityAsPrimary($identityId: String!) {
@@ -17,6 +18,7 @@ const MARK_IDENTITY_AS_PRIMARY_MUTATION = gql`
 `;
 
 export async function markIdentityAsPrimary(
+  managementCredentials: ManagementCredentials,
   identityId: Identity["id"],
 ): Promise<
   FetchResult<{
@@ -28,7 +30,7 @@ export async function markIdentityAsPrimary(
     variables: { identityId },
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     markIdentityAsPrimary: Identity;
   }>;
 }

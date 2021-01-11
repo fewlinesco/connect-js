@@ -1,8 +1,9 @@
 import type { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
 import { CreateOrUpdatePasswordInput, User } from "../@types/provider-user";
+import { fetchManagement } from "../fetch-management";
 
 export type CreateOrUpdatePassword = Promise<
   FetchResult<{
@@ -21,6 +22,7 @@ const CREATE_OR_UPDATE_PASSWORD_MUTATION = gql`
 `;
 
 export async function createOrUpdatePassword(
+  managementCredentials: ManagementCredentials,
   command: CreateOrUpdatePasswordInput,
 ): CreateOrUpdatePassword {
   const operation = {
@@ -28,5 +30,8 @@ export async function createOrUpdatePassword(
     variables: command,
   };
 
-  return fetchManagement(operation) as CreateOrUpdatePassword;
+  return fetchManagement(
+    managementCredentials,
+    operation,
+  ) as CreateOrUpdatePassword;
 }

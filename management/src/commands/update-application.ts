@@ -1,8 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetch-management";
-import { Application } from "../@types/Application";
+import { ConnectApplication } from "../@types/connect-application";
+import { ManagementCredentials } from "../@types/management";
+import { fetchManagement } from "../fetch-management";
 
 const UPDATE_APPLICATION_MUTATION = gql`
   mutation updateApplication(
@@ -31,14 +32,15 @@ const UPDATE_APPLICATION_MUTATION = gql`
 `;
 
 export async function updateApplication(
-  command: Application,
+  managementCredentials: ManagementCredentials,
+  command: ConnectApplication,
 ): Promise<FetchResult> {
   const operation = {
     query: UPDATE_APPLICATION_MUTATION,
     variables: command,
   };
 
-  return fetchManagement(operation) as FetchResult<{
-    updateApplication: Application;
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
+    updateApplication: ConnectApplication;
   }>;
 }

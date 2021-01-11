@@ -1,11 +1,12 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
 import type {
   DeleteUserInput,
   DeleteUserStatus,
 } from "../@types/provider-user";
+import { fetchManagement } from "../fetch-management";
 
 const DELETE_USER_MUTATION = gql`
   mutation deleteUser($userId: String!) {
@@ -16,6 +17,7 @@ const DELETE_USER_MUTATION = gql`
 `;
 
 export async function deleteUser(
+  managementCredentials: ManagementCredentials,
   command: DeleteUserInput,
 ): Promise<FetchResult> {
   const operation = {
@@ -23,7 +25,7 @@ export async function deleteUser(
     variables: command,
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     deleteUser: DeleteUserStatus;
   }>;
 }

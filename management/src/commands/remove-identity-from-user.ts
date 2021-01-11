@@ -1,8 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import type { IdentityCommandProps } from "@lib/@types/identity-command-props";
-import { fetchManagement } from "@src/utils/fetch-management";
+import { IdentityCommandProps } from "../@types/identity";
+import { ManagementCredentials } from "../@types/management";
+import { fetchManagement } from "../fetch-management";
 
 const REMOVE_IDENTITY_FROM_USER = gql`
   mutation removeIdentityFromUser(
@@ -25,15 +26,15 @@ const REMOVE_IDENTITY_FROM_USER = gql`
   }
 `;
 
-export async function removeIdentityFromUser({
-  userId,
-  type,
-  value,
-}: IdentityCommandProps): Promise<FetchResult> {
+export async function removeIdentityFromUser(
+  managementCredentials: ManagementCredentials,
+
+  { userId, type, value }: IdentityCommandProps,
+): Promise<FetchResult> {
   const operation = {
     query: REMOVE_IDENTITY_FROM_USER,
     variables: { userId, type, value },
   };
 
-  return fetchManagement(operation);
+  return fetchManagement(managementCredentials, operation);
 }

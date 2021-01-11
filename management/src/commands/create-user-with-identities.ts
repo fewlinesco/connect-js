@@ -1,11 +1,12 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
 import type {
   CreateUserWithIdentitiesInput,
   User,
 } from "../@types/provider-user";
+import { fetchManagement } from "../fetch-management";
 
 const CREATE_USER_WITH_IDENTITIES_MUTATION = gql`
   mutation createUserWithIdentities(
@@ -21,6 +22,7 @@ const CREATE_USER_WITH_IDENTITIES_MUTATION = gql`
 `;
 
 export async function createUserWithIdentities(
+  managementCredentials: ManagementCredentials,
   command: CreateUserWithIdentitiesInput,
 ): Promise<FetchResult> {
   const operation = {
@@ -28,7 +30,7 @@ export async function createUserWithIdentities(
     variables: command,
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     createUserWithIdentities: User;
   }>;
 }

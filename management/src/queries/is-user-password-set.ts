@@ -1,8 +1,9 @@
 import type { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import type { ProviderUserPasswordSet } from "@lib/@types/Password";
-import { fetchManagement } from "@src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
+import { ProviderUserPasswordSet } from "../@types/password";
+import { fetchManagement } from "../fetch-management";
 
 const IS_USER_PASSWORD_SET_QUERY = gql`
   query isUserPasswordSet($userId: String!) {
@@ -20,6 +21,7 @@ const IS_USER_PASSWORD_SET_QUERY = gql`
 `;
 
 export async function isUserPasswordSet(
+  managementCredentials: ManagementCredentials,
   userId: string,
 ): Promise<FetchResult<{ provider: ProviderUserPasswordSet }>> {
   const operation = {
@@ -27,7 +29,7 @@ export async function isUserPasswordSet(
     variables: { userId },
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(operation, managementCredentials) as FetchResult<{
     provider: ProviderUserPasswordSet;
   }>;
 }

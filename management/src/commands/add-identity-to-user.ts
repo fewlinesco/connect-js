@@ -1,7 +1,9 @@
-import type { IdentityCommandProps } from "@lib/@types/identity-command-props";
-import { fetchManagement } from "@src/utils/fetch-management";
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
+
+import { IdentityCommandProps } from "../@types/identity";
+import { ManagementCredentials } from "../@types/management";
+import { fetchManagement } from "../fetch-management";
 
 const ADD_IDENTITY_TO_USER = gql`
   mutation addIdentityToUser(
@@ -21,15 +23,14 @@ const ADD_IDENTITY_TO_USER = gql`
   }
 `;
 
-export async function addIdentityToUser({
-  userId,
-  type,
-  value,
-}: IdentityCommandProps): Promise<FetchResult> {
+export async function addIdentityToUser(
+  managementCredentials: ManagementCredentials,
+  { userId, type, value }: IdentityCommandProps,
+): Promise<FetchResult> {
   const operation = {
     query: ADD_IDENTITY_TO_USER,
     variables: { userId, type, value },
   };
 
-  return fetchManagement(operation);
+  return fetchManagement(managementCredentials, operation);
 }

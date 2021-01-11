@@ -1,11 +1,12 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "../../src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
 import {
   SendIdentityValidationCodeResult,
   SendIdentityVerificationCodeInput,
 } from "../@types/verification-code";
+import { fetchManagement } from "../fetch-management";
 
 const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
   mutation sendIdentityValidationCode(
@@ -31,6 +32,7 @@ const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
 `;
 
 export async function sendIdentityValidationCode(
+  managementCredentials: ManagementCredentials,
   command: SendIdentityVerificationCodeInput,
 ): Promise<
   FetchResult<{
@@ -42,7 +44,7 @@ export async function sendIdentityValidationCode(
     variables: command,
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     sendIdentityValidationCode: SendIdentityValidationCodeResult;
   }>;
 }
