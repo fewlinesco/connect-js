@@ -64,7 +64,7 @@ Returns a list containing the `access_token`, `refresh_token`, and `id_token` if
 
 ```typescript
 const tokens = await oauthClient.getTokensFromAuthorizationCode(
-  "authorization_code"
+  "authorization_code",
 );
 ```
 
@@ -98,7 +98,7 @@ const decrypted = oauthClient.decryptJWE<string>(JWE, privateKey, true);
 const decrypted = oauthClient.decryptJWE<{ [key: string]: string }>(
   JWE,
   privateKey,
-  false
+  false,
 );
 ```
 
