@@ -22,7 +22,6 @@ export type GetUserIdFromIdentityValue = Promise<
 
 export async function getUserIDFromIdentityValue(
   managementCredentials: ManagementCredentials,
-
   identities: IdentityValueInput,
 ): GetUserIdFromIdentityValue {
   const operation = {

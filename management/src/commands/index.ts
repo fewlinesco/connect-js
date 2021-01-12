@@ -5,4 +5,4 @@ export * from "./delete-user";
 export * from "./mark-identity-as-primary";
 export * from "./remove-identity-from-user";
 export * from "./send-identity-validation-code";
-export * from "./update-application";
+export * from "./update-connect-application";

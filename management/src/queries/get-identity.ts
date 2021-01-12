@@ -30,7 +30,6 @@ export type GetIdentity = Promise<
 
 export async function getIdentity(
   managementCredentials: ManagementCredentials,
-
   userId: string,
   id: string,
 ): GetIdentity {
