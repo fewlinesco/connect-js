@@ -23,6 +23,7 @@ const ADD_IDENTITY_TO_USER = gql`
   }
 `;
 
+// Fix typing
 export async function addIdentityToUser(
   managementCredentials: ManagementCredentials,
   { userId, type, value }: IdentityCommandProps,

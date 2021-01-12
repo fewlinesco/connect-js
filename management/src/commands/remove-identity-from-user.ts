@@ -26,9 +26,9 @@ const REMOVE_IDENTITY_FROM_USER = gql`
   }
 `;
 
+// Type it
 export async function removeIdentityFromUser(
   managementCredentials: ManagementCredentials,
-
   { userId, type, value }: IdentityCommandProps,
 ): Promise<FetchResult> {
   const operation = {

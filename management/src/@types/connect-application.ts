@@ -6,6 +6,6 @@ export type ConnectApplication = {
   redirectUris: string[];
 };
 
-export type ConnectProviderApplication = {
+export type ProviderApplication = {
   application: ConnectApplication;
 };

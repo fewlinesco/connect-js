@@ -1,8 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import type { CheckVerificationCodeResult } from "@lib/@types/verification-code";
-import { fetchManagement } from "@src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
+import { CheckVerificationCodeResult } from "../@types/verification-code";
+import { fetchManagement } from "../fetch-management";
 
 const CHECK_VERIFICATION_CODE_QUERY = gql`
   query checkVerificationCodeQuery($code: String!, $eventId: String!) {
@@ -16,6 +17,7 @@ const CHECK_VERIFICATION_CODE_QUERY = gql`
 `;
 
 export async function checkVerificationCode(
+  managementCredentials: ManagementCredentials,
   code: string,
   eventId: string,
 ): Promise<
@@ -26,7 +28,7 @@ export async function checkVerificationCode(
     variables: { code, eventId },
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     checkVerificationCode: CheckVerificationCodeResult;
   }>;
 }

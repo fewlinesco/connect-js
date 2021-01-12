@@ -1,8 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import type { SingleIdentityProviderUser } from "@lib/@types/provider-user";
-import { fetchManagement } from "@src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
+import { SingleIdentityProviderUser } from "../@types/provider-user";
+import { fetchManagement } from "../fetch-management";
 
 const GET_USER_IDENTITY_QUERY = gql`
   query getUserIdentityQuery($userId: String!, $id: String!) {
@@ -24,6 +25,8 @@ const GET_USER_IDENTITY_QUERY = gql`
 `;
 
 export async function getIdentity(
+  managementCredentials: ManagementCredentials,
+
   userId: string,
   id: string,
 ): Promise<FetchResult<{ provider: SingleIdentityProviderUser }>> {
@@ -32,7 +35,7 @@ export async function getIdentity(
     variables: { userId, id },
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     provider: SingleIdentityProviderUser;
   }>;
 }

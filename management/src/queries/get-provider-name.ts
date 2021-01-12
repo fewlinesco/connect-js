@@ -1,7 +1,8 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { fetchManagement } from "@src/utils/fetch-management";
+import { ManagementCredentials } from "../@types/management";
+import { fetchManagement } from "../fetch-management";
 
 const GET_PROVIDER_NAME_QUERY = gql`
   query getProviderName {
@@ -11,15 +12,15 @@ const GET_PROVIDER_NAME_QUERY = gql`
   }
 `;
 
-export async function getProviderName(): Promise<
-  FetchResult<{ provider: { name: string } }>
-> {
+export async function getProviderName(
+  managementCredentials: ManagementCredentials,
+): Promise<FetchResult<{ provider: { name: string } }>> {
   const operation = {
     query: GET_PROVIDER_NAME_QUERY,
     variables: {},
   };
 
-  return fetchManagement(operation) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     provider: { name: string };
   }>;
 }

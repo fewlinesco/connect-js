@@ -29,7 +29,7 @@ export async function isUserPasswordSet(
     variables: { userId },
   };
 
-  return fetchManagement(operation, managementCredentials) as FetchResult<{
+  return fetchManagement(managementCredentials, operation) as FetchResult<{
     provider: ProviderUserPasswordSet;
   }>;
 }
