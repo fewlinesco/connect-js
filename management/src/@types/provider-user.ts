@@ -1,4 +1,4 @@
-import { Identity, IdentityInput } from "@lib/@types";
+import { Identity, IdentityInput } from "./identity";
 
 export type ProviderUser = {
   id: string;
