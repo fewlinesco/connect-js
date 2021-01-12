@@ -1,15 +1,15 @@
-# Fewlines Connect-js Client
+# Fewlines Connect-js Management
 
 **Disclaimer**: this package is made for our internal usage and is only open source for convenience so we might not consider Pull Requests or Issues. Feel free to fork though.
 
-**Client** is part of the **Fewlines Connect-js SDK**.
+**Management** is part of the **Fewlines Connect-js SDK**.
 
-It mainly provides an abstraction for the OAuth2 flow, and a secure way to verify JWT for HS256 and RS256 algorithms (signed and/or encrypted).
+It provides a list of function
 
 ## Installation
 
 ```shell
-yarn add @fewlines/connect-client
+yarn add @fewlines/connect-management
 ```
 
 ## Getting Started
