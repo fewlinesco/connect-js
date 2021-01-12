@@ -16,19 +16,24 @@ const CHECK_VERIFICATION_CODE_QUERY = gql`
   }
 `;
 
+export type CheckVerificationCode = Promise<
+  FetchResult<{
+    checkVerificationCode: CheckVerificationCodeResult;
+  }>
+>;
+
 export async function checkVerificationCode(
   managementCredentials: ManagementCredentials,
   code: string,
   eventId: string,
-): Promise<
-  FetchResult<{ checkVerificationCode: CheckVerificationCodeResult }>
-> {
+): CheckVerificationCode {
   const operation = {
     query: CHECK_VERIFICATION_CODE_QUERY,
     variables: { code, eventId },
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    checkVerificationCode: CheckVerificationCodeResult;
-  }>;
+  return fetchManagement(
+    managementCredentials,
+    operation,
+  ) as CheckVerificationCode;
 }

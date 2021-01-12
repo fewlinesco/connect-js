@@ -20,16 +20,18 @@ const IS_USER_PASSWORD_SET_QUERY = gql`
   }
 `;
 
+export type IsUserPasswordSet = Promise<
+  FetchResult<{ provider: ProviderUserPasswordSet }>
+>;
+
 export async function isUserPasswordSet(
   managementCredentials: ManagementCredentials,
   userId: string,
-): Promise<FetchResult<{ provider: ProviderUserPasswordSet }>> {
+): IsUserPasswordSet {
   const operation = {
     query: IS_USER_PASSWORD_SET_QUERY,
     variables: { userId },
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    provider: ProviderUserPasswordSet;
-  }>;
+  return fetchManagement(managementCredentials, operation) as IsUserPasswordSet;
 }

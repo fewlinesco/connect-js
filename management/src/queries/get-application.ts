@@ -19,10 +19,14 @@ const GET_APPLICATION_QUERY = gql`
   }
 `;
 
-export async function getApplication(
+export type GetConnectApplication = Promise<
+  FetchResult<{ provider: ProviderApplication }>
+>;
+
+export async function getConnectApplication(
   managementCredentials: ManagementCredentials,
   id: string,
-): Promise<FetchResult<{ provider: ProviderApplication }>> {
+): GetConnectApplication {
   const operation = {
     query: GET_APPLICATION_QUERY,
     variables: { id },
@@ -30,9 +34,6 @@ export async function getApplication(
 
   return fetchManagement(
     managementCredentials,
-
     operation,
-  ) as FetchResult<{
-    provider: ProviderApplication;
-  }>;
+  ) as GetConnectApplication;
 }

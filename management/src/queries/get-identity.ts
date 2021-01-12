@@ -24,18 +24,20 @@ const GET_USER_IDENTITY_QUERY = gql`
   }
 `;
 
+export type GetIdentity = Promise<
+  FetchResult<{ provider: SingleIdentityProviderUser }>
+>;
+
 export async function getIdentity(
   managementCredentials: ManagementCredentials,
 
   userId: string,
   id: string,
-): Promise<FetchResult<{ provider: SingleIdentityProviderUser }>> {
+): GetIdentity {
   const operation = {
     query: GET_USER_IDENTITY_QUERY,
     variables: { userId, id },
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    provider: SingleIdentityProviderUser;
-  }>;
+  return fetchManagement(managementCredentials, operation) as GetIdentity;
 }

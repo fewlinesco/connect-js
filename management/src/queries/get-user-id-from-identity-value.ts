@@ -16,17 +16,22 @@ const GET_USER_ID_FROM_IDENTITY_VALUE_QUERY = gql`
   }
 `;
 
+export type GetUserIdFromIdentityValue = Promise<
+  FetchResult<{ provider: ProviderUserId }>
+>;
+
 export async function getUserIDFromIdentityValue(
   managementCredentials: ManagementCredentials,
 
   identities: IdentityValueInput,
-): Promise<FetchResult<{ provider: ProviderUserId }>> {
+): GetUserIdFromIdentityValue {
   const operation = {
     query: GET_USER_ID_FROM_IDENTITY_VALUE_QUERY,
     variables: { identities },
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    provider: ProviderUserId;
-  }>;
+  return fetchManagement(
+    managementCredentials,
+    operation,
+  ) as GetUserIdFromIdentityValue;
 }
