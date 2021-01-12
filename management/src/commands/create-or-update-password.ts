@@ -5,12 +5,6 @@ import { ManagementCredentials } from "../@types/management";
 import { CreateOrUpdatePasswordInput, User } from "../@types/provider-user";
 import { fetchManagement } from "../fetch-management";
 
-export type CreateOrUpdatePassword = Promise<
-  FetchResult<{
-    createOrUpdatePassword: User;
-  }>
->;
-
 const CREATE_OR_UPDATE_PASSWORD_MUTATION = gql`
   mutation createOrUpdatePassword($cleartextPassword: String!, $userId: ID!) {
     createOrUpdatePassword(
@@ -20,6 +14,12 @@ const CREATE_OR_UPDATE_PASSWORD_MUTATION = gql`
     }
   }
 `;
+
+export type CreateOrUpdatePassword = Promise<
+  FetchResult<{
+    createOrUpdatePassword: User;
+  }>
+>;
 
 export async function createOrUpdatePassword(
   managementCredentials: ManagementCredentials,

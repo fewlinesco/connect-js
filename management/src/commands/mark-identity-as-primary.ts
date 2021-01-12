@@ -17,20 +17,23 @@ const MARK_IDENTITY_AS_PRIMARY_MUTATION = gql`
   }
 `;
 
-export async function markIdentityAsPrimary(
-  managementCredentials: ManagementCredentials,
-  identityId: Identity["id"],
-): Promise<
+export type MarkIdentityAsPrimary = Promise<
   FetchResult<{
     markIdentityAsPrimary: Identity;
   }>
-> {
+>;
+
+export async function markIdentityAsPrimary(
+  managementCredentials: ManagementCredentials,
+  identityId: Identity["id"],
+): MarkIdentityAsPrimary {
   const operation = {
     query: MARK_IDENTITY_AS_PRIMARY_MUTATION,
     variables: { identityId },
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    markIdentityAsPrimary: Identity;
-  }>;
+  return fetchManagement(
+    managementCredentials,
+    operation,
+  ) as MarkIdentityAsPrimary;
 }

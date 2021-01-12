@@ -21,16 +21,23 @@ const CREATE_USER_WITH_IDENTITIES_MUTATION = gql`
   }
 `;
 
+export type CreateUserWithIdentities = Promise<
+  FetchResult<{
+    createUserWithIdentities: User;
+  }>
+>;
+
 export async function createUserWithIdentities(
   managementCredentials: ManagementCredentials,
   command: CreateUserWithIdentitiesInput,
-): Promise<FetchResult> {
+): CreateUserWithIdentities {
   const operation = {
     query: CREATE_USER_WITH_IDENTITIES_MUTATION,
     variables: command,
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    createUserWithIdentities: User;
-  }>;
+  return fetchManagement(
+    managementCredentials,
+    operation,
+  ) as CreateUserWithIdentities;
 }

@@ -31,20 +31,23 @@ const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
   }
 `;
 
-export async function sendIdentityValidationCode(
-  managementCredentials: ManagementCredentials,
-  command: SendIdentityVerificationCodeInput,
-): Promise<
+export type SendIdentityValidationCode = Promise<
   FetchResult<{
     sendIdentityValidationCode: SendIdentityValidationCodeResult;
   }>
-> {
+>;
+
+export async function sendIdentityValidationCode(
+  managementCredentials: ManagementCredentials,
+  command: SendIdentityVerificationCodeInput,
+): SendIdentityValidationCode {
   const operation = {
     query: SEND_IDENTITY_VALIDATION_CODE_MUTATION,
     variables: command,
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    sendIdentityValidationCode: SendIdentityValidationCodeResult;
-  }>;
+  return fetchManagement(
+    managementCredentials,
+    operation,
+  ) as SendIdentityValidationCode;
 }

@@ -31,16 +31,20 @@ const UPDATE_APPLICATION_MUTATION = gql`
   }
 `;
 
+export type UpdateApplication = Promise<
+  FetchResult<{
+    updateApplication: ConnectApplication;
+  }>
+>;
+
 export async function updateApplication(
   managementCredentials: ManagementCredentials,
   command: ConnectApplication,
-): Promise<FetchResult> {
+): UpdateApplication {
   const operation = {
     query: UPDATE_APPLICATION_MUTATION,
     variables: command,
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    updateApplication: ConnectApplication;
-  }>;
+  return fetchManagement(managementCredentials, operation) as UpdateApplication;
 }

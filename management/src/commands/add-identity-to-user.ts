@@ -1,7 +1,7 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { IdentityCommandProps } from "../@types/identity";
+import { Identity, IdentityCommandProps } from "../@types/identity";
 import { ManagementCredentials } from "../@types/management";
 import { fetchManagement } from "../fetch-management";
 
@@ -23,15 +23,20 @@ const ADD_IDENTITY_TO_USER = gql`
   }
 `;
 
-// Fix typing
+export type AddIdentityToUser = Promise<
+  FetchResult<{
+    AddIdentityToUser: Identity;
+  }>
+>;
+
 export async function addIdentityToUser(
   managementCredentials: ManagementCredentials,
   { userId, type, value }: IdentityCommandProps,
-): Promise<FetchResult> {
+): AddIdentityToUser {
   const operation = {
     query: ADD_IDENTITY_TO_USER,
     variables: { userId, type, value },
   };
 
-  return fetchManagement(managementCredentials, operation);
+  return fetchManagement(managementCredentials, operation) as AddIdentityToUser;
 }

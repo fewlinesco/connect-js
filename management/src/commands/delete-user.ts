@@ -16,16 +16,20 @@ const DELETE_USER_MUTATION = gql`
   }
 `;
 
+export type DeleteUser = Promise<
+  FetchResult<{
+    deleteUser: DeleteUserStatus;
+  }>
+>;
+
 export async function deleteUser(
   managementCredentials: ManagementCredentials,
   command: DeleteUserInput,
-): Promise<FetchResult> {
+): DeleteUser {
   const operation = {
     query: DELETE_USER_MUTATION,
     variables: command,
   };
 
-  return fetchManagement(managementCredentials, operation) as FetchResult<{
-    deleteUser: DeleteUserStatus;
-  }>;
+  return fetchManagement(managementCredentials, operation) as DeleteUser;
 }
