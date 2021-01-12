@@ -6,6 +6,8 @@
 
 It provides a list of function to handle all the user data flows related to Connect.
 
+AAAADDD VARIABLES
+
 ## Installation
 
 ```shell
@@ -125,19 +127,29 @@ await isUserPasswordSet(managementCredentials, "userId");
 ### addIdentityToUser
 
 ```ts
-export type AddIdentityToUser = Promise<
-  FetchResult<{
-    AddIdentityToUser: Identity;
-  }>
->;
+import { addIdentityToUser } from "@fewlines/connect-management";
 
-export async function addIdentityToUser(
-  managementCredentials,
-  { userId: string, type: IdentityTypes, value: string }
-): AddIdentityToUser {}
+const variables = {
+  userId: "userId",
+  type: "type",
+  value: "value",
+};
+
+await addIdentityToUser(managementCredentials, variables);
 ```
 
 ### createOrUpdatePassword
+
+```ts
+import { createOrUpdatePassword } from "@fewlines/connect-management";
+
+const variables = {
+  cleartextPassword: "cleartextPassword",
+  userId: "userId",
+};
+
+await createOrUpdatePassword(managementCredentials, variables);
+```
 
 ### createUserWithIdentities
 

@@ -31,11 +31,11 @@ export type AddIdentityToUser = Promise<
 
 export async function addIdentityToUser(
   managementCredentials: ManagementCredentials,
-  { userId, type, value }: IdentityCommandProps,
+  variables: IdentityCommandProps,
 ): AddIdentityToUser {
   const operation = {
     query: ADD_IDENTITY_TO_USER,
-    variables: { userId, type, value },
+    variables,
   };
 
   return fetchManagement(managementCredentials, operation) as AddIdentityToUser;
