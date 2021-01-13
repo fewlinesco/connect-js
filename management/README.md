@@ -195,11 +195,7 @@ export async function createUserWithIdentities(
 ```ts
 import { deleteUser } from "@fewlines/connect-management";
 
-const variables = {
-  userId: "f084749a-2e90-4891-a26f-65e08c4f4e69",
-};
-
-await deleteUser(managementCredentials, variables);
+await deleteUser(managementCredentials, "f084749a-2e90-4891-a26f-65e08c4f4e69");
 ```
 
 ### markIdentityAsPrimary
@@ -211,7 +207,10 @@ const variables = {
   identityId: "504c741c-f9dd-425c-912a-03fe051b0e6e",
 };
 
-await markIdentityAsPrimary(managementCredentials, variables);
+await markIdentityAsPrimary(
+  managementCredentials,
+  "504c741c-f9dd-425c-912a-03fe051b0e6e"
+);
 ```
 
 ### removeIdentityFromUser
@@ -269,5 +268,3 @@ const variables = {
 
 await updateConnectApplication(managementCredentials, variables);
 ```
-
-// npm unpublish pkg/name@version

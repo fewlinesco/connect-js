@@ -22,17 +22,13 @@ export type DeleteUser = Promise<
   }>
 >;
 
-export type DeleteUserVariables = {
-  userId: string;
-};
-
 export async function deleteUser(
   managementCredentials: ManagementCredentials,
-  variables: DeleteUserVariables,
+  userId: string,
 ): DeleteUser {
   const operation = {
     query: DELETE_USER_MUTATION,
-    variables,
+    variables: { userId },
   };
 
   return fetchManagement(managementCredentials, operation) as DeleteUser;
