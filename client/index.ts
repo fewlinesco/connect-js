@@ -17,6 +17,7 @@ import {
   OAuth2Tokens,
   JWTPayload,
   CustomPayload,
+  RefreshTokenResponse,
 } from "./src/types";
 import { decodeJWTPart } from "./src/utils/decodeJWTPart";
 import {
@@ -245,6 +246,32 @@ class OAuth2Client {
     } else {
       return JSON.parse(payload.toString()) as T;
     }
+  }
+
+  async refreshTokens(
+    refresh_token: string,
+    providerUrl: string,
+  ): Promise<RefreshTokenResponse> {
+    await this.setOpenIDConfiguration();
+
+    const payload = {
+      client_id: this.clientID,
+      client_secret: this.clientSecret,
+      refresh_token,
+      grant_type: "refresh_token",
+      scope: this.scopes.join(" "),
+    };
+
+    const route = "oauth/token";
+    const absoluteURL = new URL(route, providerUrl).toString();
+
+    return this.fetch(absoluteURL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }).then((response) => response.json());
   }
 }
 

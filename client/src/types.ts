@@ -53,4 +53,9 @@ export type JWTPayload = {
   sub: string;
 };
 
+export type RefreshTokenResponse = {
+  refresh_token: string;
+  access_token: string;
+};
+
 export type CustomPayload = Record<string, unknown>;
