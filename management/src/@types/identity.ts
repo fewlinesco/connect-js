@@ -39,7 +39,7 @@ export type IdentityValueInput = {
   value: string;
 };
 
-export type IdentityCommandProps = {
+export type IdentityCommandVariables = {
   userId: string;
   type: IdentityTypes;
   value: string;

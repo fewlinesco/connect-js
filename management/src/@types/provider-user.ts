@@ -1,4 +1,4 @@
-import { Identity, IdentityInput } from "./identity";
+import { Identity } from "./identity";
 
 export type ProviderUser = {
   id: string;
@@ -26,22 +26,4 @@ export type ProviderUserId = {
 
 export type User = {
   id: string;
-};
-
-export type CreateOrUpdatePasswordInput = {
-  cleartextPassword: string;
-  userId: string;
-};
-
-export type CreateUserWithIdentitiesInput = {
-  identities: IdentityInput[];
-  localeCode: string;
-};
-
-export type DeleteUserInput = {
-  userId: string;
-};
-
-export type DeleteUserStatus = {
-  status: string;
 };

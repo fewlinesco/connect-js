@@ -1,11 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
+import { IdentityInput } from "../@types/Identity";
 import { ManagementCredentials } from "../@types/management";
-import {
-  SendIdentityValidationCodeResult,
-  SendIdentityVerificationCodeInput,
-} from "../@types/verification-code";
+import { SendIdentityValidationCodeResult } from "../@types/verification-code";
 import { fetchManagement } from "../fetch-management";
 
 const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
@@ -37,13 +35,20 @@ export type SendIdentityValidationCode = Promise<
   }>
 >;
 
+export type SendIdentityVerificationCodeVariables = {
+  callbackUrl: string;
+  identity: IdentityInput;
+  localeCodeOverride?: string;
+  userId?: string;
+};
+
 export async function sendIdentityValidationCode(
   managementCredentials: ManagementCredentials,
-  command: SendIdentityVerificationCodeInput,
+  variables: SendIdentityVerificationCodeVariables,
 ): SendIdentityValidationCode {
   const operation = {
     query: SEND_IDENTITY_VALIDATION_CODE_MUTATION,
-    variables: command,
+    variables,
   };
 
   return fetchManagement(

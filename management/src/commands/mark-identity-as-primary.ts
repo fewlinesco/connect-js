@@ -23,13 +23,17 @@ export type MarkIdentityAsPrimary = Promise<
   }>
 >;
 
+export type MarkIdentityAsPrimaryVariables = {
+  identityId: Identity["id"];
+};
+
 export async function markIdentityAsPrimary(
   managementCredentials: ManagementCredentials,
-  identityId: Identity["id"],
+  variables: MarkIdentityAsPrimaryVariables,
 ): MarkIdentityAsPrimary {
   const operation = {
     query: MARK_IDENTITY_AS_PRIMARY_MUTATION,
-    variables: { identityId },
+    variables,
   };
 
   return fetchManagement(

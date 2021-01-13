@@ -6,8 +6,6 @@
 
 It provides a list of function to handle all the user data flows related to Connect.
 
-AAAADDD VARIABLES
-
 ## Installation
 
 ```shell
@@ -87,7 +85,11 @@ await getConnectApplication(managementCredentials, "id");
 ```ts
 import { getIdentities } from "@fewlines/connect-management";
 
-await getIdentities(managementCredentials, "userId");
+const variables = {
+  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+};
+
+await getIdentities(managementCredentials, variables);
 ```
 
 ### getIdentity
@@ -130,9 +132,9 @@ await isUserPasswordSet(managementCredentials, "userId");
 import { addIdentityToUser } from "@fewlines/connect-management";
 
 const variables = {
-  userId: "userId",
-  type: "type",
-  value: "value",
+  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  type: "EMAIL",
+  value: "foo@fewlines.co",
 };
 
 await addIdentityToUser(managementCredentials, variables);
@@ -145,7 +147,7 @@ import { createOrUpdatePassword } from "@fewlines/connect-management";
 
 const variables = {
   cleartextPassword: "cleartextPassword",
-  userId: "userId",
+  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
 };
 
 await createOrUpdatePassword(managementCredentials, variables);
@@ -153,14 +155,106 @@ await createOrUpdatePassword(managementCredentials, variables);
 
 ### createUserWithIdentities
 
+```ts
+import { createUserWithIdentities } from "@fewlines/connect-management";
+
+const variables = {
+  identities: [
+    {
+      id: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+      type: "EMAIL",
+      value: "foo@fewlines.co",
+      status: "validated",
+      primary: true,
+    },
+  ],
+  localeCode: "en-EN",
+};
+
+export async function createUserWithIdentities(
+  managementCredentials,
+  variables
+);
+```
+
 ### deleteUser
+
+```ts
+import { deleteUser } from "@fewlines/connect-management";
+
+const variables = {
+  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+};
+
+await deleteUser(managementCredentials, variables);
+```
 
 ### markIdentityAsPrimary
 
+```ts
+import { markIdentityAsPrimary } from "@fewlines/connect-management";
+
+const variables = {
+  identityId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+};
+
+await markIdentityAsPrimary(managementCredentials, variables);
+```
+
 ### removeIdentityFromUser
+
+```ts
+import { removeIdentityFromUser } from "@fewlines/connect-management";
+
+const variables = {
+  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  type: "EMAIL",
+  value: "foo@fewlines.co",
+};
+
+export async function removeIdentityFromUser(managementCredentials, variables);
+```
 
 ### sendIdentityValidationCode
 
+```ts
+import { sendIdentityValidationCode } from "@fewlines/connect-management";
+
+const variables = {
+  callbackUrl: "/",
+  identity: {
+      id: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+      type: "EMAIL",
+      value: "foo@fewlines.co",
+      status: "validated",
+      primary: true,
+    },
+  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4";
+};
+
+await sendIdentityValidationCode(
+  managementCredentials,
+  variables
+);
+```
+
 ### updateConnectApplication
+
+```ts
+import { updateConnectApplication } from "@fewlines/connect-management";
+
+const variables = {
+  id: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  description: "Connect JS Management test environment",
+  name: "Connect JS Management",
+  redirectUris: [
+    "http://localhost:3000/oauth/callback",
+    "https://connect-management.local:3001/oauth/callback",
+  ],
+  defaultHomePage: "https://www.fewlines.co",
+};
+
+await updateConnectApplication(managementCredentials, variables);
+```
 
 // npm unpublish pkg/name@version

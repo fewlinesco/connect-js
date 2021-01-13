@@ -6,7 +6,7 @@ import {
   markIdentityAsPrimary,
   removeIdentityFromUser,
   sendIdentityValidationCode,
-  updateApplication,
+  updateConnectApplication,
 } from "../../index";
 
 describe("Commands", () => {
@@ -18,6 +18,6 @@ describe("Commands", () => {
     expect(markIdentityAsPrimary).toBeInstanceOf(Function);
     expect(removeIdentityFromUser).toBeInstanceOf(Function);
     expect(sendIdentityValidationCode).toBeInstanceOf(Function);
-    expect(updateApplication).toBeInstanceOf(Function);
+    expect(updateConnectApplication).toBeInstanceOf(Function);
   });
 });

@@ -28,11 +28,11 @@ export type GetIdentities = Promise<FetchResult<{ provider: ProviderUser }>>;
 
 export async function getIdentities(
   managementCredentials: ManagementCredentials,
-  userId: string,
+  variables: { userId: string },
 ): GetIdentities {
   const operation = {
     query: GET_USER_IDENTITIES_QUERY,
-    variables: { userId },
+    variables,
   };
 
   return fetchManagement(managementCredentials, operation) as GetIdentities;

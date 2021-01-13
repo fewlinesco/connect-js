@@ -39,11 +39,11 @@ export type UpdateConnectApplication = Promise<
 
 export async function updateConnectApplication(
   managementCredentials: ManagementCredentials,
-  command: ConnectApplication,
+  variables: ConnectApplication,
 ): UpdateConnectApplication {
   const operation = {
     query: UPDATE_APPLICATION_MUTATION,
-    variables: command,
+    variables,
   };
 
   return fetchManagement(

@@ -1,11 +1,9 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
+import { IdentityInput } from "../@types/Identity";
 import { ManagementCredentials } from "../@types/management";
-import type {
-  CreateUserWithIdentitiesInput,
-  User,
-} from "../@types/provider-user";
+import type { User } from "../@types/provider-user";
 import { fetchManagement } from "../fetch-management";
 
 const CREATE_USER_WITH_IDENTITIES_MUTATION = gql`
@@ -27,13 +25,18 @@ export type CreateUserWithIdentities = Promise<
   }>
 >;
 
+export type CreateUserWithIdentitiesVariables = {
+  identities: IdentityInput[];
+  localeCode: string;
+};
+
 export async function createUserWithIdentities(
   managementCredentials: ManagementCredentials,
-  command: CreateUserWithIdentitiesInput,
+  variables: CreateUserWithIdentitiesVariables,
 ): CreateUserWithIdentities {
   const operation = {
     query: CREATE_USER_WITH_IDENTITIES_MUTATION,
-    variables: command,
+    variables,
   };
 
   return fetchManagement(

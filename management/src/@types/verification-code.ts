@@ -1,4 +1,4 @@
-import { IdentityInput, IdentityTypes } from "./Identity";
+import { IdentityTypes } from "./Identity";
 
 export type CheckVerificationCodeInput = {
   code: string;
@@ -17,13 +17,6 @@ export type CheckVerificationCodeResult = {
   identityValue: string;
   nonce: string;
   status: CheckVerificationCodeStatus;
-};
-
-export type SendIdentityVerificationCodeInput = {
-  callbackUrl: string;
-  identity: IdentityInput;
-  localeCodeOverride?: string;
-  userId?: string;
 };
 
 export type SendIdentityValidationCodeResult = {

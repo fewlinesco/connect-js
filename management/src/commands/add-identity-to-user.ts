@@ -1,7 +1,7 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { Identity, IdentityCommandProps } from "../@types/identity";
+import { Identity, IdentityCommandVariables } from "../@types/identity";
 import { ManagementCredentials } from "../@types/management";
 import { fetchManagement } from "../fetch-management";
 
@@ -31,7 +31,7 @@ export type AddIdentityToUser = Promise<
 
 export async function addIdentityToUser(
   managementCredentials: ManagementCredentials,
-  variables: IdentityCommandProps,
+  variables: IdentityCommandVariables,
 ): AddIdentityToUser {
   const operation = {
     query: ADD_IDENTITY_TO_USER,
