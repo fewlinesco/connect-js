@@ -24,17 +24,13 @@ export type IsUserPasswordSet = Promise<
   FetchResult<{ provider: ProviderUserPasswordSet }>
 >;
 
-export type IsUserPasswordSetVariables = {
-  userId: string;
-};
-
 export async function isUserPasswordSet(
   managementCredentials: ManagementCredentials,
-  variables: IsUserPasswordSetVariables,
+  userId: string,
 ): IsUserPasswordSet {
   const operation = {
     query: IS_USER_PASSWORD_SET_QUERY,
-    variables,
+    variables: { userId },
   };
 
   return fetchManagement(managementCredentials, operation) as IsUserPasswordSet;

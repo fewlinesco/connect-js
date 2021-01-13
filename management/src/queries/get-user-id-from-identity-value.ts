@@ -19,17 +19,13 @@ export type GetUserIdFromIdentityValue = Promise<
   FetchResult<{ provider: ProviderUserId }>
 >;
 
-export type GetUserIDFromIdentityValueVariables = {
-  value: string;
-};
-
 export async function getUserIDFromIdentityValue(
   managementCredentials: ManagementCredentials,
-  variables: GetUserIDFromIdentityValueVariables,
+  identityValue: string,
 ): GetUserIdFromIdentityValue {
   const operation = {
     query: GET_USER_ID_FROM_IDENTITY_VALUE_QUERY,
-    variables,
+    variables: { value: identityValue },
   };
 
   return fetchManagement(

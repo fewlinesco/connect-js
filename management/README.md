@@ -1,7 +1,5 @@
 # Fewlines Connect-js Management
 
-**Disclaimer**: this package is made for our internal usage and is only open source for convenience so we might not consider Pull Requests or Issues. Feel free to fork though.
-
 **Management** is part of the **Fewlines Connect-js SDK**.
 
 It provides a list of function to handle all the user data flows related to Connect.
@@ -82,11 +80,10 @@ await checkVerificationCode(managementCredentials, variables);
 ```ts
 import { getConnectApplication } from "@fewlines/connect-management";
 
-const variables = {
-  id: "317e2dbd-e386-4eef-91f6-eee5091db372",
-};
-
-await getConnectApplication(managementCredentials, "id");
+await getConnectApplication(
+  managementCredentials,
+  "a3e64872-6326-4813-948d-db8d8fc81bc8"
+);
 ```
 
 ### getIdentities
@@ -94,11 +91,10 @@ await getConnectApplication(managementCredentials, "id");
 ```ts
 import { getIdentities } from "@fewlines/connect-management";
 
-const variables = {
-  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
-};
-
-await getIdentities(managementCredentials, variables);
+await getIdentities(
+  managementCredentials,
+  "d96ee314-31b2-4e19-88b7-63734b90d1d4"
+);
 ```
 
 ### getIdentity
@@ -127,11 +123,7 @@ await getProviderName(managementCredentials);
 ```ts
 import { getUserIDFromIdentityValue } from "@fewlines/connect-management";
 
-const variables = {
-  value: "foo@fewlines.co",
-};
-
-await getUserIDFromIdentityValue(managementCredentials, variables);
+await getUserIDFromIdentityValue(managementCredentials, "foo@fewlines.co");
 ```
 
 ### isUserPasswordSet
@@ -139,11 +131,10 @@ await getUserIDFromIdentityValue(managementCredentials, variables);
 ```ts
 import { isUserPasswordSet } from "@fewlines/connect-management";
 
-const variables = {
-  userId: "16071981-1536-4eb2-a33e-892dc84c14a4";
-};
-
-await isUserPasswordSet(managementCredentials, variables);
+await isUserPasswordSet(
+  managementCredentials,
+  "16071981-1536-4eb2-a33e-892dc84c14a4"
+);
 ```
 
 ## Commands
