@@ -23,13 +23,17 @@ export type GetConnectApplication = Promise<
   FetchResult<{ provider: ProviderApplication }>
 >;
 
+export type GetConnectApplicationVariables = {
+  id: string;
+};
+
 export async function getConnectApplication(
   managementCredentials: ManagementCredentials,
-  id: string,
+  variables: GetConnectApplicationVariables,
 ): GetConnectApplication {
   const operation = {
     query: GET_APPLICATION_QUERY,
-    variables: { id },
+    variables,
   };
 
   return fetchManagement(

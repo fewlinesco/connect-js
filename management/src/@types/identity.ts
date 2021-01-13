@@ -35,10 +35,6 @@ export type Identity = {
   value: string;
 };
 
-export type IdentityValueInput = {
-  value: string;
-};
-
 export type IdentityCommandVariables = {
   userId: string;
   type: IdentityTypes;

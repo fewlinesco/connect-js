@@ -69,13 +69,22 @@ const managementCredentials: ManagementCredentials = {
 ```ts
 import { checkVerificationCode } from "@fewlines/connect-management";
 
-await checkVerificationCode(managementCredentials, "code", "eventId");
+const variables = {
+  code: "288761",
+  eventId: "ec1ee772-3249-4e5a-ad85-2b18d13f6f73",
+};
+
+await checkVerificationCode(managementCredentials, variables);
 ```
 
 ### getConnectApplication
 
 ```ts
 import { getConnectApplication } from "@fewlines/connect-management";
+
+const variables = {
+  id: "317e2dbd-e386-4eef-91f6-eee5091db372",
+};
 
 await getConnectApplication(managementCredentials, "id");
 ```
@@ -97,7 +106,12 @@ await getIdentities(managementCredentials, variables);
 ```ts
 import { getIdentity } from "@fewlines/connect-management";
 
-await getIdentity(managementCredentials, "userId", "id");
+const variables = {
+  userId: "b4e8bec6-3156-43c4-aaa8-9632c1c160b3",
+  id: "9a60bc4c-82dc-42c5-8bac-8b051340d2ac",
+};
+
+await getIdentity(managementCredentials, variables);
 ```
 
 ### getProviderName
@@ -113,7 +127,11 @@ await getProviderName(managementCredentials);
 ```ts
 import { getUserIDFromIdentityValue } from "@fewlines/connect-management";
 
-await getUserIDFromIdentityValue(managementCredentials, identities);
+const variables = {
+  value: "foo@fewlines.co",
+};
+
+await getUserIDFromIdentityValue(managementCredentials, variables);
 ```
 
 ### isUserPasswordSet
@@ -121,7 +139,11 @@ await getUserIDFromIdentityValue(managementCredentials, identities);
 ```ts
 import { isUserPasswordSet } from "@fewlines/connect-management";
 
-await isUserPasswordSet(managementCredentials, "userId");
+const variables = {
+  userId: "16071981-1536-4eb2-a33e-892dc84c14a4";
+};
+
+await isUserPasswordSet(managementCredentials, variables);
 ```
 
 ## Commands
@@ -147,7 +169,7 @@ import { createOrUpdatePassword } from "@fewlines/connect-management";
 
 const variables = {
   cleartextPassword: "cleartextPassword",
-  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  userId: "d8959bfd9-aab8-4de2-81bb-cbd9ea1a4191",
 };
 
 await createOrUpdatePassword(managementCredentials, variables);
@@ -161,7 +183,7 @@ import { createUserWithIdentities } from "@fewlines/connect-management";
 const variables = {
   identities: [
     {
-      id: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+      id: "d4e5e5d5-4fd3-49af-8ee4-7e28c824bb3c",
       type: "EMAIL",
       value: "foo@fewlines.co",
       status: "validated",
@@ -183,7 +205,7 @@ export async function createUserWithIdentities(
 import { deleteUser } from "@fewlines/connect-management";
 
 const variables = {
-  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  userId: "f084749a-2e90-4891-a26f-65e08c4f4e69",
 };
 
 await deleteUser(managementCredentials, variables);
@@ -195,7 +217,7 @@ await deleteUser(managementCredentials, variables);
 import { markIdentityAsPrimary } from "@fewlines/connect-management";
 
 const variables = {
-  identityId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  identityId: "504c741c-f9dd-425c-912a-03fe051b0e6e",
 };
 
 await markIdentityAsPrimary(managementCredentials, variables);
@@ -207,7 +229,7 @@ await markIdentityAsPrimary(managementCredentials, variables);
 import { removeIdentityFromUser } from "@fewlines/connect-management";
 
 const variables = {
-  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  userId: "4a5324f7-9390-41ab-a94d-2ab3198f1a8c",
   type: "EMAIL",
   value: "foo@fewlines.co",
 };
@@ -223,13 +245,13 @@ import { sendIdentityValidationCode } from "@fewlines/connect-management";
 const variables = {
   callbackUrl: "/",
   identity: {
-      id: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+      id: "12488dfe-8e46-4391-a8bb-f0db41078942",
       type: "EMAIL",
       value: "foo@fewlines.co",
       status: "validated",
       primary: true,
     },
-  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4";
+  userId: "37b21863-3f38-4d20-848d-3108337a0b8b";
 };
 
 await sendIdentityValidationCode(
@@ -244,7 +266,7 @@ await sendIdentityValidationCode(
 import { updateConnectApplication } from "@fewlines/connect-management";
 
 const variables = {
-  id: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  id: "d1e34015-4ba0-44a3-8171-15ed6979b86d",
   description: "Connect JS Management test environment",
   name: "Connect JS Management",
   redirectUris: [

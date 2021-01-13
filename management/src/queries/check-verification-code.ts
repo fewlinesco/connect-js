@@ -22,14 +22,18 @@ export type CheckVerificationCode = Promise<
   }>
 >;
 
+export type CheckVerificationCodeVariables = {
+  code: string;
+  eventId: string;
+};
+
 export async function checkVerificationCode(
   managementCredentials: ManagementCredentials,
-  code: string,
-  eventId: string,
+  variables: CheckVerificationCodeVariables,
 ): CheckVerificationCode {
   const operation = {
     query: CHECK_VERIFICATION_CODE_QUERY,
-    variables: { code, eventId },
+    variables,
   };
 
   return fetchManagement(
