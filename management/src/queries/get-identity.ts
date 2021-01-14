@@ -9,7 +9,6 @@ const GET_USER_IDENTITY_QUERY = gql`
   query getUserIdentityQuery($userId: String!, $id: String!) {
     provider {
       id
-      name
       user(filters: { userId: $userId }) {
         id
         identity(filters: { id: $id }) {

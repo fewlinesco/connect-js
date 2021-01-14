@@ -9,7 +9,6 @@ const IS_USER_PASSWORD_SET_QUERY = gql`
   query isUserPasswordSet($userId: String!) {
     provider {
       id
-      name
       user(filters: { userId: $userId }) {
         id
         passwords {

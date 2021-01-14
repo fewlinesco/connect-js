@@ -8,6 +8,7 @@ import { fetchManagement } from "../fetch-management";
 const GET_USER_ID_FROM_IDENTITY_VALUE_QUERY = gql`
   query getUser($identities: IdentityInput!) {
     provider {
+      id
       user(filters: { identities: $identities }) {
         id
       }

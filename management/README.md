@@ -2,12 +2,28 @@
 
 **Management** is part of the **Fewlines Connect-js SDK**.
 
-It provides a list of functions to handle all the user data flows related to Connect.
+It provides a list of functions to handle all the user data flows related to Connect, and some useful tools regarding Connect Applications.
 
 ## Installation
 
 ```shell
 yarn add @fewlines/connect-management
+```
+
+## Usage
+
+Apart from the arguments specific to the query/command needed to fetch **Connect**, you will need to pass your **Management** credentials each time, in the form of an object, called `ManagementCredentials`.
+
+```ts
+type ManagementCredentials = {
+  URI: string;
+  APIKey: string;
+}
+
+const managementCredentials: ManagementCredentials = {
+  URI: "URI",
+  APIKey: "APIKey";
+}
 ```
 
 ## Important types
@@ -44,25 +60,30 @@ type Identity = {
 };
 ```
 
-### ManagementCredentials
+### Connect Application
 
-`ManagementCredentials` is an object that needs to be passed each time Connect is fetched.
+**Connect Applications** are the entities between the **Connect Provider** and your web application.
 
 ```ts
-type ManagementCredentials = {
-  URI: string;
-  APIKey: string;
-}
-
-const managementCredentials: ManagementCredentials = {
-  URI: "URI",
-  APIKey: "APIKey";
-}
+type ConnectApplication = {
+  id: string;
+  name: string;
+  description: string;
+  defaultHomePage: string;
+  redirectUris: string[];
+};
 ```
 
 ## Queries
 
 ### checkVerificationCode
+
+Used to verify the verification code input by the user. The function returns an object, composed of:
+
+- The type of the Identity
+- The value of the Identity
+- The status of the Identity
+- The nonce
 
 ```ts
 import { checkVerificationCode } from "@fewlines/connect-management";
@@ -72,21 +93,40 @@ const input = {
   eventId: "ec1ee772-3249-4e5a-ad85-2b18d13f6f73",
 };
 
-await checkVerificationCode(managementCredentials, input);
+const {
+  identityType,
+  identityValue,
+  nonce,
+  status,
+} = await checkVerificationCode(managementCredentials, input);
 ```
 
 ### getConnectApplication
 
+Used to get the information from the Connect Application. The function returns an object, composed of:
+
+- The ID of the Application
+- The default homepage URL
+- The authorized redirect URIs, usable for the Connect authentication flow.
+
 ```ts
 import { getConnectApplication } from "@fewlines/connect-management";
 
-await getConnectApplication(
+const {
+  id,
+  defaultHomePage,
+  redirectUris,
+  name,
+  description,
+} = await getConnectApplication(
   managementCredentials,
   "a3e64872-6326-4813-948d-db8d8fc81bc8"
 );
 ```
 
 ### getIdentities
+
+Used to retrieve all the Identities for a particular user. The function returns a list
 
 ```ts
 import { getIdentities } from "@fewlines/connect-management";
