@@ -1,7 +1,7 @@
 import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
-import { IdentityInput } from "../@types/Identity";
+import { IdentityInput } from "../@types/identity";
 import { ManagementCredentials } from "../@types/management";
 import type { User } from "../@types/provider-user";
 import { fetchManagement } from "../fetch-management";

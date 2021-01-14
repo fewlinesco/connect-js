@@ -1,4 +1,4 @@
-export * from "./Identity";
+export * from "./identity";
 export * from "./connect-application";
 export * from "./verification-code";
 export * from "./management";
