@@ -2,7 +2,7 @@
 
 **Management** is part of the **Fewlines Connect-js SDK**.
 
-It provides a list of function to handle all the user data flows related to Connect.
+It provides a list of functions to handle all the user data flows related to Connect.
 
 ## Installation
 
