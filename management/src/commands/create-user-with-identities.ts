@@ -25,14 +25,14 @@ export type CreateUserWithIdentities = Promise<
   }>
 >;
 
-export type CreateUserWithIdentitiesVariables = {
+export type CreateUserWithIdentitiesInput = {
   identities: IdentityInput[];
   localeCode: string;
 };
 
 export async function createUserWithIdentities(
   managementCredentials: ManagementCredentials,
-  { identities, localeCode }: CreateUserWithIdentitiesVariables,
+  { identities, localeCode }: CreateUserWithIdentitiesInput,
 ): CreateUserWithIdentities {
   const operation = {
     query: CREATE_USER_WITH_IDENTITIES_MUTATION,

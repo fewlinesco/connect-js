@@ -67,12 +67,12 @@ const managementCredentials: ManagementCredentials = {
 ```ts
 import { checkVerificationCode } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   code: "288761",
   eventId: "ec1ee772-3249-4e5a-ad85-2b18d13f6f73",
 };
 
-await checkVerificationCode(managementCredentials, variables);
+await checkVerificationCode(managementCredentials, input);
 ```
 
 ### getConnectApplication
@@ -102,12 +102,12 @@ await getIdentities(
 ```ts
 import { getIdentity } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   userId: "b4e8bec6-3156-43c4-aaa8-9632c1c160b3",
-  id: "9a60bc4c-82dc-42c5-8bac-8b051340d2ac",
+  identityId: "9a60bc4c-82dc-42c5-8bac-8b051340d2ac",
 };
 
-await getIdentity(managementCredentials, variables);
+await getIdentity(managementCredentials, input);
 ```
 
 ### getProviderName
