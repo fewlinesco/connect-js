@@ -126,7 +126,7 @@ const {
 
 ### getIdentities
 
-Used to retrieve all the Identities for a particular user. The function returns a list
+Used to retrieve all the Identities for a particular user. The function returns a list of Identity. Refer to the [Identity section](#Identities) to understand the returned data structure.
 
 ```ts
 import { getIdentities } from "@fewlines/connect-management";
@@ -207,6 +207,8 @@ await createOrUpdatePassword(managementCredentials, input);
 ```
 
 ### createUserWithIdentities
+
+The `identity` list cannot be empty.
 
 ```ts
 import { createUserWithIdentities } from "@fewlines/connect-management";
