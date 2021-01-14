@@ -21,18 +21,18 @@ export type CreateOrUpdatePassword = Promise<
   }>
 >;
 
-export type CreateOrUpdatePasswordVariables = {
+export type CreateOrUpdatePasswordInput = {
   cleartextPassword: string;
   userId: string;
 };
 
 export async function createOrUpdatePassword(
   managementCredentials: ManagementCredentials,
-  variables: CreateOrUpdatePasswordVariables,
+  { cleartextPassword, userId }: CreateOrUpdatePasswordInput,
 ): CreateOrUpdatePassword {
   const operation = {
     query: CREATE_OR_UPDATE_PASSWORD_MUTATION,
-    variables,
+    variables: { cleartextPassword, userId },
   };
 
   return fetchManagement(

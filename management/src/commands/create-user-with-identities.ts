@@ -32,11 +32,11 @@ export type CreateUserWithIdentitiesVariables = {
 
 export async function createUserWithIdentities(
   managementCredentials: ManagementCredentials,
-  variables: CreateUserWithIdentitiesVariables,
+  { identities, localeCode }: CreateUserWithIdentitiesVariables,
 ): CreateUserWithIdentities {
   const operation = {
     query: CREATE_USER_WITH_IDENTITIES_MUTATION,
-    variables,
+    variables: { identities, localeCode },
   };
 
   return fetchManagement(

@@ -144,13 +144,13 @@ await isUserPasswordSet(
 ```ts
 import { addIdentityToUser } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
   type: "EMAIL",
   value: "foo@fewlines.co",
 };
 
-await addIdentityToUser(managementCredentials, variables);
+await addIdentityToUser(managementCredentials, input);
 ```
 
 ### createOrUpdatePassword
@@ -158,12 +158,12 @@ await addIdentityToUser(managementCredentials, variables);
 ```ts
 import { createOrUpdatePassword } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   cleartextPassword: "cleartextPassword",
   userId: "d8959bfd9-aab8-4de2-81bb-cbd9ea1a4191",
 };
 
-await createOrUpdatePassword(managementCredentials, variables);
+await createOrUpdatePassword(managementCredentials, input);
 ```
 
 ### createUserWithIdentities
@@ -171,7 +171,7 @@ await createOrUpdatePassword(managementCredentials, variables);
 ```ts
 import { createUserWithIdentities } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   identities: [
     {
       id: "d4e5e5d5-4fd3-49af-8ee4-7e28c824bb3c",
@@ -184,10 +184,7 @@ const variables = {
   localeCode: "en-EN",
 };
 
-export async function createUserWithIdentities(
-  managementCredentials,
-  variables
-);
+export async function createUserWithIdentities(managementCredentials, input);
 ```
 
 ### deleteUser
@@ -203,10 +200,6 @@ await deleteUser(managementCredentials, "f084749a-2e90-4891-a26f-65e08c4f4e69");
 ```ts
 import { markIdentityAsPrimary } from "@fewlines/connect-management";
 
-const variables = {
-  identityId: "504c741c-f9dd-425c-912a-03fe051b0e6e",
-};
-
 await markIdentityAsPrimary(
   managementCredentials,
   "504c741c-f9dd-425c-912a-03fe051b0e6e"
@@ -218,13 +211,13 @@ await markIdentityAsPrimary(
 ```ts
 import { removeIdentityFromUser } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   userId: "4a5324f7-9390-41ab-a94d-2ab3198f1a8c",
   type: "EMAIL",
   value: "foo@fewlines.co",
 };
 
-export async function removeIdentityFromUser(managementCredentials, variables);
+export async function removeIdentityFromUser(managementCredentials, input);
 ```
 
 ### sendIdentityValidationCode
@@ -232,7 +225,7 @@ export async function removeIdentityFromUser(managementCredentials, variables);
 ```ts
 import { sendIdentityValidationCode } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   callbackUrl: "/",
   identity: {
       id: "12488dfe-8e46-4391-a8bb-f0db41078942",
@@ -246,7 +239,7 @@ const variables = {
 
 await sendIdentityValidationCode(
   managementCredentials,
-  variables
+  input
 );
 ```
 
@@ -255,7 +248,7 @@ await sendIdentityValidationCode(
 ```ts
 import { updateConnectApplication } from "@fewlines/connect-management";
 
-const variables = {
+const input = {
   id: "d1e34015-4ba0-44a3-8171-15ed6979b86d",
   description: "Connect JS Management test environment",
   name: "Connect JS Management",
@@ -266,5 +259,5 @@ const variables = {
   defaultHomePage: "https://www.fewlines.co",
 };
 
-await updateConnectApplication(managementCredentials, variables);
+await updateConnectApplication(managementCredentials, input);
 ```

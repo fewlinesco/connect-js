@@ -35,7 +35,7 @@ export type SendIdentityValidationCode = Promise<
   }>
 >;
 
-export type SendIdentityVerificationCodeVariables = {
+export type SendIdentityVerificationCodeInput = {
   callbackUrl: string;
   identity: IdentityInput;
   localeCodeOverride?: string;
@@ -44,11 +44,21 @@ export type SendIdentityVerificationCodeVariables = {
 
 export async function sendIdentityValidationCode(
   managementCredentials: ManagementCredentials,
-  variables: SendIdentityVerificationCodeVariables,
+  {
+    callbackUrl,
+    identity,
+    localeCodeOverride,
+    userId,
+  }: SendIdentityVerificationCodeInput,
 ): SendIdentityValidationCode {
   const operation = {
     query: SEND_IDENTITY_VALIDATION_CODE_MUTATION,
-    variables,
+    variables: {
+      callbackUrl,
+      identity,
+      localeCodeOverride,
+      userId,
+    },
   };
 
   return fetchManagement(

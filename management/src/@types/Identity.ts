@@ -35,8 +35,8 @@ export type Identity = {
   value: string;
 };
 
-export type IdentityCommandVariables = {
+export type IdentityCommandInput = {
   userId: string;
-  type: IdentityTypes;
-  value: string;
+  identityType: IdentityTypes;
+  identityValue: string;
 };
