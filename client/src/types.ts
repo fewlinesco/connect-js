@@ -19,7 +19,7 @@ export type OpenIDConfiguration = {
 };
 
 export type OAuth2ClientConstructor = {
-  openIDConfigurationURL: string;
+  providerURL: string;
   clientID: string;
   clientSecret: string;
   redirectURI: string;

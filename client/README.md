@@ -106,10 +106,16 @@ const decrypted = oauthClient.decryptJWE<{ [key: string]: string }>(
 ### refreshTokens
 
 ```typescript
-async refreshTokens(refresh_token: string, providerUrl: string): Promise<{refresh_token: string, access_token: string}>
+async refreshTokens(refresh_token: string): Promise<{refresh_token: string, access_token: string}>
 ```
 
 Returns a refreshed `access_token` along with a new `refresh_token`.
+
+```typescript
+const { refresh_token, access_token } = await oauthClient.refreshTokens(
+  "refresh_token",
+);
+```
 
 ## Utils
 

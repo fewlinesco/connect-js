@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.0] - 2021-01-13
 
-- Added function to refresh tokens (`refreshTokens`).
+- Added a function to refresh tokens (`refreshTokens`).
 
 ## [0.1.0] - 2021-01-11
 
