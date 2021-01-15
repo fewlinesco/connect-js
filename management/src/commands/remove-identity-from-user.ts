@@ -1,8 +1,8 @@
-import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
 import { Identity, IdentityCommandInput } from "../@types/identity";
 import { ManagementCredentials } from "../@types/management";
+import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
 
 const REMOVE_IDENTITY_FROM_USER = gql`
@@ -14,7 +14,6 @@ const REMOVE_IDENTITY_FROM_USER = gql`
     removeIdentityFromUser(
       input: { userId: $userId, type: $type, value: $value }
     ) {
-      id
       identities {
         id
         primary
@@ -26,21 +25,22 @@ const REMOVE_IDENTITY_FROM_USER = gql`
   }
 `;
 
-export type RemoveIdentityFromUser = Promise<
-  FetchResult<{ removeIdentityFromUser: { id: string } & Identity[] }>
->;
-
 export async function removeIdentityFromUser(
   managementCredentials: ManagementCredentials,
   { userId, identityType, identityValue }: IdentityCommandInput,
-): RemoveIdentityFromUser {
+): Promise<Identity[]> {
   const operation = {
     query: REMOVE_IDENTITY_FROM_USER,
     variables: { userId, type: identityType, value: identityValue },
   };
 
-  return fetchManagement(
-    managementCredentials,
-    operation,
-  ) as RemoveIdentityFromUser;
+  const { data, errors } = await fetchManagement<{
+    removeIdentityFromUser: Identity[];
+  }>(managementCredentials, operation);
+
+  if (errors) {
+    throw new GraphqlErrors(errors);
+  }
+
+  return data.removeIdentityFromUser;
 }

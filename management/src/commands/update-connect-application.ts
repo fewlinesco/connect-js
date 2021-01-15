@@ -1,8 +1,8 @@
-import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
 import { ConnectApplication } from "../@types/connect-application";
 import { ManagementCredentials } from "../@types/management";
+import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
 
 const UPDATE_APPLICATION_MUTATION = gql`
@@ -31,23 +31,22 @@ const UPDATE_APPLICATION_MUTATION = gql`
   }
 `;
 
-export type UpdateConnectApplication = Promise<
-  FetchResult<{
-    updateApplication: UpdateConnectApplication;
-  }>
->;
-
 export async function updateConnectApplication(
   managementCredentials: ManagementCredentials,
   { id, name, description, defaultHomePage, redirectUris }: ConnectApplication,
-): UpdateConnectApplication {
+): Promise<ConnectApplication> {
   const operation = {
     query: UPDATE_APPLICATION_MUTATION,
     variables: { id, name, description, defaultHomePage, redirectUris },
   };
 
-  return fetchManagement(
-    managementCredentials,
-    operation,
-  ) as UpdateConnectApplication;
+  const { data, errors } = await fetchManagement<{
+    updateApplication: ConnectApplication;
+  }>(managementCredentials, operation);
+
+  if (errors) {
+    throw new GraphqlErrors(errors);
+  }
+
+  return data.updateApplication;
 }

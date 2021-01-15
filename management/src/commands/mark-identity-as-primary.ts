@@ -1,8 +1,8 @@
-import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
 import { Identity } from "../@types/identity";
 import { ManagementCredentials } from "../@types/management";
+import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
 
 const MARK_IDENTITY_AS_PRIMARY_MUTATION = gql`
@@ -17,23 +17,22 @@ const MARK_IDENTITY_AS_PRIMARY_MUTATION = gql`
   }
 `;
 
-export type MarkIdentityAsPrimary = Promise<
-  FetchResult<{
-    markIdentityAsPrimary: Identity;
-  }>
->;
-
 export async function markIdentityAsPrimary(
   managementCredentials: ManagementCredentials,
   identityId: Identity["id"],
-): MarkIdentityAsPrimary {
+): Promise<Identity> {
   const operation = {
     query: MARK_IDENTITY_AS_PRIMARY_MUTATION,
     variables: { identityId },
   };
 
-  return fetchManagement(
-    managementCredentials,
-    operation,
-  ) as MarkIdentityAsPrimary;
+  const { data, errors } = await fetchManagement<{
+    markIdentityAsPrimary: Identity;
+  }>(managementCredentials, operation);
+
+  if (errors) {
+    throw new GraphqlErrors(errors);
+  }
+
+  return data.markIdentityAsPrimary;
 }
