@@ -1,9 +1,12 @@
 import gql from "graphql-tag";
 
-import { Identity, IdentityCommandInput } from "../@types/identity";
-import { ManagementCredentials } from "../@types/management";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import {
+  Identity,
+  IdentityCommandInput,
+  ManagementCredentials,
+} from "../types";
 
 const REMOVE_IDENTITY_FROM_USER = gql`
   mutation removeIdentityFromUser(

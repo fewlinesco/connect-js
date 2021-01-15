@@ -1,9 +1,8 @@
 import gql from "graphql-tag";
 
-import { ManagementCredentials } from "../@types/management";
-import { User } from "../@types/provider-user";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { CreateOrUpdatePasswordInput, ManagementCredentials } from "../types";
 
 const CREATE_OR_UPDATE_PASSWORD_MUTATION = gql`
   mutation createOrUpdatePassword($cleartextPassword: String!, $userId: ID!) {
@@ -15,22 +14,17 @@ const CREATE_OR_UPDATE_PASSWORD_MUTATION = gql`
   }
 `;
 
-export type CreateOrUpdatePasswordInput = {
-  cleartextPassword: string;
-  userId: string;
-};
-
 export async function createOrUpdatePassword(
   managementCredentials: ManagementCredentials,
   { cleartextPassword, userId }: CreateOrUpdatePasswordInput,
-): Promise<User> {
+): Promise<{ id: string }> {
   const operation = {
     query: CREATE_OR_UPDATE_PASSWORD_MUTATION,
     variables: { cleartextPassword, userId },
   };
 
   const { data, errors } = await fetchManagement<{
-    createOrUpdatePassword: User;
+    createOrUpdatePassword: { id: string };
   }>(managementCredentials, operation);
 
   if (errors) {

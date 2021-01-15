@@ -1,10 +1,12 @@
 import gql from "graphql-tag";
 
-import { IdentityInput } from "../@types/identity";
-import { ManagementCredentials } from "../@types/management";
-import { SendIdentityValidationCodeResult } from "../@types/verification-code";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import {
+  ManagementCredentials,
+  SendIdentityValidationCodeResult,
+  SendIdentityVerificationCodeInput,
+} from "../types";
 
 const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
   mutation sendIdentityValidationCode(
@@ -29,13 +31,6 @@ const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
   }
 `;
 
-export type SendIdentityVerificationCodeInput = {
-  callbackUrl: string;
-  identity: IdentityInput;
-  localeCodeOverride?: string;
-  userId?: string;
-};
-
 export async function sendIdentityValidationCode(
   managementCredentials: ManagementCredentials,
   {
@@ -44,7 +39,12 @@ export async function sendIdentityValidationCode(
     localeCodeOverride,
     userId,
   }: SendIdentityVerificationCodeInput,
-): Promise<SendIdentityValidationCodeResult> {
+): Promise<{
+  callbackUrl: string;
+  eventId: string;
+  localeCode: string;
+  nonce: string;
+}> {
   const operation = {
     query: SEND_IDENTITY_VALIDATION_CODE_MUTATION,
     variables: {

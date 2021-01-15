@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-import { ManagementCredentials } from "../@types/management";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { ManagementCredentials } from "../types";
 
 const DELETE_USER_MUTATION = gql`
   mutation deleteUser($userId: String!) {
@@ -12,21 +12,19 @@ const DELETE_USER_MUTATION = gql`
   }
 `;
 
-export type DeleteUserStatus = {
-  status: string;
-};
-
 export async function deleteUser(
   managementCredentials: ManagementCredentials,
   userId: string,
-): Promise<DeleteUserStatus> {
+): Promise<{ status: string }> {
   const operation = {
     query: DELETE_USER_MUTATION,
     variables: { userId },
   };
 
   const { data, errors } = await fetchManagement<{
-    deleteUser: DeleteUserStatus;
+    deleteUser: {
+      status: string;
+    };
   }>(managementCredentials, operation);
 
   if (errors) {

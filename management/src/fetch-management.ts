@@ -3,7 +3,7 @@ import { setContext } from "apollo-link-context";
 import { HttpLink } from "apollo-link-http";
 import fetch from "cross-fetch";
 
-import { ManagementCredentials } from "./@types/management";
+import { ManagementCredentials } from "./types";
 
 export function fetchManagement<T = unknown>(
   managementCredentials: ManagementCredentials,

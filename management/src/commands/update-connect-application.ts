@@ -1,9 +1,9 @@
 import gql from "graphql-tag";
 
-import { ConnectApplication } from "../@types/connect-application";
-import { ManagementCredentials } from "../@types/management";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { ConnectApplication } from "../types";
+import { ManagementCredentials } from "../types";
 
 const UPDATE_APPLICATION_MUTATION = gql`
   mutation updateApplication(

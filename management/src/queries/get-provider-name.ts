@@ -1,8 +1,8 @@
 import gql from "graphql-tag";
 
-import { ManagementCredentials } from "../@types/management";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { ManagementCredentials } from "../types";
 
 const GET_PROVIDER_NAME_QUERY = gql`
   query getProviderName {

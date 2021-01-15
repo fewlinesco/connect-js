@@ -1,9 +1,8 @@
 import gql from "graphql-tag";
 
-import { Identity } from "../@types/identity";
-import { ManagementCredentials } from "../@types/management";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { Identity, ManagementCredentials } from "../types";
 
 const MARK_IDENTITY_AS_PRIMARY_MUTATION = gql`
   mutation markIdentityAsPrimary($identityId: String!) {

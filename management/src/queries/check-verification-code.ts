@@ -1,12 +1,12 @@
 import gql from "graphql-tag";
 
-import { ManagementCredentials } from "../@types/management";
+import { GraphqlErrors } from "../errors";
+import { fetchManagement } from "../fetch-management";
 import {
   CheckVerificationCodeInput,
   CheckVerificationCodeResult,
-} from "../@types/verification-code";
-import { GraphqlErrors } from "../errors";
-import { fetchManagement } from "../fetch-management";
+  ManagementCredentials,
+} from "../types";
 
 const CHECK_VERIFICATION_CODE_QUERY = gql`
   query checkVerificationCodeQuery($code: String!, $eventId: String!) {

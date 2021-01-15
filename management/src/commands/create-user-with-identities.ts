@@ -1,10 +1,8 @@
 import gql from "graphql-tag";
 
-import { IdentityInput } from "../@types/identity";
-import { ManagementCredentials } from "../@types/management";
-import type { User } from "../@types/provider-user";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { CreateUserWithIdentitiesInput, ManagementCredentials } from "../types";
 
 const CREATE_USER_WITH_IDENTITIES_MUTATION = gql`
   mutation createUserWithIdentities(
@@ -19,22 +17,17 @@ const CREATE_USER_WITH_IDENTITIES_MUTATION = gql`
   }
 `;
 
-export type CreateUserWithIdentitiesInput = {
-  identities: IdentityInput[];
-  localeCode: string;
-};
-
 export async function createUserWithIdentities(
   managementCredentials: ManagementCredentials,
   { identities, localeCode }: CreateUserWithIdentitiesInput,
-): Promise<User> {
+): Promise<{ id: string }> {
   const operation = {
     query: CREATE_USER_WITH_IDENTITIES_MUTATION,
     variables: { identities, localeCode },
   };
 
   const { data, errors } = await fetchManagement<{
-    createUserWithIdentities: User;
+    createUserWithIdentities: { id: string };
   }>(managementCredentials, operation);
 
   if (errors) {

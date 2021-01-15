@@ -1,16 +1,13 @@
 import gql from "graphql-tag";
 
-import { ManagementCredentials } from "../@types/management";
-import { ProviderUser } from "../@types/provider-user";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { Identity, ManagementCredentials } from "../types";
 
 const GET_USER_IDENTITIES_QUERY = gql`
   query getUserIdentitiesQuery($userId: String!) {
     provider {
-      id
       user(filters: { userId: $userId }) {
-        id
         identities {
           id
           type
@@ -26,20 +23,23 @@ const GET_USER_IDENTITIES_QUERY = gql`
 export async function getIdentities(
   managementCredentials: ManagementCredentials,
   userId: string,
-): Promise<ProviderUser> {
+): Promise<Identity[]> {
   const operation = {
     query: GET_USER_IDENTITIES_QUERY,
     variables: { userId },
   };
 
-  const { data, errors } = await fetchManagement<{ provider: ProviderUser }>(
-    managementCredentials,
-    operation,
-  );
+  const { data, errors } = await fetchManagement<{
+    provider: {
+      user: {
+        identities: Identity[];
+      };
+    };
+  }>(managementCredentials, operation);
 
   if (errors) {
     throw new GraphqlErrors(errors);
   }
 
-  return data.provider;
+  return data.provider.user.identities;
 }
