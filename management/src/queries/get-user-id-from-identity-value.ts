@@ -1,8 +1,8 @@
-import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
 import { ManagementCredentials } from "../@types/management";
 import type { ProviderUserId } from "../@types/provider-user";
+import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
 
 const GET_USER_ID_FROM_IDENTITY_VALUE_QUERY = gql`
@@ -16,21 +16,23 @@ const GET_USER_ID_FROM_IDENTITY_VALUE_QUERY = gql`
   }
 `;
 
-export type GetUserIdFromIdentityValue = Promise<
-  FetchResult<{ provider: ProviderUserId }>
->;
-
 export async function getUserIDFromIdentityValue(
   managementCredentials: ManagementCredentials,
   identityValue: string,
-): GetUserIdFromIdentityValue {
+): Promise<ProviderUserId> {
   const operation = {
     query: GET_USER_ID_FROM_IDENTITY_VALUE_QUERY,
     variables: { value: identityValue },
   };
 
-  return fetchManagement(
+  const { data, errors } = await fetchManagement<{ provider: ProviderUserId }>(
     managementCredentials,
     operation,
-  ) as GetUserIdFromIdentityValue;
+  );
+
+  if (errors) {
+    throw new GraphqlErrors(errors);
+  }
+
+  return data.provider;
 }

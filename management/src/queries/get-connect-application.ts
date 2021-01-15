@@ -1,8 +1,8 @@
-import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 
 import type { ProviderApplication } from "../@types/connect-application";
 import { ManagementCredentials } from "../@types/management";
+import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
 
 const GET_APPLICATION_QUERY = gql`
@@ -19,21 +19,22 @@ const GET_APPLICATION_QUERY = gql`
   }
 `;
 
-export type GetConnectApplication = Promise<
-  FetchResult<{ provider: ProviderApplication }>
->;
-
 export async function getConnectApplication(
   managementCredentials: ManagementCredentials,
   connectApplicationId: string,
-): GetConnectApplication {
+): Promise<ProviderApplication> {
   const operation = {
     query: GET_APPLICATION_QUERY,
     variables: { id: connectApplicationId },
   };
 
-  return fetchManagement(
-    managementCredentials,
-    operation,
-  ) as GetConnectApplication;
+  const { data, errors } = await fetchManagement<{
+    provider: ProviderApplication;
+  }>(managementCredentials, operation);
+
+  if (errors) {
+    throw new GraphqlErrors(errors);
+  }
+
+  return data.provider;
 }
