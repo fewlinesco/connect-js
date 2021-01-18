@@ -18,11 +18,7 @@ const REMOVE_IDENTITY_FROM_USER = gql`
       input: { userId: $userId, type: $type, value: $value }
     ) {
       identities {
-        id
-        primary
         value
-        type
-        status
       }
     }
   }

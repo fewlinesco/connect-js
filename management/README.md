@@ -2,7 +2,7 @@
 
 **Management** is part of the **Fewlines Connect-js SDK**.
 
-It provides a list of functions to handle all the user data flows related to Connect, and some useful tools regarding Connect Applications.
+It provides a list of functions to handle all the user data flows related to Connect, and some useful tools regarding Provider Applications.
 
 ## Installation
 
@@ -60,12 +60,12 @@ type Identity = {
 };
 ```
 
-### Connect Application
+### Provider Application
 
-**Connect Applications** are the entities between the **Connect Provider** and your web application.
+**Provider Applications** are the entities between the **Connect Provider** and your web application.
 
 ```ts
-type ConnectApplication = {
+type ProviderApplication = {
   id: string;
   name: string;
   description: string;
@@ -101,16 +101,12 @@ const {
 } = await checkVerificationCode(managementCredentials, input);
 ```
 
-### getConnectApplication
+### getProviderApplication
 
-Used to get the information from the Connect Application. The function returns an object, composed of:
-
-- The ID of the Application
-- The default homepage URL
-- The authorized redirect URIs, usable for the Connect authentication flow.
+Used to get the information from the Connect Application. The function returns the Application data. Refer to the [Provider Application](#Provider) to understand the returned data structure.
 
 ```ts
-import { getConnectApplication } from "@fewlines/connect-management";
+import { getProviderApplication } from "@fewlines/connect-management";
 
 const {
   id,
@@ -118,7 +114,7 @@ const {
   redirectUris,
   name,
   description,
-} = await getConnectApplication(
+} = await getProviderApplication(
   managementCredentials,
   "a3e64872-6326-4813-948d-db8d8fc81bc8"
 );
@@ -180,12 +176,12 @@ const userID = await getUserIdFromIdentityValue(
 
 ### isUserPasswordSet
 
-Used to check if the user has already set his password.
+Used to check if the user has already set his password. The function returns a boolean.
 
 ```ts
 import { isUserPasswordSet } from "@fewlines/connect-management";
 
-const isUserPasswordSet = await isUserPasswordSet(
+const isPasswordSet = await isUserPasswordSet(
   managementCredentials,
   "16071981-1536-4eb2-a33e-892dc84c14a4"
 );
@@ -194,6 +190,8 @@ const isUserPasswordSet = await isUserPasswordSet(
 ## Commands
 
 ### addIdentityToUser
+
+Used to add a new Identity to the user. The function returns the newly added Identity.
 
 ```ts
 import { addIdentityToUser } from "@fewlines/connect-management";
@@ -217,12 +215,15 @@ const input = {
   userId: "d8959bfd9-aab8-4de2-81bb-cbd9ea1a4191",
 };
 
-await createOrUpdatePassword(managementCredentials, input);
+const { id, primary, status, type, value } = await createOrUpdatePassword(
+  managementCredentials,
+  input
+);
 ```
 
 ### createUserWithIdentities
 
-The `identity` list cannot be empty.
+Create a new User for the current Provider, and add a list of Identities to him. The list of identities passed as input cannot be empty. The function returns the User `id`.
 
 ```ts
 import { createUserWithIdentities } from "@fewlines/connect-management";
@@ -240,29 +241,39 @@ const input = {
   localeCode: "en-EN",
 };
 
-export async function createUserWithIdentities(managementCredentials, input);
+const userId = await createUserWithIdentities(managementCredentials, input);
 ```
 
 ### deleteUser
 
+Used to delete a User. Return the string `"DISPATCHED"` to signify that the delete event has been sent to all the services.
+
 ```ts
 import { deleteUser } from "@fewlines/connect-management";
 
-await deleteUser(managementCredentials, "f084749a-2e90-4891-a26f-65e08c4f4e69");
+const deleteStatus = await deleteUser(
+  managementCredentials,
+  "f084749a-2e90-4891-a26f-65e08c4f4e69"
+);
 ```
 
 ### markIdentityAsPrimary
 
+Used to retrieve mark an Identity as `primary`. Will set the previous primary identity as non primary.
+The function returns the Identity. Refer to the [Identity section](#Identities) to understand the returned data structure.
+
 ```ts
 import { markIdentityAsPrimary } from "@fewlines/connect-management";
 
-await markIdentityAsPrimary(
+const newPrimaryIdentity = await markIdentityAsPrimary(
   managementCredentials,
   "504c741c-f9dd-425c-912a-03fe051b0e6e"
 );
 ```
 
 ### removeIdentityFromUser
+
+Used to remove an Identity from a User. The function returns a boolean.
 
 ```ts
 import { removeIdentityFromUser } from "@fewlines/connect-management";
@@ -273,10 +284,20 @@ const input = {
   value: "foo@fewlines.co",
 };
 
-export async function removeIdentityFromUser(managementCredentials, input);
+const isIdentityRemove = await removeIdentityFromUser(
+  managementCredentials,
+  input
+);
 ```
 
 ### sendIdentityValidationCode
+
+Used to send a Validation Code to the User. The function returns an object, composed of:
+
+- The event id, used to verify the Validation Code.
+- The callback URL
+- The locale code
+- The nonce
 
 ```ts
 import { sendIdentityValidationCode } from "@fewlines/connect-management";
@@ -284,25 +305,29 @@ import { sendIdentityValidationCode } from "@fewlines/connect-management";
 const input = {
   callbackUrl: "/",
   identity: {
-      id: "12488dfe-8e46-4391-a8bb-f0db41078942",
-      type: "EMAIL",
-      value: "foo@fewlines.co",
-      status: "validated",
-      primary: true,
-    },
-  userId: "37b21863-3f38-4d20-848d-3108337a0b8b";
+    id: "12488dfe-8e46-4391-a8bb-f0db41078942",
+    type: "EMAIL",
+    value: "foo@fewlines.co",
+    status: "validated",
+    primary: true,
+  },
+  userId: "37b21863-3f38-4d20-848d-3108337a0b8b",
 };
 
-await sendIdentityValidationCode(
-  managementCredentials,
-  input
-);
+const {
+  callbackUrl,
+  localeCode,
+  eventId,
+  nonce,
+} = await sendIdentityValidationCode(managementCredentials, input);
 ```
 
-### updateConnectApplication
+### updateProviderApplication
+
+Used to update the Provider Application. The function returns the Application data. Refer to the [Provider Application](#Provider) to understand the returned data structure.
 
 ```ts
-import { updateConnectApplication } from "@fewlines/connect-management";
+import { updateProviderApplication } from "@fewlines/connect-management";
 
 const input = {
   id: "d1e34015-4ba0-44a3-8171-15ed6979b86d",
@@ -321,5 +346,5 @@ const {
   redirectUris,
   name,
   defaultHomePage,
-} = await updateConnectApplication(managementCredentials, input);
+} = await updateProviderApplication(managementCredentials, input);
 ```

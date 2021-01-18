@@ -3,7 +3,7 @@ import gql from "graphql-tag";
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import { ManagementCredentials } from "../types";
-import { ConnectApplication } from "../types";
+import { ProviderApplication } from "../types";
 
 const GET_APPLICATION_QUERY = gql`
   query getApplicationQuery($id: String!) {
@@ -19,17 +19,17 @@ const GET_APPLICATION_QUERY = gql`
   }
 `;
 
-export async function getConnectApplication(
+export async function getProviderApplication(
   managementCredentials: ManagementCredentials,
   connectApplicationId: string,
-): Promise<ConnectApplication> {
+): Promise<ProviderApplication> {
   const operation = {
     query: GET_APPLICATION_QUERY,
     variables: { id: connectApplicationId },
   };
 
   const { data, errors } = await fetchManagement<{
-    provider: { application: ConnectApplication };
+    provider: { application: ProviderApplication };
   }>(managementCredentials, operation);
 
   if (errors) {

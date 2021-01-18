@@ -1,6 +1,6 @@
 import {
   checkVerificationCode,
-  getConnectApplication,
+  getProviderApplication,
   getIdentities,
   getIdentity,
   getProviderName,
@@ -11,7 +11,7 @@ import {
 describe("Queries", () => {
   test("They should all be exported from 'src/queries/index.ts'", () => {
     expect(checkVerificationCode).toBeInstanceOf(Function);
-    expect(getConnectApplication).toBeInstanceOf(Function);
+    expect(getProviderApplication).toBeInstanceOf(Function);
     expect(getIdentities).toBeInstanceOf(Function);
     expect(getIdentity).toBeInstanceOf(Function);
     expect(getProviderName).toBeInstanceOf(Function);

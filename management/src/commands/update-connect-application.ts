@@ -2,8 +2,8 @@ import gql from "graphql-tag";
 
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
-import { getConnectApplication } from "../queries/get-connect-application";
-import { ConnectApplication, UpdateConnectApplicationInput } from "../types";
+import { getProviderApplication } from "../queries/get-provider-application";
+import { ProviderApplication, UpdateProviderApplicationInput } from "../types";
 import { ManagementCredentials } from "../types";
 
 const UPDATE_APPLICATION_MUTATION = gql`
@@ -32,7 +32,7 @@ const UPDATE_APPLICATION_MUTATION = gql`
   }
 `;
 
-export async function updateConnectApplication(
+export async function updateProviderApplication(
   managementCredentials: ManagementCredentials,
   {
     id,
@@ -40,9 +40,9 @@ export async function updateConnectApplication(
     description,
     defaultHomePage,
     redirectUris,
-  }: UpdateConnectApplicationInput,
-): Promise<ConnectApplication> {
-  const currentData = await getConnectApplication(managementCredentials, id);
+  }: UpdateProviderApplicationInput,
+): Promise<ProviderApplication> {
+  const currentData = await getProviderApplication(managementCredentials, id);
 
   const updatedData = {
     ...currentData,
@@ -64,7 +64,7 @@ export async function updateConnectApplication(
   };
 
   const { data, errors } = await fetchManagement<{
-    updateApplication: ConnectApplication;
+    updateApplication: ProviderApplication;
   }>(managementCredentials, operation);
 
   if (errors) {

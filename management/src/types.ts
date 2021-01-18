@@ -3,7 +3,7 @@ export type ManagementCredentials = {
   APIKey: string;
 };
 
-export type ConnectApplication = {
+export type ProviderApplication = {
   id: string;
   name: string;
   description: string;
@@ -11,7 +11,7 @@ export type ConnectApplication = {
   redirectUris: string[];
 };
 
-export type UpdateConnectApplicationInput = {
+export type UpdateProviderApplicationInput = {
   id: string;
   name?: string;
   description?: string;
