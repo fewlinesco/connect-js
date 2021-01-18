@@ -31,7 +31,7 @@ const REMOVE_IDENTITY_FROM_USER = gql`
 export async function removeIdentityFromUser(
   managementCredentials: ManagementCredentials,
   { userId, identityType, identityValue }: IdentityCommandInput,
-): Promise<Identity[]> {
+): Promise<boolean> {
   const operation = {
     query: REMOVE_IDENTITY_FROM_USER,
     variables: { userId, type: identityType, value: identityValue },
@@ -45,5 +45,7 @@ export async function removeIdentityFromUser(
     throw new GraphqlErrors(errors);
   }
 
-  return data.removeIdentityFromUser;
+  return data.removeIdentityFromUser.some(
+    ({ value }) => value === identityValue,
+  );
 }

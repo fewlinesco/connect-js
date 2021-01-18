@@ -19,7 +19,7 @@ const IS_USER_PASSWORD_SET_QUERY = gql`
 export async function isUserPasswordSet(
   managementCredentials: ManagementCredentials,
   userId: string,
-): Promise<{ available: boolean }> {
+): Promise<boolean> {
   const operation = {
     query: IS_USER_PASSWORD_SET_QUERY,
     variables: { userId },
@@ -39,5 +39,5 @@ export async function isUserPasswordSet(
     throw new GraphqlErrors(errors);
   }
 
-  return data.provider.user.passwords;
+  return data.provider.user.passwords.available;
 }
