@@ -11,6 +11,14 @@ export type ConnectApplication = {
   redirectUris: string[];
 };
 
+export type UpdateConnectApplicationInput = {
+  id: string;
+  name?: string;
+  description?: string;
+  defaultHomePage?: string;
+  redirectUris?: string[];
+};
+
 export type CreateUserWithIdentitiesInput = {
   identities: IdentityInput[];
   localeCode: string;

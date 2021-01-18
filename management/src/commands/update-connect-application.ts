@@ -2,7 +2,8 @@ import gql from "graphql-tag";
 
 import { GraphqlErrors } from "../errors";
 import { fetchManagement } from "../fetch-management";
-import { ConnectApplication } from "../types";
+import { getConnectApplication } from "../queries/get-connect-application";
+import { ConnectApplication, UpdateConnectApplicationInput } from "../types";
 import { ManagementCredentials } from "../types";
 
 const UPDATE_APPLICATION_MUTATION = gql`
@@ -33,11 +34,33 @@ const UPDATE_APPLICATION_MUTATION = gql`
 
 export async function updateConnectApplication(
   managementCredentials: ManagementCredentials,
-  { id, name, description, defaultHomePage, redirectUris }: ConnectApplication,
+  {
+    id,
+    name,
+    description,
+    defaultHomePage,
+    redirectUris,
+  }: UpdateConnectApplicationInput,
 ): Promise<ConnectApplication> {
+  const currentData = await getConnectApplication(managementCredentials, id);
+
+  const updatedData = {
+    ...currentData,
+    name,
+    description,
+    defaultHomePage,
+    redirectUris,
+  };
+
   const operation = {
     query: UPDATE_APPLICATION_MUTATION,
-    variables: { id, name, description, defaultHomePage, redirectUris },
+    variables: {
+      id: updatedData.id,
+      name: updatedData.name,
+      description: updatedData.description,
+      defaultHomePage: updatedData.defaultHomePage,
+      redirectUris: updatedData.redirectUris,
+    },
   };
 
   const { data, errors } = await fetchManagement<{

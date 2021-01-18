@@ -120,7 +120,7 @@ const {
   description,
 } = await getConnectApplication(
   managementCredentials,
-  "a3e64872-6326-4813-948d-db8d8fc81bc8"
+  "a3e64872-6326-4813-948d-db8d8fc81bc8",
 );
 ```
 
@@ -133,7 +133,7 @@ import { getIdentities } from "@fewlines/connect-management";
 
 await getIdentities(
   managementCredentials,
-  "d96ee314-31b2-4e19-88b7-63734b90d1d4"
+  "d96ee314-31b2-4e19-88b7-63734b90d1d4",
 );
 ```
 
@@ -173,7 +173,7 @@ import { isUserPasswordSet } from "@fewlines/connect-management";
 
 await isUserPasswordSet(
   managementCredentials,
-  "16071981-1536-4eb2-a33e-892dc84c14a4"
+  "16071981-1536-4eb2-a33e-892dc84c14a4",
 );
 ```
 
@@ -244,7 +244,7 @@ import { markIdentityAsPrimary } from "@fewlines/connect-management";
 
 await markIdentityAsPrimary(
   managementCredentials,
-  "504c741c-f9dd-425c-912a-03fe051b0e6e"
+  "504c741c-f9dd-425c-912a-03fe051b0e6e",
 );
 ```
 
