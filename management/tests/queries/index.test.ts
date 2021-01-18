@@ -4,7 +4,7 @@ import {
   getIdentities,
   getIdentity,
   getProviderName,
-  getUserIDFromIdentityValue,
+  getUserIdFromIdentityValue,
   isUserPasswordSet,
 } from "../../src/queries";
 
@@ -15,7 +15,7 @@ describe("Queries", () => {
     expect(getIdentities).toBeInstanceOf(Function);
     expect(getIdentity).toBeInstanceOf(Function);
     expect(getProviderName).toBeInstanceOf(Function);
-    expect(getUserIDFromIdentityValue).toBeInstanceOf(Function);
+    expect(getUserIdFromIdentityValue).toBeInstanceOf(Function);
     expect(isUserPasswordSet).toBeInstanceOf(Function);
   });
 });

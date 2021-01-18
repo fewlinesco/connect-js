@@ -14,10 +14,10 @@ const GET_USER_ID_FROM_IDENTITY_VALUE_QUERY = gql`
   }
 `;
 
-export async function getUserIDFromIdentityValue(
+export async function getUserIdFromIdentityValue(
   managementCredentials: ManagementCredentials,
   identityValue: string,
-): Promise<{ id: string }> {
+): Promise<string> {
   const operation = {
     query: GET_USER_ID_FROM_IDENTITY_VALUE_QUERY,
     variables: { value: identityValue },
@@ -35,5 +35,5 @@ export async function getUserIDFromIdentityValue(
     throw new GraphqlErrors(errors);
   }
 
-  return data.provider.user;
+  return data.provider.user.id;
 }

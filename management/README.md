@@ -120,7 +120,7 @@ const {
   description,
 } = await getConnectApplication(
   managementCredentials,
-  "a3e64872-6326-4813-948d-db8d8fc81bc8",
+  "a3e64872-6326-4813-948d-db8d8fc81bc8"
 );
 ```
 
@@ -131,13 +131,15 @@ Used to retrieve all the Identities for a particular user. The function returns 
 ```ts
 import { getIdentities } from "@fewlines/connect-management";
 
-await getIdentities(
+const identities = await getIdentities(
   managementCredentials,
-  "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  "d96ee314-31b2-4e19-88b7-63734b90d1d4"
 );
 ```
 
 ### getIdentity
+
+Used to retrieve an Identity for a particular user using both the user and the Identity `id`. Refer to the [Identity section](#Identities) to understand the returned data structure.
 
 ```ts
 import { getIdentity } from "@fewlines/connect-management";
@@ -147,33 +149,45 @@ const input = {
   identityId: "9a60bc4c-82dc-42c5-8bac-8b051340d2ac",
 };
 
-await getIdentity(managementCredentials, input);
+const { id, primary, status, type, value } = await getIdentity(
+  managementCredentials,
+  input
+);
 ```
 
 ### getProviderName
 
+Used to retrieve the name of the current Provider.
+
 ```ts
 import { getProviderName } from "@fewlines/connect-management";
 
-await getProviderName(managementCredentials);
+const providerName = await getProviderName(managementCredentials);
 ```
 
-### getUserIDFromIdentityValue
+### getUserIdFromIdentityValue
+
+Used to retrieve the user `id` by passing an Identity value as input.
 
 ```ts
-import { getUserIDFromIdentityValue } from "@fewlines/connect-management";
+import { getUserIdFromIdentityValue } from "@fewlines/connect-management";
 
-await getUserIDFromIdentityValue(managementCredentials, "foo@fewlines.co");
+const userID = await getUserIdFromIdentityValue(
+  managementCredentials,
+  "foo@fewlines.co"
+);
 ```
 
 ### isUserPasswordSet
 
+Used to check if the user has already set his password.
+
 ```ts
 import { isUserPasswordSet } from "@fewlines/connect-management";
 
-await isUserPasswordSet(
+const isUserPasswordSet = await isUserPasswordSet(
   managementCredentials,
-  "16071981-1536-4eb2-a33e-892dc84c14a4",
+  "16071981-1536-4eb2-a33e-892dc84c14a4"
 );
 ```
 
@@ -244,7 +258,7 @@ import { markIdentityAsPrimary } from "@fewlines/connect-management";
 
 await markIdentityAsPrimary(
   managementCredentials,
-  "504c741c-f9dd-425c-912a-03fe051b0e6e",
+  "504c741c-f9dd-425c-912a-03fe051b0e6e"
 );
 ```
 
@@ -301,5 +315,11 @@ const input = {
   defaultHomePage: "https://www.fewlines.co",
 };
 
-await updateConnectApplication(managementCredentials, input);
+const {
+  id,
+  description,
+  redirectUris,
+  name,
+  defaultHomePage,
+} = await updateConnectApplication(managementCredentials, input);
 ```
