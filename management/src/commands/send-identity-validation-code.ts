@@ -39,12 +39,7 @@ export async function sendIdentityValidationCode(
     localeCodeOverride,
     userId,
   }: SendIdentityVerificationCodeInput,
-): Promise<{
-  callbackUrl: string;
-  eventId: string;
-  localeCode: string;
-  nonce: string;
-}> {
+): Promise<SendIdentityValidationCodeResult> {
   const operation = {
     query: SEND_IDENTITY_VALIDATION_CODE_MUTATION,
     variables: {

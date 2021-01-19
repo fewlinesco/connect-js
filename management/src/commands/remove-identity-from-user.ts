@@ -41,7 +41,7 @@ export async function removeIdentityFromUser(
     throw new GraphqlErrors(errors);
   }
 
-  return data.removeIdentityFromUser.some(
+  return !data.removeIdentityFromUser.some(
     ({ value }) => value === identityValue,
   );
 }

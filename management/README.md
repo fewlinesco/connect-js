@@ -223,7 +223,7 @@ const { id, primary, status, type, value } = await createOrUpdatePassword(
 
 ### createUserWithIdentities
 
-Create a new User for the current Provider, and add a list of Identities to him. The list of identities passed as input cannot be empty. The function returns the User `id`.
+Create a new User with a list of Identities for the current Provider. The list of identities passed as input cannot be empty. The function returns the User `id`.
 
 ```ts
 import { createUserWithIdentities } from "@fewlines/connect-management";
@@ -259,7 +259,7 @@ const deleteStatus = await deleteUser(
 
 ### markIdentityAsPrimary
 
-Used to retrieve mark an Identity as `primary`. Will set the previous primary identity as non primary.
+Used to mark an Identity as `primary`. Will set the previous primary identity as non primary.
 The function returns the Identity. Refer to the [Identity section](#Identities) to understand the returned data structure.
 
 ```ts
@@ -273,7 +273,7 @@ const newPrimaryIdentity = await markIdentityAsPrimary(
 
 ### removeIdentityFromUser
 
-Used to remove an Identity from a User. The function returns a boolean.
+Used to remove an Identity from a User. The function returns true if the removal worked.
 
 ```ts
 import { removeIdentityFromUser } from "@fewlines/connect-management";
