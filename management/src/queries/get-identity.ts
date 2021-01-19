@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import { Identity, ManagementCredentials } from "../types";
 
@@ -44,6 +44,10 @@ export async function getIdentity(
 
   if (errors) {
     throw new GraphqlErrors(errors);
+  }
+
+  if (!data.provider) {
+    throw new OutputDataNullError();
   }
 
   return data.provider.user.identity;

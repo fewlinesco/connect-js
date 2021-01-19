@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import { getProviderApplication } from "../queries/get-provider-application";
 import { ProviderApplication, UpdateProviderApplicationInput } from "../types";
@@ -69,6 +69,10 @@ export async function updateProviderApplication(
 
   if (errors) {
     throw new GraphqlErrors(errors);
+  }
+
+  if (!data.updateApplication) {
+    throw new OutputDataNullError();
   }
 
   return data.updateApplication;

@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import {
   CheckVerificationCodeInput,
@@ -34,6 +34,10 @@ export async function checkVerificationCode(
 
   if (errors) {
     throw new GraphqlErrors(errors);
+  }
+
+  if (!data.checkVerificationCode) {
+    throw new OutputDataNullError();
   }
 
   return data.checkVerificationCode;

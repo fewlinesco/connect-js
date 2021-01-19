@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import { CreateOrUpdatePasswordInput, ManagementCredentials } from "../types";
 
@@ -29,6 +29,10 @@ export async function createOrUpdatePassword(
 
   if (errors) {
     throw new GraphqlErrors(errors);
+  }
+
+  if (!data.createOrUpdatePassword) {
+    throw new OutputDataNullError();
   }
 
   return data.createOrUpdatePassword;

@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import {
   Identity,
@@ -36,12 +36,16 @@ export async function addIdentityToUser(
   };
 
   const { data, errors } = await fetchManagement<{
-    AddIdentityToUser: Identity;
+    addIdentityToUser: Identity;
   }>(managementCredentials, operation);
 
   if (errors) {
     throw new GraphqlErrors(errors);
   }
 
-  return data.AddIdentityToUser;
+  if (!data.addIdentityToUser) {
+    throw new OutputDataNullError();
+  }
+
+  return data.addIdentityToUser;
 }

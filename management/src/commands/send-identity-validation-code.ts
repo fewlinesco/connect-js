@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import {
   ManagementCredentials,
@@ -56,6 +56,10 @@ export async function sendIdentityValidationCode(
 
   if (errors) {
     throw new GraphqlErrors(errors);
+  }
+
+  if (!data.sendIdentityValidationCode) {
+    throw new OutputDataNullError();
   }
 
   return data.sendIdentityValidationCode;

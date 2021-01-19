@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import { Identity, ManagementCredentials } from "../types";
 
@@ -31,6 +31,10 @@ export async function markIdentityAsPrimary(
 
   if (errors) {
     throw new GraphqlErrors(errors);
+  }
+
+  if (!data.markIdentityAsPrimary) {
+    throw new OutputDataNullError();
   }
 
   return data.markIdentityAsPrimary;

@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import { GraphqlErrors, OutputDataNullError } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import { CreateUserWithIdentitiesInput, ManagementCredentials } from "../types";
 
@@ -32,6 +32,10 @@ export async function createUserWithIdentities(
 
   if (errors) {
     throw new GraphqlErrors(errors);
+  }
+
+  if (!data.createUserWithIdentities) {
+    throw new OutputDataNullError();
   }
 
   return data.createUserWithIdentities;

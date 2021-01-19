@@ -1,6 +1,10 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors } from "../errors";
+import {
+  GraphqlErrors,
+  IdentityDeletionFailedError,
+  OutputDataNullError,
+} from "../errors";
 import { fetchManagement } from "../fetch-management";
 import {
   Identity,
@@ -41,7 +45,17 @@ export async function removeIdentityFromUser(
     throw new GraphqlErrors(errors);
   }
 
-  return !data.removeIdentityFromUser.some(
+  if (!data.removeIdentityFromUser) {
+    throw new OutputDataNullError();
+  }
+
+  const isNotDeleted = data.removeIdentityFromUser.some(
     ({ value }) => value === identityValue,
   );
+
+  if (isNotDeleted) {
+    throw new IdentityDeletionFailedError();
+  }
+
+  return true;
 }
