@@ -32,9 +32,9 @@ export class InvalidPasswordInputError extends Error {
 }
 
 export class IdentityAlreadyUsedError extends Error {
-  readonly message = "Identity Already Used";
+  readonly message = "Identity already used";
 }
 
 export class IdentityValueCantBeBlankError extends Error {
-  readonly message = "Identity Value Can't Be Blank";
+  readonly message = "Identity value can't be Blank";
 }
