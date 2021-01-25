@@ -217,7 +217,10 @@ const input = {
   userId: "d8959bfd9-aab8-4de2-81bb-cbd9ea1a4191",
 };
 
-const { id } = await createOrUpdatePassword(managementCredentials, input);
+const isPasswordSet = await createOrUpdatePassword(
+  managementCredentials,
+  input
+);
 ```
 
 If the `cleartextPassword` input doesn't meet the Provider defined rules, the function will throw a specific error containing the `rules` waited for the password to be valid. The data structure of the `rules` property is dependent of the Provider settings.
@@ -234,7 +237,7 @@ const input = {
 };
 
 try {
-  const { id } = await createOrUpdatePassword(managementCredentials, input);
+  await createOrUpdatePassword(managementCredentials, input);
 } catch (error) {
   if (error instanceof InvalidPasswordInputError) {
     const { rules } = error;
@@ -263,10 +266,7 @@ const input = {
   localeCode: "en-EN",
 };
 
-const { id: userId } = await createUserWithIdentities(
-  managementCredentials,
-  input
-);
+const userId = await createUserWithIdentities(managementCredentials, input);
 ```
 
 ### deleteUser
