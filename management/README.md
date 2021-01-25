@@ -207,6 +207,8 @@ await addIdentityToUser(managementCredentials, input);
 
 ### createOrUpdatePassword
 
+Used to create or update a User password. The function returns the User `id`.
+
 ```ts
 import { createOrUpdatePassword } from "@fewlines/connect-management";
 
@@ -215,10 +217,30 @@ const input = {
   userId: "d8959bfd9-aab8-4de2-81bb-cbd9ea1a4191",
 };
 
-const { id, primary, status, type, value } = await createOrUpdatePassword(
-  managementCredentials,
-  input
-);
+const { id } = await createOrUpdatePassword(managementCredentials, input);
+```
+
+If the `cleartextPassword` input doesn't meet the Provider defined rules, the function will throw a specific error containing the `rules` waited for the password to be valid. The data structure of the `rules` property is dependent of the Provider settings.
+
+```ts
+import {
+  createOrUpdatePassword,
+  InvalidPasswordInputError,
+} from "@fewlines/connect-management";
+
+const input = {
+  cleartextPassword: "42",
+  userId: "d8959bfd9-aab8-4de2-81bb-cbd9ea1a4191",
+};
+
+try {
+  const { id } = await createOrUpdatePassword(managementCredentials, input);
+} catch (error) {
+  if (error instanceof InvalidPasswordInputError) {
+    const { rules } = error;
+    // ...
+  }
+}
 ```
 
 ### createUserWithIdentities
@@ -241,7 +263,10 @@ const input = {
   localeCode: "en-EN",
 };
 
-const userId = await createUserWithIdentities(managementCredentials, input);
+const { id: userId } = await createUserWithIdentities(
+  managementCredentials,
+  input
+);
 ```
 
 ### deleteUser
@@ -320,6 +345,45 @@ const {
   eventId,
   nonce,
 } = await sendIdentityValidationCode(managementCredentials, input);
+```
+
+If the Identity `value` input is blank or is identical to an already validated Identity for the current Provider, the function will throw specific errors corresponding to each case.
+
+```ts
+import {
+  sendIdentityValidationCode,
+  IdentityAlreadyUsedError,
+  IdentityValueCantBeBlankError,
+} from "@fewlines/connect-management";
+
+const input = {
+  callbackUrl: "/",
+  identity: {
+    id: "12488dfe-8e46-4391-a8bb-f0db41078942",
+    type: "EMAIL",
+    value: "",
+    status: "validated",
+    primary: true,
+  },
+  userId: "37b21863-3f38-4d20-848d-3108337a0b8b",
+};
+
+try {
+  const {
+    callbackUrl,
+    localeCode,
+    eventId,
+    nonce,
+  } = await sendIdentityValidationCode(managementCredentials, input);
+} catch (error) {
+  if (error instanceof IdentityValueCantBeBlankError) {
+    // ...
+  }
+
+  if (error instanceof IdentityAlreadyUsedError) {
+    // ...
+  }
+}
 ```
 
 ### updateProviderApplication
