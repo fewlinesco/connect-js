@@ -132,3 +132,18 @@ export type CheckVerificationCodeResult = {
   nonce: string;
   status: CheckVerificationCodeStatus;
 };
+
+export type PasswordRules = {
+  min_digits: {
+    error: boolean;
+    minimum: number;
+  };
+  min_non_digits: {
+    error: boolean;
+    minimum: number;
+  };
+  min_total_characters: {
+    error: false;
+    minimum: number;
+  };
+};

@@ -1,8 +1,17 @@
+import { GraphQLError } from "graphql";
 import gql from "graphql-tag";
 
-import { GraphqlErrors, OutputDataNullError } from "../errors";
+import {
+  GraphqlErrors,
+  InvalidPasswordInputError,
+  OutputDataNullError,
+} from "../errors";
 import { fetchManagement } from "../fetch-management";
-import { CreateOrUpdatePasswordInput, ManagementCredentials } from "../types";
+import {
+  CreateOrUpdatePasswordInput,
+  ManagementCredentials,
+  PasswordRules,
+} from "../types";
 
 const CREATE_OR_UPDATE_PASSWORD_MUTATION = gql`
   mutation createOrUpdatePassword($cleartextPassword: String!, $userId: ID!) {
@@ -28,6 +37,16 @@ export async function createOrUpdatePassword(
   }>(managementCredentials, operation);
 
   if (errors) {
+    const passwordError = errors.find(
+      (error) => (error as GraphQLError & { rules: PasswordRules }).rules,
+    );
+
+    if (passwordError) {
+      throw new InvalidPasswordInputError(
+        (passwordError as GraphQLError & { rules: PasswordRules }).rules,
+      );
+    }
+
     throw new GraphqlErrors(errors);
   }
 
