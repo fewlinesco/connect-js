@@ -67,18 +67,18 @@ export async function sendIdentityValidationCode(
         "identity_already_validated",
     );
 
-    const identityValueError = errors.find(
-      (error) =>
-        (error as GraphQLError & { errors: { identity_value: string } }).errors
-          .identity_value === "can't be blank",
-    );
-
     if (identityAlreadyUsedError) {
       throw new IdentityAlreadyUsedError();
-    }
+    } else {
+      const identityValueError = errors.find(
+        (error) =>
+          (error as GraphQLError & { errors: { identity_value: string } })
+            .errors.identity_value === "can't be blank",
+      );
 
-    if (identityValueError) {
-      throw new IdentityValueCantBeBlankError();
+      if (identityValueError) {
+        throw new IdentityValueCantBeBlankError();
+      }
     }
 
     throw new GraphqlErrors(errors);
