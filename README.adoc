@@ -1,3 +1,3 @@
 # Connect-JS
 
-This is the repository for Connect JavaScript packagess
+This is the repository for Connect JavaScript packages.

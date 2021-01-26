@@ -13,7 +13,7 @@ You need to create a new `ConnectPopup` instance with the options your want and 
 ### Package usage
 
 ```
-npm install @fewlines/connect-popup
+yarn add @fewlines/connect-popup
 ```
 
 ```javascript
