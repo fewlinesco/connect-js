@@ -70,12 +70,12 @@ describe("generateJWS", () => {
       );
     });
 
-    test("should generate an RS256 signed JWS when passing a custom payload and custom privateKey", () => {
+    test("should generate a RS256 signed JWS when passing a custom payload and custom privateKey", () => {
       expect.assertions(2);
 
       const RS256JWS = generateRS256JWS(
         { ...defaultPayload, ...customPayload },
-        process.env.PEM_RSA_PRIVATE_KEY,
+        process.env.PEM_RSA_PRIVATE_KEY_1,
       );
 
       const [JWA, payload] = RS256JWS.split(".");

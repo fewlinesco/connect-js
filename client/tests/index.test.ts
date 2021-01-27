@@ -432,9 +432,6 @@ describe("OAuth2Client", () => {
         },
       });
 
-      console.log("publicKeyForEncryption: ", publicKeyForEncryption);
-      console.log("privateKeyForEncryption: ", privateKeyForEncryption);
-
       const mockedSignedJWT = jwt.sign(defaultPayload, privateKeyForSignature);
 
       const josePublicKeyForEncryption = await jose.JWK.asKey(
@@ -475,7 +472,7 @@ describe("OAuth2Client", () => {
 
       const decryptedMockedJWEAccessToken = await oauthClient.decryptJWE<{
         iss: string;
-      }>(mockedJWEAccessToken, process.env.PEM_RSA_PRIVATE_KEY, false);
+      }>(mockedJWEAccessToken, process.env.PEM_RSA_PRIVATE_KEY_2, false);
 
       expect(decryptedMockedJWEAccessToken.iss).toStrictEqual(
         mockedAccessTokenClearPayload.iss,
