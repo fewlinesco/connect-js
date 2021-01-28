@@ -76,7 +76,7 @@ class OAuth2Client {
     }
   }
 
-  private async getJWKS(): Promise<void> {
+  private async setJWKS(): Promise<void> {
     await this.setOpenIDConfiguration();
 
     if (this.jwks) {
@@ -167,7 +167,7 @@ class OAuth2Client {
 
   async verifyJWT<T = unknown>(accessToken: string, algo: string): Promise<T> {
     await this.setOpenIDConfiguration();
-    await this.getJWKS();
+    await this.setJWKS();
 
     return new Promise((resolve, reject) => {
       const [header, payload] = accessToken.split(".");
