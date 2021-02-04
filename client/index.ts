@@ -79,6 +79,10 @@ class OAuth2Client {
   private async setJWKS(): Promise<void> {
     await this.setOpenIDConfiguration();
 
+    if (!this.openIDConfiguration.jwks_uri) {
+      throw new MissingJWKSURI("Missing JWKS URI for RS256 encoded JWT");
+    }
+
     await this.fetch(this.openIDConfiguration.jwks_uri)
       .then((response) => response.json())
       .then((jwks) => {
@@ -164,12 +168,18 @@ class OAuth2Client {
   async verifyJWT<T = unknown>(accessToken: string, algo: string): Promise<T> {
     await this.setOpenIDConfiguration();
 
+    const [header, payload] = accessToken.split(".");
+
+    const { alg, kid } = decodeJWTPart<{ alg: string; kid: string }>(header);
+    const { aud } = decodeJWTPart<{ aud: string }>(payload);
+
+    if (kid) {
+      if (!this.jwks) {
+        await this.setJWKS();
+      }
+    }
+
     return new Promise((resolve, reject) => {
-      const [header, payload] = accessToken.split(".");
-
-      const { alg, kid } = decodeJWTPart<{ alg: string; kid: string }>(header);
-      const { aud } = decodeJWTPart<{ aud: string }>(payload);
-
       if (
         (typeof aud === "string" && aud !== this.audience) ||
         (Array.isArray(aud) && !aud.includes(this.audience))
@@ -190,10 +200,6 @@ class OAuth2Client {
         );
       } else if (alg === "RS256" && algo === "RS256") {
         if (kid) {
-          if (!this.jwks) {
-            this.setJWKS();
-          }
-
           const validKey = this.jwks.keys.find(
             (keyObject) => keyObject.kid === kid,
           );
@@ -219,8 +225,6 @@ class OAuth2Client {
               ),
             );
           }
-
-          reject(new MissingJWKSURI("Missing JWKS URI for RS256 encoded JWT"));
         } else {
           reject(
             new MissingKeyIDHS256("Missing key ID (kid) for RS256 encoded JWT"),
