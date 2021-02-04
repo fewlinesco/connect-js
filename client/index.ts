@@ -79,18 +79,14 @@ class OAuth2Client {
   private async setJWKS(): Promise<void> {
     await this.setOpenIDConfiguration();
 
-    if (this.jwks) {
-      return Promise.resolve();
-    } else {
-      await this.fetch(this.openIDConfiguration.jwks_uri)
-        .then((response) => response.json())
-        .then((jwks) => {
-          this.jwks = jwks;
-        })
-        .catch((error) => {
-          throw error;
-        });
-    }
+    await this.fetch(this.openIDConfiguration.jwks_uri)
+      .then((response) => response.json())
+      .then((jwks) => {
+        this.jwks = jwks;
+      })
+      .catch((error) => {
+        throw error;
+      });
   }
 
   async getAuthorizationURL(state?: string): Promise<URL> {
@@ -167,7 +163,6 @@ class OAuth2Client {
 
   async verifyJWT<T = unknown>(accessToken: string, algo: string): Promise<T> {
     await this.setOpenIDConfiguration();
-    await this.setJWKS();
 
     return new Promise((resolve, reject) => {
       const [header, payload] = accessToken.split(".");
@@ -195,37 +190,37 @@ class OAuth2Client {
         );
       } else if (alg === "RS256" && algo === "RS256") {
         if (kid) {
-          if (this.jwks) {
-            const validKey = this.jwks.keys.find(
-              (keyObject) => keyObject.kid === kid,
+          if (!this.jwks) {
+            this.setJWKS();
+          }
+
+          const validKey = this.jwks.keys.find(
+            (keyObject) => keyObject.kid === kid,
+          );
+
+          if (validKey) {
+            const { e, n } = validKey;
+            const publicKey = rsaPublicKeyToPEM(n, e);
+
+            return jwt.verify(
+              accessToken,
+              publicKey,
+              {
+                algorithms: ["RS256"],
+              },
+              (error: jwt.VerifyErrors | null, decoded: unknown) => {
+                return error ? reject(error) : resolve(decoded as T);
+              },
             );
-
-            if (validKey) {
-              const { e, n } = validKey;
-              const publicKey = rsaPublicKeyToPEM(n, e);
-
-              return jwt.verify(
-                accessToken,
-                publicKey,
-                {
-                  algorithms: ["RS256"],
-                },
-                (error: jwt.VerifyErrors | null, decoded: unknown) => {
-                  return error ? reject(error) : resolve(decoded as T);
-                },
-              );
-            } else {
-              reject(
-                new InvalidKeyIDRS256(
-                  "Invalid key ID (kid) for RS256 encoded JWT",
-                ),
-              );
-            }
           } else {
             reject(
-              new MissingJWKSURI("Missing JWKS URI for RS256 encoded JWT"),
+              new InvalidKeyIDRS256(
+                "Invalid key ID (kid) for RS256 encoded JWT",
+              ),
             );
           }
+
+          reject(new MissingJWKSURI("Missing JWKS URI for RS256 encoded JWT"));
         } else {
           reject(
             new MissingKeyIDHS256("Missing key ID (kid) for RS256 encoded JWT"),
