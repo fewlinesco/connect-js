@@ -61,14 +61,15 @@ class OAuth2Client {
       : undefined;
   }
 
-  private async setOpenIDConfiguration(): Promise<void> {
+  private async getOpenIDConfiguration(): Promise<OpenIDConfiguration> {
     if (this.openIDConfiguration) {
-      return Promise.resolve();
+      return Promise.resolve(this.openIDConfiguration);
     } else {
       await this.fetch(this.openIDConfigurationURL)
         .then((response) => response.json())
         .then((openIDConfiguration) => {
           this.openIDConfiguration = openIDConfiguration;
+          return openIDConfiguration;
         })
         .catch((error) => {
           throw error;
@@ -76,30 +77,32 @@ class OAuth2Client {
     }
   }
 
-  private async setJWKS(): Promise<void> {
-    await this.setOpenIDConfiguration();
+  private async getJWKS(): Promise<JWKSDT> {
+    const openIDConfiguration = await this.getOpenIDConfiguration();
 
     if (!this.openIDConfiguration.jwks_uri) {
       throw new MissingJWKSURI("Missing JWKS URI for RS256 encoded JWT");
     }
 
-    await this.fetch(this.openIDConfiguration.jwks_uri)
-      .then((response) => response.json())
-      .then((jwks) => {
-        this.jwks = jwks;
-      })
-      .catch((error) => {
-        throw error;
-      });
+    if (this.jwks) {
+      return Promise.resolve(this.jwks);
+    } else {
+      await this.fetch(openIDConfiguration.jwks_uri)
+        .then((response) => response.json())
+        .then((jwks) => {
+          this.jwks = jwks;
+          return jwks;
+        })
+        .catch((error) => {
+          throw error;
+        });
+    }
   }
 
   async getAuthorizationURL(state?: string): Promise<URL> {
-    await this.setOpenIDConfiguration();
+    const openIDConfiguration = await this.getOpenIDConfiguration();
 
-    const {
-      authorization_endpoint,
-      scopes_supported,
-    } = this.openIDConfiguration;
+    const { authorization_endpoint, scopes_supported } = openIDConfiguration;
 
     const areScopesSupported = this.scopes.every((scope) =>
       scopes_supported.includes(scope),
@@ -129,7 +132,7 @@ class OAuth2Client {
   async getTokensFromAuthorizationCode(
     authorizationCode: string,
   ): Promise<OAuth2Tokens> {
-    await this.setOpenIDConfiguration();
+    const openIDConfiguration = await this.getOpenIDConfiguration();
 
     const callback = {
       client_id: this.clientID,
@@ -140,7 +143,7 @@ class OAuth2Client {
     };
 
     const tokenEndpointResponse = await this.fetch(
-      this.openIDConfiguration.token_endpoint,
+      openIDConfiguration.token_endpoint,
       {
         method: "POST",
         headers: {
@@ -166,16 +169,15 @@ class OAuth2Client {
   }
 
   async verifyJWT<T = unknown>(accessToken: string, algo: string): Promise<T> {
-    await this.setOpenIDConfiguration();
-
     const [header, payload] = accessToken.split(".");
 
     const { alg, kid } = decodeJWTPart<{ alg: string; kid: string }>(header);
     const { aud } = decodeJWTPart<{ aud: string }>(payload);
+    let jwks;
 
     if (kid) {
       if (!this.jwks) {
-        await this.setJWKS();
+        jwks = await this.getJWKS();
       }
     }
 
@@ -200,9 +202,7 @@ class OAuth2Client {
         );
       } else if (alg === "RS256" && algo === "RS256") {
         if (kid) {
-          const validKey = this.jwks.keys.find(
-            (keyObject) => keyObject.kid === kid,
-          );
+          const validKey = jwks.keys.find((keyObject) => keyObject.kid === kid);
 
           if (validKey) {
             const { e, n } = validKey;
@@ -257,7 +257,7 @@ class OAuth2Client {
   }
 
   async refreshTokens(refresh_token: string): Promise<RefreshTokenResponse> {
-    await this.setOpenIDConfiguration();
+    const openIDConfiguration = await this.getOpenIDConfiguration();
 
     const payload = {
       client_id: this.clientID,
@@ -267,7 +267,7 @@ class OAuth2Client {
       scope: this.scopes.join(" "),
     };
 
-    return this.fetch(this.openIDConfiguration.token_endpoint, {
+    return this.fetch(openIDConfiguration.token_endpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
