@@ -173,7 +173,7 @@ class OAuth2Client {
 
     const { alg, kid } = decodeJWTPart<{ alg: string; kid: string }>(header);
     const { aud } = decodeJWTPart<{ aud: string }>(payload);
-    let jwks;
+    let jwks = this.jwks;
 
     if (kid) {
       if (!this.jwks) {
