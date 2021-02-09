@@ -173,13 +173,8 @@ class OAuth2Client {
 
     const { alg, kid } = decodeJWTPart<{ alg: string; kid: string }>(header);
     const { aud } = decodeJWTPart<{ aud: string }>(payload);
-    let jwks = this.jwks;
 
-    if (kid) {
-      if (!this.jwks) {
-        jwks = await this.getJWKS();
-      }
-    }
+    const jwks = kid && await this.getJWKS();
 
     return new Promise((resolve, reject) => {
       if (
