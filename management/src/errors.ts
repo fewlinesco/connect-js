@@ -1,4 +1,5 @@
 import { GraphQLError } from "graphql";
+import { FetchError } from "node-fetch";
 
 import { PasswordRules } from "./types";
 
@@ -38,3 +39,5 @@ export class IdentityAlreadyUsedError extends Error {
 export class IdentityValueCantBeBlankError extends Error {
   readonly message = "Identity value can't be Blank";
 }
+
+export { FetchError };
