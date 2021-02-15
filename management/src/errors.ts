@@ -40,14 +40,14 @@ class IdentityValueCantBeBlankError extends Error {
   readonly message = "Identity value can't be Blank";
 }
 
-class ConnectUnreachableError extends FetchError {}
+// class ConnectUnreachableError extends FetchError {}
 
 export {
-  ConnectUnreachableError,
   GraphqlError,
   GraphqlErrors,
   OutputDataNullError,
   InvalidPasswordInputError,
   IdentityAlreadyUsedError,
   IdentityValueCantBeBlankError,
+  FetchError,
 };
