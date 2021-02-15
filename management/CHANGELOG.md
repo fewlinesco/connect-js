@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.2.1] - 2021-02-12
 
-- Export `ConnectUnreachableError` class derived from `FetchError` (`@types/node-fetch`).
+- `fetchManagement` now throws a `ConnectUnreachableError` error, derived from `FetchError` (`@types/node-fetch`).
 
 ## [0.2.0] - 2021-01-26
 
