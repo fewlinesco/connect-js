@@ -78,25 +78,77 @@ class OAuth2Client {
   }
 
   private async getJWKS(): Promise<JWKSDT> {
-    const openIDConfiguration = await this.getOpenIDConfiguration();
-
-    if (!this.openIDConfiguration.jwks_uri) {
-      throw new MissingJWKSURI("Missing JWKS URI for RS256 encoded JWT");
-    }
-
     if (this.jwks) {
       return Promise.resolve(this.jwks);
     } else {
-      return await this.fetch(openIDConfiguration.jwks_uri)
-        .then((response) => response.json())
-        .then((jwks) => {
-          this.jwks = jwks;
-          return jwks;
-        })
-        .catch((error) => {
-          throw error;
-        });
+      return await this.fetchJWKS();
     }
+  }
+
+  private async fetchJWKS(): Promise<JWKSDT> {
+    const openIDConfiguration = await this.getOpenIDConfiguration();
+
+    if (!openIDConfiguration.jwks_uri) {
+      throw new MissingJWKSURI("Missing JWKS URI for RS256 encoded JWT");
+    }
+
+    return await this.fetch(openIDConfiguration.jwks_uri)
+      .then((response) => response.json())
+      .then((jwks) => {
+        this.jwks = jwks;
+        return jwks;
+      })
+      .catch((error) => {
+        throw error;
+      });
+  }
+
+  private async getPublicKey(jwks: JWKSDT, kid: string): Promise<string> {
+    const validKey = jwks.keys.find((keyObject) => keyObject.kid === kid);
+
+    if (validKey) {
+      const { e, n } = validKey;
+      const publicKey = rsaPublicKeyToPEM(n, e);
+      return publicKey;
+    }
+
+    return undefined;
+  }
+
+  private async verifyHS256<T = unknown>(
+    accessToken: string,
+    clientSecret: string,
+  ): Promise<T> {
+    return new Promise((resolve, reject) => {
+      return jwt.verify(
+        accessToken,
+        clientSecret,
+        {
+          algorithms: ["HS256"],
+        },
+        (error: jwt.VerifyErrors | null, decoded: unknown) => {
+          return error ? reject(error) : resolve(decoded as T);
+        },
+      );
+    });
+  }
+
+  private async verifyRS256<T = unknown>(
+    accessToken: string,
+    publicKey: string,
+  ): Promise<T> {
+    return new Promise((resolve, reject) => {
+      return jwt.verify(
+        accessToken,
+        publicKey,
+        {
+          algorithms: ["RS256"],
+        },
+        (error: jwt.VerifyErrors | null, decoded: unknown) => {
+          return error ? reject(error) : resolve(decoded as T);
+        },
+      );
+    });
   }
 
   async getAuthorizationURL(state?: string): Promise<URL> {
@@ -176,59 +228,41 @@ class OAuth2Client {
 
     const jwks = kid && (await this.getJWKS());
 
-    return new Promise((resolve, reject) => {
-      if (
-        (typeof aud === "string" && aud !== this.audience) ||
-        (Array.isArray(aud) && !aud.includes(this.audience))
-      ) {
-        reject(new InvalidAudience("Invalid audience"));
-      }
+    if (
+      (typeof aud === "string" && aud !== this.audience) ||
+      (Array.isArray(aud) && !aud.includes(this.audience))
+    ) {
+      throw new InvalidAudience("Invalid audience");
+    }
 
-      if (alg === "HS256" && algo === "HS256") {
-        jwt.verify(
-          accessToken,
-          this.clientSecret,
-          {
-            algorithms: ["HS256"],
-          },
-          (error: jwt.VerifyErrors | null, decoded: unknown) => {
-            return error ? reject(error) : resolve(decoded as T);
-          },
-        );
-      } else if (alg === "RS256" && algo === "RS256") {
-        if (kid) {
-          const validKey = jwks.keys.find((keyObject) => keyObject.kid === kid);
+    if (alg === "HS256" && algo === "HS256") {
+      return this.verifyHS256(accessToken, this.clientSecret);
+    } else if (alg === "RS256" && algo === "RS256") {
+      if (kid) {
+        const publicKey = await this.getPublicKey(jwks, kid);
 
-          if (validKey) {
-            const { e, n } = validKey;
-            const publicKey = rsaPublicKeyToPEM(n, e);
+        if (!publicKey) {
+          const updatedJwks = await this.fetchJWKS();
+          const publicKey = await this.getPublicKey(updatedJwks, kid);
 
-            return jwt.verify(
-              accessToken,
-              publicKey,
-              {
-                algorithms: ["RS256"],
-              },
-              (error: jwt.VerifyErrors | null, decoded: unknown) => {
-                return error ? reject(error) : resolve(decoded as T);
-              },
-            );
-          } else {
-            reject(
-              new InvalidKeyIDRS256(
-                "Invalid key ID (kid) for RS256 encoded JWT",
-              ),
+          if (!publicKey) {
+            throw new InvalidKeyIDRS256(
+              "Invalid key ID (kid) for RS256 encoded JWT",
             );
           }
-        } else {
-          reject(
-            new MissingKeyIDHS256("Missing key ID (kid) for RS256 encoded JWT"),
-          );
+
+          return await this.verifyRS256(accessToken, publicKey);
         }
+
+        return await this.verifyRS256(accessToken, publicKey);
       } else {
-        reject(new AlgoNotSupported("Encoding algo not supported"));
+        throw new MissingKeyIDHS256(
+          "Missing key ID (kid) for RS256 encoded JWT",
+        );
       }
-    });
+    } else {
+      throw new AlgoNotSupported("Encoding algo not supported");
+    }
   }
 
   async decryptJWE<T = unknown>(
