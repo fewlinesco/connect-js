@@ -7,7 +7,7 @@ import { FetchError } from "node-fetch";
 import { ConnectUnreachableError } from "./errors";
 import { ManagementCredentials } from "./types";
 
-export function fetchManagement<T = unknown>(
+export async function fetchManagement<T = unknown>(
   managementCredentials: ManagementCredentials,
   operation: GraphQLRequest,
 ): Promise<FetchResult<T>> {
@@ -25,9 +25,9 @@ export function fetchManagement<T = unknown>(
     };
   });
   try {
-    return makePromise(
+    return (await makePromise(
       execute(authLink.concat(httpLink), operation),
-    ) as Promise<FetchResult<T>>;
+    )) as Promise<FetchResult<T>>;
   } catch (error) {
     if (error instanceof FetchError) {
       throw new ConnectUnreachableError(error);
