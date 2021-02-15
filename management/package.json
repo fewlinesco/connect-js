@@ -1,6 +1,6 @@
 {
   "name": "@fewlines/connect-management",
-  "version": "0.0.0-experimental-7326543",
+  "version": "0.0.0-experimental-1ea3cdf",
   "author": "Fewlines",
   "description": "Management flow for the Connect JS SDK",
   "license": "MIT",
