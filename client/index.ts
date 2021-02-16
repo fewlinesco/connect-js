@@ -78,11 +78,7 @@ class OAuth2Client {
   }
 
   private async getJWKS(): Promise<JWKSDT> {
-    if (this.jwks) {
-      return Promise.resolve(this.jwks);
-    } else {
-      return await this.fetchJWKS();
-    }
+    return this.jwks ? this.jwks : this.fetchJWKS();
   }
 
   private async fetchJWKS(): Promise<JWKSDT> {
@@ -97,22 +93,24 @@ class OAuth2Client {
       .then((jwks) => {
         this.jwks = jwks;
         return jwks;
-      })
-      .catch((error) => {
-        throw error;
       });
   }
 
   private async getPublicKey(jwks: JWKSDT, kid: string): Promise<string> {
-    const validKey = jwks.keys.find((keyObject) => keyObject.kid === kid);
+    let validKey = jwks.keys.find((keyObject) => keyObject.kid === kid);
+
+    if (!validKey) {
+      const updatedJwks = await this.fetchJWKS();
+      validKey = updatedJwks.keys.find((keyObject) => keyObject.kid === kid);
+    }
 
     if (validKey) {
       const { e, n } = validKey;
       const publicKey = rsaPublicKeyToPEM(n, e);
       return publicKey;
+    } else {
+      throw new InvalidKeyIDRS256("Invalid key ID (kid) for RS256 encoded JWT");
     }
-
-    return undefined;
   }
 
   private async verifyHS256<T = unknown>(
@@ -240,19 +238,6 @@ class OAuth2Client {
     } else if (alg === "RS256" && algo === "RS256") {
       if (kid) {
         const publicKey = await this.getPublicKey(jwks, kid);
-
-        if (!publicKey) {
-          const updatedJwks = await this.fetchJWKS();
-          const publicKey = await this.getPublicKey(updatedJwks, kid);
-
-          if (!publicKey) {
-            throw new InvalidKeyIDRS256(
-              "Invalid key ID (kid) for RS256 encoded JWT",
-            );
-          }
-
-          return await this.verifyRS256(accessToken, publicKey);
-        }
 
         return await this.verifyRS256(accessToken, publicKey);
       } else {
