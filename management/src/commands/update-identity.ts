@@ -60,7 +60,7 @@ async function updateIdentity(
         const identity = {
           userId,
           identityType: type,
-          identityValue: identityToUpdate.value,
+          identityValue: value,
         };
 
         await removeIdentityFromUser(managementCredentials, identity);
