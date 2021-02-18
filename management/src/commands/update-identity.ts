@@ -6,7 +6,7 @@ import { addIdentityToUser } from "./add-identity-to-user";
 import { markIdentityAsPrimary } from "./mark-identity-as-primary";
 import { removeIdentityFromUser } from "./remove-identity-from-user";
 
-type VerifyValidationCodeProps = {
+type VerifyValidationCodeData = {
   validationCode: string;
   eventId: string;
 };
@@ -20,12 +20,21 @@ type NewIdentityData = {
 async function updateIdentity(
   managementCredentials: ManagementCredentials,
   userId: string,
-  verifyValidationCode: VerifyValidationCodeProps,
+  verifyValidationCode: VerifyValidationCodeData,
   newIdentity: NewIdentityData,
   identityToUpdateId: string,
 ): Promise<void> {
   const { validationCode, eventId } = verifyValidationCode;
   const { value, type, primary } = newIdentity;
+
+  const identityToUpdate = await getIdentity(managementCredentials, {
+    userId,
+    identityId: identityToUpdateId,
+  });
+
+  if (!identityToUpdate) {
+    throw new IdentityNotFoundError();
+  }
 
   const { status: verificationStatus } = await checkVerificationCode(
     managementCredentials,
@@ -46,22 +55,37 @@ async function updateIdentity(
   });
 
   if (primary) {
-    await markIdentityAsPrimary(managementCredentials, identityId);
-  }
+    await markIdentityAsPrimary(managementCredentials, identityId).catch(
+      async (error) => {
+        const identity = {
+          userId,
+          identityType: type,
+          identityValue: identityToUpdate.value,
+        };
 
-  const identityToUpdate = await getIdentity(managementCredentials, {
-    userId,
-    identityId: identityToUpdateId,
-  });
+        await removeIdentityFromUser(managementCredentials, identity);
 
-  if (!identityToUpdate) {
-    throw new IdentityNotFoundError();
+        throw error;
+      },
+    );
   }
 
   await removeIdentityFromUser(managementCredentials, {
     userId,
     identityType: type,
     identityValue: identityToUpdate.value,
+  }).catch(async (error) => {
+    const identity = {
+      userId,
+      identityType: type,
+      identityValue: identityToUpdate.value,
+    };
+
+    await markIdentityAsPrimary(managementCredentials, identityToUpdateId);
+
+    await removeIdentityFromUser(managementCredentials, identity);
+
+    throw error;
   });
 }
 
