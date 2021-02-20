@@ -14,7 +14,6 @@ type VerifyValidationCodeData = {
 type NewIdentityData = {
   value: string;
   type: IdentityTypes;
-  primary: string;
 };
 
 async function updateIdentity(
@@ -25,7 +24,7 @@ async function updateIdentity(
   identityToUpdateId: string,
 ): Promise<void> {
   const { validationCode, eventId } = verifyValidationCode;
-  const { value, type, primary } = newIdentity;
+  const { value, type } = newIdentity;
 
   const identityToUpdate = await getIdentity(managementCredentials, {
     userId,
@@ -54,7 +53,7 @@ async function updateIdentity(
     identityValue: value,
   });
 
-  if (primary) {
+  if (identityToUpdate.primary) {
     await markIdentityAsPrimary(managementCredentials, identityId).catch(
       async (error) => {
         const identity = {

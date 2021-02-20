@@ -54,7 +54,7 @@ class InvalidValidationCodeError extends Error {
 }
 
 class IdentityNotFoundError extends Error {
-  readonly message = "Invalid validation code";
+  readonly message = "Identity Not Found";
 }
 
 export {
