@@ -2,6 +2,7 @@ import { IdentityNotFoundError, InvalidValidationCodeError } from "../errors";
 import { checkVerificationCode } from "../queries/check-verification-code";
 import { getIdentity } from "../queries/get-identity";
 import { ManagementCredentials } from "../types";
+import { getIdentityType } from "../utils/get-identity-type";
 import { addIdentityToUser } from "./add-identity-to-user";
 import { markIdentityAsPrimary } from "./mark-identity-as-primary";
 import { removeIdentityFromUser } from "./remove-identity-from-user";
@@ -46,7 +47,7 @@ async function updateIdentity(
       async (error) => {
         const identity = {
           userId,
-          identityType: identityToUpdate.type,
+          identityType: getIdentityType(identityToUpdate.type),
           identityValue,
         };
 

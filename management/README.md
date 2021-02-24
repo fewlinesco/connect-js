@@ -445,3 +445,4 @@ Here are the expected exception raised in case of a failure:
 - GraphqlErrors
 - IdentityNotFoundError
 - InvalidValidationCodeError
+- UnhandledIdentityType
