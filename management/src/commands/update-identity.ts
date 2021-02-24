@@ -38,7 +38,7 @@ async function updateIdentity(
 
   const { id: identityId } = await addIdentityToUser(managementCredentials, {
     userId,
-    identityType: identityToUpdate.type,
+    identityType: getIdentityType(identityToUpdate.type),
     identityValue,
   });
 
@@ -60,12 +60,12 @@ async function updateIdentity(
 
   await removeIdentityFromUser(managementCredentials, {
     userId,
-    identityType: identityToUpdate.type,
+    identityType: getIdentityType(identityToUpdate.type),
     identityValue: identityToUpdate.value,
   }).catch(async (error) => {
     const identity = {
       userId,
-      identityType: identityToUpdate.type,
+      identityType: getIdentityType(identityToUpdate.type),
       identityValue: identityToUpdate.value,
     };
 
