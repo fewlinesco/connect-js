@@ -251,7 +251,7 @@ const publicKey = rsaPublicKeyToPEM(n, e);
 
 ## Exceptions
 
-Here is an overview of the exceptions raised from the libraries:
+Here is an overview of the exceptions raised from the library:
 
 - MissingJWKSURIError
 - InvalidKeyIDRS256Error
