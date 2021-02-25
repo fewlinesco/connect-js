@@ -9,7 +9,7 @@ import {
   AlgoNotSupportedError,
   InvalidAudienceError,
   ScopesNotSupportedError,
-  ConnectUnreachableError,
+  UnreachableError,
 } from "./src/errors";
 import {
   OpenIDConfiguration,
@@ -74,7 +74,7 @@ class OAuth2Client {
         })
         .catch((error) => {
           if (error instanceof FetchError) {
-            throw new ConnectUnreachableError(error);
+            throw new UnreachableError(error);
           }
 
           throw error;
@@ -101,7 +101,7 @@ class OAuth2Client {
       })
       .catch((error) => {
         if (error instanceof FetchError) {
-          throw new ConnectUnreachableError(error);
+          throw new UnreachableError(error);
         }
 
         throw error;
@@ -305,7 +305,7 @@ class OAuth2Client {
       .then((response) => response.json())
       .catch((error) => {
         if (error instanceof FetchError) {
-          throw new ConnectUnreachableError(error);
+          throw new UnreachableError(error);
         }
 
         throw error;
@@ -326,6 +326,7 @@ export {
   AlgoNotSupportedError,
   InvalidAudienceError,
   ScopesNotSupportedError,
+  UnreachableError,
   OAuth2Tokens,
   JWTPayload,
   CustomPayload,

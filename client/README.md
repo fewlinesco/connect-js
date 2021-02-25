@@ -259,6 +259,6 @@ Here is an overview of the exceptions raised from the library:
 - AlgoNotSupportedError
 - InvalidAudienceError
 - ScopesNotSupportedError
-- ConnectUnreachableError
+- UnreachableError
 
-In case of an issue with fetching **Connect**, the library will throw a `ConnectUnreachableError`, based on `FetchError`.
+In case of an issue with fetching the **OpenID** endpoints, the library will throw a `UnreachableError`, based on `FetchError`.
