@@ -12,7 +12,7 @@ class InvalidAudienceError extends Error {}
 
 class ScopesNotSupportedError extends Error {}
 
-class ConnectUnreachableError extends Error {
+class UnreachableError extends Error {
   readonly parentError: FetchError;
 
   constructor(parentError: FetchError) {
@@ -28,5 +28,5 @@ export {
   AlgoNotSupportedError,
   InvalidAudienceError,
   ScopesNotSupportedError,
-  ConnectUnreachableError,
+  UnreachableError,
 };
