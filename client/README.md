@@ -248,3 +248,17 @@ const key = {
 const { e, n } = key;
 const publicKey = rsaPublicKeyToPEM(n, e);
 ```
+
+## Exceptions
+
+Here is an overview of the exceptions raised from the libraries:
+
+- MissingJWKSURIError
+- InvalidKeyIDRS256Error
+- MissingKeyIDHS256Error
+- AlgoNotSupportedError
+- InvalidAudienceError
+- ScopesNotSupportedError
+- ConnectUnreachableError
+
+In case of an issue with fetching **Connect**, the library will throw a `ConnectUnreachableError`, based on `FetchError`.
