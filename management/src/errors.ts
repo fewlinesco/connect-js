@@ -58,11 +58,8 @@ class IdentityNotFoundError extends Error {
 }
 
 class UnhandledIdentityType extends Error {
-  readonly message: string;
-
   constructor(message: string) {
-    super();
-    this.message = message;
+    super(message);
   }
 }
 
