@@ -6,7 +6,7 @@ import { addIdentityToUser } from "./add-identity-to-user";
 import { markIdentityAsPrimary } from "./mark-identity-as-primary";
 import { removeIdentityFromUser } from "./remove-identity-from-user";
 
-async function updateIdentity(
+async function updateIdentityFromUser(
   managementCredentials: ManagementCredentials,
   userId: string,
   validationCode: string,
@@ -69,4 +69,4 @@ async function updateIdentity(
   });
 }
 
-export { updateIdentity };
+export { updateIdentityFromUser };
