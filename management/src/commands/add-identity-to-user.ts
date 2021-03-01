@@ -1,7 +1,14 @@
 import gql from "graphql-tag";
 
-import { GraphqlErrors, OutputDataNullError } from "../errors";
+import {
+  ExpiredValidationCodeError,
+  GraphqlErrors,
+  InvalidValidationCodeError,
+  OutputDataNullError,
+  ValidationCodeNotFoundError,
+} from "../errors";
 import { fetchManagement } from "../fetch-management";
+import { checkVerificationCode } from "../queries/check-verification-code";
 import {
   Identity,
   IdentityCommandInput,
@@ -26,10 +33,32 @@ const ADD_IDENTITY_TO_USER = gql`
   }
 `;
 
-export async function addIdentityToUser(
+async function addIdentityToUser(
   managementCredentials: ManagementCredentials,
+  validationCode: string,
+  eventId: string,
   { userId, identityType, identityValue }: IdentityCommandInput,
 ): Promise<Identity> {
+  const { status: verificationStatus } = await checkVerificationCode(
+    managementCredentials,
+    {
+      code: validationCode,
+      eventId,
+    },
+  );
+
+  if (verificationStatus === "EXPIRED") {
+    throw new ExpiredValidationCodeError();
+  }
+
+  if (verificationStatus === "INVALID") {
+    throw new InvalidValidationCodeError();
+  }
+
+  if (verificationStatus === "NOT_FOUND") {
+    throw new ValidationCodeNotFoundError();
+  }
+
   const operation = {
     query: ADD_IDENTITY_TO_USER,
     variables: { userId, type: identityType, value: identityValue },
@@ -49,3 +78,5 @@ export async function addIdentityToUser(
 
   return data.addIdentityToUser;
 }
+
+export { addIdentityToUser };
