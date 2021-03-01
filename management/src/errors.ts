@@ -53,14 +53,6 @@ class InvalidValidationCodeError extends Error {
   readonly message = "Invalid validation code";
 }
 
-class ExpiredValidationCodeError extends Error {
-  readonly message = "Expired validation code";
-}
-
-class ValidationCodeNotFoundError extends Error {
-  readonly message = "Validation code not found";
-}
-
 class IdentityNotFoundError extends Error {
   readonly message = "Identity Not Found";
 }
@@ -77,8 +69,6 @@ export {
   GraphqlErrors,
   OutputDataNullError,
   InvalidPasswordInputError,
-  ExpiredValidationCodeError,
-  ValidationCodeNotFoundError,
   IdentityAlreadyUsedError,
   IdentityValueCantBeBlankError,
   InvalidValidationCodeError,
