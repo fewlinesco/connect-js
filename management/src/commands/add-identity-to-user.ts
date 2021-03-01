@@ -41,18 +41,14 @@ async function addIdentityToUser(
 
   for await (const eventId of eventIds) {
     if (validationStatus !== "VALID") {
-      checkVerificationCode(managementCredentials, {
+      await checkVerificationCode(managementCredentials, {
         code: validationCode,
         eventId,
-      })
-        .then(({ status: verifiedResult }) => {
-          if (verifiedResult === "VALID") {
-            validationStatus = verifiedResult;
-          }
-        })
-        .catch((error) => {
-          throw error;
-        });
+      }).then(({ status: verifiedResult }) => {
+        if (verifiedResult === "VALID") {
+          validationStatus = verifiedResult;
+        }
+      });
     }
   }
 
