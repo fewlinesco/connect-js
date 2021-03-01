@@ -41,21 +41,21 @@ async function addIdentityToUser(
   let validationStatus: CheckVerificationCodeStatus.VALID | undefined;
 
   for await (const eventId of eventIds.reverse()) {
-    if (validationStatus !== CheckVerificationCodeStatus.VALID) {
-      const { status: verifiedResult } = await checkVerificationCode(
-        managementCredentials,
-        {
-          code: validationCode,
-          eventId,
-        },
-      );
-
-      if (verifiedResult === CheckVerificationCodeStatus.VALID) {
-        validationStatus = verifiedResult;
-      }
+    if (validationStatus === CheckVerificationCodeStatus.VALID) {
+      break;
     }
 
-    break;
+    const { status: verifiedResult } = await checkVerificationCode(
+      managementCredentials,
+      {
+        code: validationCode,
+        eventId,
+      },
+    );
+
+    if (verifiedResult === CheckVerificationCodeStatus.VALID) {
+      validationStatus = verifiedResult;
+    }
   }
 
   if (!validationStatus) {
