@@ -8,6 +8,7 @@ import {
 import { fetchManagement } from "../fetch-management";
 import { checkVerificationCode } from "../queries/check-verification-code";
 import {
+  CheckVerificationCodeStatus,
   Identity,
   IdentityCommandInput,
   ManagementCredentials,
@@ -37,19 +38,24 @@ async function addIdentityToUser(
   eventIds: string[],
   { userId, identityType, identityValue }: IdentityCommandInput,
 ): Promise<Identity> {
-  let validationStatus;
+  let validationStatus: CheckVerificationCodeStatus.VALID | undefined;
 
-  for await (const eventId of eventIds) {
+  for await (const eventId of eventIds.reverse()) {
     if (validationStatus !== "VALID") {
-      await checkVerificationCode(managementCredentials, {
-        code: validationCode,
-        eventId,
-      }).then(({ status: verifiedResult }) => {
-        if (verifiedResult === "VALID") {
-          validationStatus = verifiedResult;
-        }
-      });
+      const { status: verifiedResult } = await checkVerificationCode(
+        managementCredentials,
+        {
+          code: validationCode,
+          eventId,
+        },
+      );
+
+      if (verifiedResult === "VALID") {
+        validationStatus = verifiedResult;
+      }
     }
+
+    break;
   }
 
   if (!validationStatus) {

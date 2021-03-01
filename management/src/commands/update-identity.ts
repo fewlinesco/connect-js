@@ -10,7 +10,7 @@ async function updateIdentity(
   managementCredentials: ManagementCredentials,
   userId: string,
   validationCode: string,
-  eventId: string,
+  eventIds: string[],
   identityValue: string,
   identityToUpdateId: string,
 ): Promise<void> {
@@ -26,7 +26,7 @@ async function updateIdentity(
   const { id: identityId } = await addIdentityToUser(
     managementCredentials,
     validationCode,
-    [eventId],
+    eventIds,
     {
       userId,
       identityType: getIdentityType(identityToUpdate.type),

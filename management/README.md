@@ -116,7 +116,7 @@ const {
   description,
 } = await getProviderApplication(
   managementCredentials,
-  "a3e64872-6326-4813-948d-db8d8fc81bc8",
+  "a3e64872-6326-4813-948d-db8d8fc81bc8"
 );
 ```
 
@@ -129,7 +129,7 @@ import { getIdentities } from "@fewlines/connect-management";
 
 const identities = await getIdentities(
   managementCredentials,
-  "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  "d96ee314-31b2-4e19-88b7-63734b90d1d4"
 );
 ```
 
@@ -147,7 +147,7 @@ const input = {
 
 const { id, primary, status, type, value } = await getIdentity(
   managementCredentials,
-  input,
+  input
 );
 ```
 
@@ -170,7 +170,7 @@ import { getUserIdFromIdentityValue } from "@fewlines/connect-management";
 
 const userID = await getUserIdFromIdentityValue(
   managementCredentials,
-  "foo@fewlines.co",
+  "foo@fewlines.co"
 );
 ```
 
@@ -183,7 +183,7 @@ import { isUserPasswordSet } from "@fewlines/connect-management";
 
 const isPasswordSet = await isUserPasswordSet(
   managementCredentials,
-  "16071981-1536-4eb2-a33e-892dc84c14a4",
+  "16071981-1536-4eb2-a33e-892dc84c14a4"
 );
 ```
 
@@ -191,13 +191,16 @@ const isPasswordSet = await isUserPasswordSet(
 
 ### addIdentityToUser
 
-Used to add a new Identity to the user. The function returns the newly added Identity.
+Used to add a new Identity to the user. It also allows the use of multiple event IDs. The function returns the newly added Identity.
 
 ```ts
 import { addIdentityToUser } from "@fewlines/connect-management";
 
 const input = {
-  userId: "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  userIds: [
+    "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+    "5f42e01d-3b41-485e-8749-975cb693a3aa",
+  ],
   type: "EMAIL",
   value: "foo@fewlines.co",
 };
@@ -219,7 +222,7 @@ const input = {
 
 const isPasswordSet = await createOrUpdatePassword(
   managementCredentials,
-  input,
+  input
 );
 ```
 
@@ -278,7 +281,7 @@ import { deleteUser } from "@fewlines/connect-management";
 
 const deleteStatus = await deleteUser(
   managementCredentials,
-  "f084749a-2e90-4891-a26f-65e08c4f4e69",
+  "f084749a-2e90-4891-a26f-65e08c4f4e69"
 );
 ```
 
@@ -292,7 +295,7 @@ import { markIdentityAsPrimary } from "@fewlines/connect-management";
 
 const newPrimaryIdentity = await markIdentityAsPrimary(
   managementCredentials,
-  "504c741c-f9dd-425c-912a-03fe051b0e6e",
+  "504c741c-f9dd-425c-912a-03fe051b0e6e"
 );
 ```
 
@@ -311,7 +314,7 @@ const input = {
 
 const isIdentityRemove = await removeIdentityFromUser(
   managementCredentials,
-  input,
+  input
 );
 ```
 
@@ -419,7 +422,7 @@ Used to update an Identity. Here are the props needed, in order:
 
 - managementCredentials: URI and API Key of Connect.
 - userId: ID or sub of the current user.
-- eventId: Event ID generated at the start of the Identity validation flow.
+- eventIds: List of event ID generated at the start of the Identity validation flow, and populated when the user re-send a validation code.
 - validationCode: Code input from the User during the Identity validation flow.
 - identityValue: Identity value that will replace the current Identity.
 - identityToUpdateId: ID of the previous Identity to update.
@@ -430,14 +433,14 @@ import { updateIdentity } from "@fewlines/connect-management";
 await updateIdentity(
   managementCredentials,
   userId,
-  eventId,
+  eventIds,
   validationCode,
   identityValue,
-  identityToUpdateId,
+  identityToUpdateId
 );
 ```
 
-The function will do a rollback of any added Identity and primary Identity status in case of a failure.
+The function will do a rollback of any added Identity and primary Identity status in case of a failure. It also allows the use of multiple event IDs.
 
 Here are the expected exception raised in case of a failure:
 
