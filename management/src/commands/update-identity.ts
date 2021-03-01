@@ -26,7 +26,7 @@ async function updateIdentity(
   const { id: identityId } = await addIdentityToUser(
     managementCredentials,
     validationCode,
-    eventId,
+    [eventId],
     {
       userId,
       identityType: getIdentityType(identityToUpdate.type),

@@ -1,11 +1,9 @@
 import gql from "graphql-tag";
 
 import {
-  ExpiredValidationCodeError,
   GraphqlErrors,
   InvalidValidationCodeError,
   OutputDataNullError,
-  ValidationCodeNotFoundError,
 } from "../errors";
 import { fetchManagement } from "../fetch-management";
 import { checkVerificationCode } from "../queries/check-verification-code";
@@ -36,27 +34,30 @@ const ADD_IDENTITY_TO_USER = gql`
 async function addIdentityToUser(
   managementCredentials: ManagementCredentials,
   validationCode: string,
-  eventId: string,
+  eventIds: string[],
   { userId, identityType, identityValue }: IdentityCommandInput,
 ): Promise<Identity> {
-  const { status: verificationStatus } = await checkVerificationCode(
-    managementCredentials,
-    {
-      code: validationCode,
-      eventId,
-    },
-  );
+  let validationStatus;
 
-  if (verificationStatus === "EXPIRED") {
-    throw new ExpiredValidationCodeError();
+  for await (const eventId of eventIds) {
+    if (validationStatus !== "VALID") {
+      checkVerificationCode(managementCredentials, {
+        code: validationCode,
+        eventId,
+      })
+        .then(({ status: verifiedResult }) => {
+          if (verifiedResult === "VALID") {
+            validationStatus = verifiedResult;
+          }
+        })
+        .catch((error) => {
+          throw error;
+        });
+    }
   }
 
-  if (verificationStatus === "INVALID") {
+  if (!validationStatus) {
     throw new InvalidValidationCodeError();
-  }
-
-  if (verificationStatus === "NOT_FOUND") {
-    throw new ValidationCodeNotFoundError();
   }
 
   const operation = {
