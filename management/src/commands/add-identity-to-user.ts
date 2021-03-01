@@ -41,7 +41,7 @@ async function addIdentityToUser(
   let validationStatus: CheckVerificationCodeStatus.VALID | undefined;
 
   for await (const eventId of eventIds.reverse()) {
-    if (validationStatus !== "VALID") {
+    if (validationStatus !== CheckVerificationCodeStatus.VALID) {
       const { status: verifiedResult } = await checkVerificationCode(
         managementCredentials,
         {
@@ -50,7 +50,7 @@ async function addIdentityToUser(
         },
       );
 
-      if (verifiedResult === "VALID") {
+      if (verifiedResult === CheckVerificationCodeStatus.VALID) {
         validationStatus = verifiedResult;
       }
     }
