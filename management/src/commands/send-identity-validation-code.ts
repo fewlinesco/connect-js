@@ -11,7 +11,7 @@ import { fetchManagement } from "../fetch-management";
 import {
   ManagementCredentials,
   SendIdentityValidationCodeResult,
-  SendIdentityVerificationCodeInput,
+  SendIdentityValidationCodeInput,
 } from "../types";
 
 const SEND_IDENTITY_VALIDATION_CODE_MUTATION = gql`
@@ -44,7 +44,7 @@ async function sendIdentityValidationCode(
     identity,
     localeCodeOverride,
     userId,
-  }: SendIdentityVerificationCodeInput,
+  }: SendIdentityValidationCodeInput,
 ): Promise<SendIdentityValidationCodeResult> {
   const operation = {
     query: SEND_IDENTITY_VALIDATION_CODE_MUTATION,
