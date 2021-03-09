@@ -14,13 +14,13 @@ import {
 } from "../types";
 
 const SEND_PHONE_VERIFICATION_CODE_MUTATION = gql`
-  mutation sendIPhoneVerificationCode(
+  mutation sendPhoneVerificationCode(
     $callbackUrl: String!
     $identity: IdentityInput!
     $localeCodeOverride: String
     $userId: String
   ) {
-    sendIPhoneVerificationCode(
+    sendPhoneVerificationCode(
       input: {
         callbackUrl: $callbackUrl
         identity: $identity
