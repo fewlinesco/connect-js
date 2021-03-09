@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2021-03-09
+
+- New function called `sendPhoneVerificationCode`, that can be used to send a verification code to a User.
+
 ## [0.5.1] - 2021-03-03
 
 - Change of error data structure in `createOrUpdatePassword`.
