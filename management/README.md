@@ -450,7 +450,7 @@ Here are the expected exception raised in case of a failure:
 - InvalidValidationCodeError
 - UnhandledIdentityType
 
-### sendPhoneVerificationCode
+### send2FaVerificationCode
 
 Used to send a Verification Code to the User. The function returns an object, composed of:
 
@@ -460,14 +460,14 @@ Used to send a Verification Code to the User. The function returns an object, co
 - The nonce
 
 ```ts
-import { sendPhoneVerificationCode } from "@fewlines/connect-management";
+import { send2FaVerificationCode } from "@fewlines/connect-management";
 
 const input = {
   callbackUrl: "/",
   identity: {
     id: "12488dfe-8e46-4391-a8bb-f0db41078942",
-    type: "EMAIL",
-    value: "foo@fewlines.co",
+    type: "PHONE",
+    value: "+33642424242",
     status: "validated",
     primary: true,
   },
@@ -479,15 +479,16 @@ const {
   localeCode,
   eventId,
   nonce,
-} = await sendPhoneVerificationCode(managementCredentials, input);
+} = await send2FaVerificationCode(managementCredentials, input);
 ```
 
-If the Identity `type` isn't a valid one, the function will throw a specific error.
+If the Identity `type` isn't a valid one or if the provided Identity is not associated with the `userId`, the function will throw specific errors corresponding to each case.
 
 ```ts
 import {
-  sendPhoneVerificationCode,
+  send2FaVerificationCode,
   InvalidIdentityTypeError,
+  IdentityNotFoundError,
 } from "@fewlines/connect-management";
 
 const input = {
@@ -508,9 +509,13 @@ try {
     localeCode,
     eventId,
     nonce,
-  } = await sendPhoneVerificationCode(managementCredentials, input);
+  } = await send2FaVerificationCode(managementCredentials, input);
 } catch (error) {
   if (error instanceof InvalidIdentityTypeError) {
+    // ...
+  }
+
+  if (error instanceof IdentityNotFoundError) {
     // ...
   }
 }
