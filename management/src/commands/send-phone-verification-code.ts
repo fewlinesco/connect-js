@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 
 import {
   GraphqlErrors,
+  IdentityNotFoundError,
   InvalidIdentityTypeError,
   OutputDataNullError,
 } from "../errors";
@@ -70,6 +71,16 @@ async function sendPhoneVerificationCode(
 
     if (invalidIdentityTypeError) {
       throw new InvalidIdentityTypeError();
+    } else {
+      const identityNotFound = errors.find(
+        (error) =>
+          (error as GraphQLError & { errors: { identity_value: string } })
+            .errors.identity_value === "can't be blank",
+      );
+
+      if (identityNotFound) {
+        throw new IdentityNotFoundError();
+      }
     }
 
     throw new GraphqlErrors(errors);
