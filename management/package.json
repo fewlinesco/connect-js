@@ -15,7 +15,7 @@
     "prelint": "prettier --trailing-comma all --write './**/*.md'",
     "lint": "eslint --ext ts --ignore-pattern dist .",
     "prebuild": "yarn clean",
-    "prepare": "yarn build",
+    "prepare": "cd .. && husky install",
     "prepublishOnly": "yarn lint",
     "experimental-publish": "yarn publish --new-version \"0.0.0-experimental-$(git rev-parse --short HEAD)\" --access public --tag experimental",
     "preversion": "yarn lint",

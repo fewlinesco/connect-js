@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+(cd client && yarn lint && yarn build) &&
+(cd management && yarn lint && yarn build) &&
+(cd popup && yarn lint && yarn build)

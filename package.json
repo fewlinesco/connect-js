@@ -1,0 +1,10 @@
+{
+  "name": "@fewlines/connect-js",
+  "version": "0.1.0",
+  "author": "Fewlines",
+  "description": "Connect JS SDK",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "6.0.0"
+  }
+}
