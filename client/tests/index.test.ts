@@ -469,12 +469,10 @@ describe("OAuth2Client", () => {
         true,
       );
 
-      console.log("signed: ", decryptedMockedJWEWithJWS);
-
       expect(decryptedMockedJWEWithJWS).toStrictEqual(mockedSignedJWT);
     });
 
-    test.only("it should correctly decrypt a JWE based on non-signed JWT", async () => {
+    test("it should correctly decrypt a JWE based on non-signed JWT", async () => {
       expect.assertions(1);
 
       const oauthClient = new OAuth2Client(oauthClientConstructorProps);
