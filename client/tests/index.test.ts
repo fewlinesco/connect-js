@@ -16,6 +16,7 @@ import OAuth2Client, {
   generateHS256JWS,
 } from "../index";
 import { generateJWE } from "../src/utils/generateJWE";
+import { generateRS256JWS } from "../src/utils/generateJWS";
 
 enableFetchMocks();
 
@@ -423,7 +424,6 @@ describe("OAuth2Client", () => {
 
       const oauthClient = new OAuth2Client(oauthClientConstructorProps);
 
-      const passphraseSignature = "top secret";
       const { privateKey: privateKeyForSignature } = crypto.generateKeyPairSync(
         "rsa",
         {
@@ -435,8 +435,6 @@ describe("OAuth2Client", () => {
           privateKeyEncoding: {
             type: "pkcs8",
             format: "pem",
-            cipher: "aes-256-cbc",
-            passphrase: passphraseSignature,
           },
         },
       );
@@ -456,11 +454,15 @@ describe("OAuth2Client", () => {
         },
       });
 
-      const mockedSignedJWT = jwt.sign(defaultPayload, privateKeyForSignature);
+      const mockedSignedJWT = generateRS256JWS(
+        defaultPayload,
+        privateKeyForSignature,
+      );
 
       const mockedJWEWithJWS = await generateJWE(
-        mockedSignedJWT,
+        defaultPayload,
         publicKeyForEncryption,
+        { privateKeyForSignature },
       );
 
       const decryptedMockedJWEWithJWS = await oauthClient.decryptJWE<string>(
