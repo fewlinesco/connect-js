@@ -67,7 +67,7 @@ Returns a list containing the `access_token`, `refresh_token`, and `id_token` if
 
 ```typescript
 const tokens = await oauthClient.getTokensFromAuthorizationCode(
-  "authorization_code",
+  "authorization_code"
 );
 ```
 
@@ -101,7 +101,7 @@ const decrypted = oauthClient.decryptJWE<string>(JWE, privateKey, true);
 const decrypted = oauthClient.decryptJWE<{ [key: string]: string }>(
   JWE,
   privateKey,
-  false,
+  false
 );
 ```
 
@@ -115,7 +115,7 @@ Returns a refreshed `access_token` along with a new `refresh_token`.
 
 ```typescript
 const { refresh_token, access_token } = await oauthClient.refreshTokens(
-  refresh_token,
+  refresh_token
 );
 ```
 
@@ -160,6 +160,16 @@ generateRS256JWS(customPayload?: CustomPayload, secret?: string): string {};
 If used without any argument, the function will return a default **RS256 JWS** composed of the default objects found below.
 
 You can give a custom **secret** for signature, and/or a custom payload to customize your **RS256 JWS**.
+
+### generateJWE
+
+```typescript
+import { generateJWE } from "@fewlines/connect-client"
+
+await generateJWE(jwtOrJws: string, publicKey: string): Promise<string> {};
+```
+
+Given a signed or not JWT and a RSA public key, this function will return a JWE.
 
 ### default JWS composition objects
 
