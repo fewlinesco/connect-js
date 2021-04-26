@@ -469,31 +469,43 @@ describe("OAuth2Client", () => {
         true,
       );
 
+      console.log("signed: ", decryptedMockedJWEWithJWS);
+
       expect(decryptedMockedJWEWithJWS).toStrictEqual(mockedSignedJWT);
     });
 
-    test("it should correctly decrypt a JWE based on non-signed JWT", async () => {
+    test.only("it should correctly decrypt a JWE based on non-signed JWT", async () => {
       expect.assertions(1);
 
       const oauthClient = new OAuth2Client(oauthClientConstructorProps);
 
-      const mockedAccessTokenClearPayload = {
-        exp: 1605010807,
-        iss: "fewlines",
-        sub: "3dafcd27-a3a8-4a7e-81a3-9dd4cea44cfb",
-        aud: ["fenn"],
-        scope: "openid phone email",
-      };
-      const mockedJWEAccessToken =
-        "eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJlbmMiOiJBMTI4R0NNIn0.w4eo3k66Kr20CVrUQYDCgIR9ZFTFmbdtHvCGEGEYqQt3xJKo1zDT8nrkApHBTWgpg09BrvToBcHYhpZSCV9dbMSzjPWvjNlQTr5f7lOQ4Q34MQaCmH3LWr5toCYGl9iXJLolpW-r9vQNuwJIoYIinycXYJMCMgT72miKbHC66qJf1YoOgOqC9fc8E4V79fYuAaLmalEncqJHTn_u67e5qEZNqRrgFlxd4b9IPhMuRmaP3OICvtSFBIuFH64gVke6ckOwK-mGIIA-qQzwgkZrWnddmIMWKhSR7CwtXzKY46alHJrN1pvaAHBVqHCKi3JtBL_sCtpVZXHfCmhBqWcW2A.vxelVyonD7vTWBYX.yz7wOYxlwTRGeuABqlQ110Sw28nFsHjBig9kwyGFz4D6fqjrY_6mM2fYBZDbPuviumQifJ3vDvilV4dkIXJ9csSEgLlaLOK043kpT2T-2_XFnxdG7sfBHRimsg_ag889OjdZiGT4hMK-K_0lyZ8dOTHgcRMpLApX_s8Cog.kxPk7co7dttJ9l9ZrKxV9g";
+      const {
+        publicKey: publicKeyForEncryption,
+        privateKey: privateKeyForEncryption,
+      } = crypto.generateKeyPairSync("rsa", {
+        modulusLength: 2048,
+        publicKeyEncoding: {
+          type: "spki",
+          format: "pem",
+        },
+        privateKeyEncoding: {
+          type: "pkcs8",
+          format: "pem",
+        },
+      });
 
-      const decryptedMockedJWEAccessToken = await oauthClient.decryptJWE<{
-        iss: string;
-      }>(mockedJWEAccessToken, process.env.PEM_RSA_PRIVATE_KEY_2, false);
-
-      expect(decryptedMockedJWEAccessToken.iss).toStrictEqual(
-        mockedAccessTokenClearPayload.iss,
+      const mockedJWEWithJWTPayload = await generateJWE(
+        defaultPayload,
+        publicKeyForEncryption,
       );
+
+      const decryptedMockedJWEAccessToken = await oauthClient.decryptJWE<string>(
+        mockedJWEWithJWTPayload,
+        privateKeyForEncryption,
+        false,
+      );
+
+      expect(decryptedMockedJWEAccessToken).toStrictEqual(defaultPayload);
     });
   });
 });
