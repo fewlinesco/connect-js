@@ -2,7 +2,6 @@ import crypto from "crypto";
 import fetch from "jest-fetch-mock";
 import { enableFetchMocks } from "jest-fetch-mock";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
-import jose from "node-jose";
 
 import OAuth2Client, {
   InvalidAudienceError,
@@ -16,6 +15,7 @@ import OAuth2Client, {
   OpenIDConfiguration,
   generateHS256JWS,
 } from "../index";
+import { generateJWE } from "../src/utils/generateJWE";
 
 enableFetchMocks();
 
@@ -458,17 +458,10 @@ describe("OAuth2Client", () => {
 
       const mockedSignedJWT = jwt.sign(defaultPayload, privateKeyForSignature);
 
-      const josePublicKeyForEncryption = await jose.JWK.asKey(
+      const mockedJWEWithJWS = await generateJWE(
+        mockedSignedJWT,
         publicKeyForEncryption,
-        "pem",
       );
-
-      const mockedJWEWithJWS = await jose.JWE.createEncrypt(
-        { format: "compact" },
-        josePublicKeyForEncryption,
-      )
-        .update(Buffer.from(mockedSignedJWT))
-        .final();
 
       const decryptedMockedJWEWithJWS = await oauthClient.decryptJWE<string>(
         mockedJWEWithJWS,
