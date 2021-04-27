@@ -4,8 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.4] - 2021-04-26
 
-- Fixing issue with `getTokensFromAuthorizationCode`.
-- Added new util function to generate JWE (`generateJWE`).
+- Fixed an issue with `getTokensFromAuthorizationCode`.
+- Added a new util function to generate JWE (`generateJWE`).
 
 ## [0.4.3] - 2021-04-19
 

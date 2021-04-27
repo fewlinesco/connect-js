@@ -166,10 +166,14 @@ You can give a custom **secret** for signature, and/or a custom payload to custo
 ```typescript
 import { generateJWE } from "@fewlines/connect-client"
 
-await generateJWE(JWTPayloadOrJWS: JWTPayload | string, publicKey: string): Promise<string> {};
+await generateJWE(
+  JWTPayload: JWTPayload,
+  publicKeyForEncryption: string,
+  options?: { secretKey?: string; privateKeyForSignature?: string }
+): Promise<string> {};
 ```
 
-Given a signed or not JWT and a RSA public key, this function will return a JWE.
+This function takes as arguments a JWT payload, a RSA public key for encryption, and an optional object, `options`, containing either a secret key for signing a HS256 JWS, or a RSA private key for signing a RS256 JWS before encrypting it. It will then return a JWE based on a non-signed JWT or a JWS, according to arguments provided.
 
 ### default JWS composition objects
 
