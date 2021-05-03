@@ -14,6 +14,16 @@ import {
   SendTwoFAVerificationCodeResult,
 } from "../types";
 
+type TwoFAFunction = (
+  managementCredentials: ManagementCredentials,
+  {
+    callbackUrl,
+    identity,
+    userId,
+    localeCodeOverride,
+  }: SendTwoFAVerificationCodeInput,
+) => Promise<SendTwoFAVerificationCodeResult>;
+
 function handleErrors(errors: readonly GraphQLError[]): void {
   const invalidIdentityTypeError = errors.find(
     (error) =>
@@ -63,15 +73,10 @@ const SEND_EMAIL_TWO_FA_VERIFICATION_CODE_MUTATION = gql`
   }
 `;
 
-async function sendEmailTwoFAVerificationCode(
-  managementCredentials: ManagementCredentials,
-  {
-    callbackUrl,
-    identity,
-    userId,
-    localeCodeOverride,
-  }: SendTwoFAVerificationCodeInput,
-): Promise<SendTwoFAVerificationCodeResult> {
+const sendEmailTwoFAVerificationCode: TwoFAFunction = async (
+  managementCredentials,
+  { callbackUrl, identity, userId, localeCodeOverride },
+) => {
   const operation = {
     query: SEND_EMAIL_TWO_FA_VERIFICATION_CODE_MUTATION,
     variables: {
@@ -94,7 +99,7 @@ async function sendEmailTwoFAVerificationCode(
     throw new OutputDataNullError();
   }
   return data.sendEmailVerificationCode;
-}
+};
 
 const SEND_PHONE_TWO_FA_VERIFICATION_CODE_MUTATION = gql`
   mutation sendPhoneTwoFAVerificationCode(
@@ -119,15 +124,10 @@ const SEND_PHONE_TWO_FA_VERIFICATION_CODE_MUTATION = gql`
   }
 `;
 
-async function sendPhoneTwoFAVerificationCode(
-  managementCredentials: ManagementCredentials,
-  {
-    callbackUrl,
-    identity,
-    userId,
-    localeCodeOverride,
-  }: SendTwoFAVerificationCodeInput,
-): Promise<SendTwoFAVerificationCodeResult> {
+const sendPhoneTwoFAVerificationCode: TwoFAFunction = async (
+  managementCredentials,
+  { callbackUrl, identity, userId, localeCodeOverride },
+) => {
   const operation = {
     query: SEND_PHONE_TWO_FA_VERIFICATION_CODE_MUTATION,
     variables: {
@@ -150,7 +150,7 @@ async function sendPhoneTwoFAVerificationCode(
     throw new OutputDataNullError();
   }
   return data.sendPhoneVerificationCode;
-}
+};
 
 async function sendTwoFAVerificationCode(
   managementCredentials: ManagementCredentials,
@@ -161,10 +161,16 @@ async function sendTwoFAVerificationCode(
     localeCodeOverride,
   }: SendTwoFAVerificationCodeInput,
 ): Promise<SendTwoFAVerificationCodeResult> {
-  const twoFAfunction =
-    identity.type.toLocaleLowerCase() === "phone"
-      ? sendPhoneTwoFAVerificationCode
-      : sendEmailTwoFAVerificationCode;
+  const twoFAfunction = ((): TwoFAFunction => {
+    switch (identity.type.toLocaleLowerCase()) {
+      case "phone":
+        return sendPhoneTwoFAVerificationCode;
+      case "email":
+        return sendEmailTwoFAVerificationCode;
+      default:
+        throw new InvalidIdentityTypeError();
+    }
+  })();
 
   const twoFAVerificationCodeResult = await twoFAfunction(
     managementCredentials,
