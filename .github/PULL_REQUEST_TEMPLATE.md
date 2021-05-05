@@ -34,8 +34,5 @@
 - [ ] My change requires a change to a package version.
 - [ ] I have updated the `package.json` version accordingly.
 - [ ] I have updated the `CHANGELOG.md` version accordingly.
-- [ ] I have read the [**CONTRIBUTING**][CONTRIBUTING_FILE] document.
 - [ ] I have added tests to cover my changes.
 - [ ] All new and existing tests passed.
-
-[CONTRIBUTING_FILE]: https://github.com/fewlinesco/node-web-libraries/blob/master/CONTRIBUTING.md
