@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.4.6] - 2021-05-05
 
-- Added the export of `generateJWE`. This was missing from `0.4.4`
+- Added the export of `generateJWE`. This was missing in the `0.4.4` version.
 
 ## [0.4.5] - 2021-04-27
 
