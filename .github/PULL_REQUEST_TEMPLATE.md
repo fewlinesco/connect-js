@@ -4,16 +4,6 @@
 
 <!--- Describe your changes in detail -->
 
-## Related Issue
-
-<!--- This project only accepts pull requests related to open issues -->
-<!--- If suggesting a new feature or change, please discuss it in an -->
-<!--- issue first -->
-<!--- If fixing a bug, there should be an issue describing it with -->
-<!--- steps to reproduce -->
-<!--- Please link to the issue here with the prefix or resolve -->
-<!--- keyword -->
-
 ## Motivation and Context
 
 <!--- Why is this change required? What problem does it solve? -->
@@ -25,18 +15,13 @@
 <!--- you ran to see how your change affects other areas of the -->
 <!--- code, etc. -->
 
-## Screenshots
-
-<!--- if appropriate, otherwise the section can be removed -->
-
 ## Types of changes
 
 <!--- What types of changes does your code introduce? Stroke -->
-<!-- (i.e. ~stroked text~) the ones that don't apply: -->
-- Chore (non-breaking change which refactors / improves the existing code base)
-- Bug fix (non-breaking change which fixes an issue)
-- New feature (non-breaking change which adds functionality)
-- Breaking change (fix or feature that would cause existing functionality to
+- [ ] Chore (non-breaking change which refactors / improves the existing code base)
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to
   change)
 
 ## Checklist:
@@ -45,11 +30,14 @@
 <!--- the lines with a :white_check_mark: when relevant. -->
 <!--- If you're unsure about any of these, don't hesitate to ask. We're -->
 <!--- here to help! -->
-- :red_circle: My code follows the code style of this project.
-- :red_circle: My change requires a change to the documentation.
-- :red_circle: I have updated the documentation accordingly.
-- :red_circle: I have read the [**CONTRIBUTING**][CONTRIBUTING_FILE] document.
-- :red_circle: I have added tests to cover my changes.
-- :red_circle: All new and existing tests passed.
+- [ ] My code follows the code style of this project.
+- [ ] My change requires a change to the documentation.
+- [ ] I have updated the documentation accordingly.
+- [ ] My change requires a change to a package version.
+- [ ] I have updated the `package.json` version accordingly.
+- [ ] I have updated the `CHANGELOG.md` version accordingly.
+- [ ] I have read the [**CONTRIBUTING**][CONTRIBUTING_FILE] document.
+- [ ] I have added tests to cover my changes.
+- [ ] All new and existing tests passed.
 
-[CONTRIBUTING_FILE]: https://github.com/fewlinesco/connect/blob/master/CONTRIBUTING.md
+[CONTRIBUTING_FILE]: https://github.com/fewlinesco/node-web-libraries/blob/master/CONTRIBUTING.md
