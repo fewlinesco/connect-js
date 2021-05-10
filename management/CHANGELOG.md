@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## [0.6.5] - 2021-05-10
 
-- Bumped dependencies
+- Bumped dependencies.
 
 ```sh
   @types/node                       dev     ~5mo  14.14.14  →   15.0.2   ~6d
