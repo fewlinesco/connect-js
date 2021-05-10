@@ -124,13 +124,16 @@ const { refresh_token, access_token } = await oauthClient.refreshTokens(
 **_ This method is still a work in progress _**
 
 ```typescript
-async getUserInfo(accessToken: string): Promise<Record<string, unknown>>
+async getUserInfo<T = Record<string, unknown>>(accessToken: string): Promise<T>
 ```
 
 Returns the JSON response from the Provider's `/userinfo` endpoint fetching, concerning the user associated with the `access_token` provided in parameter.
 
 ```typescript
-const userInfoResponse = await oauthClient.getUserInfo(accessToken);
+const userInfoResponse = await oauthClient.getUserInfo<{
+  email: string;
+  phone_number: string;
+}>(accessToken);
 ```
 
 ## Utils
@@ -160,6 +163,20 @@ generateRS256JWS(customPayload?: CustomPayload, secret?: string): string {};
 If used without any argument, the function will return a default **RS256 JWS** composed of the default objects found below.
 
 You can give a custom **secret** for signature, and/or a custom payload to customize your **RS256 JWS**.
+
+### generateJWE
+
+```typescript
+import { generateJWE } from "@fewlines/connect-client"
+
+await generateJWE(
+  JWTPayload: JWTPayload,
+  publicKeyForEncryption: string,
+  options?: { secretKey?: string; privateKeyForSignature?: string }
+): Promise<string> {};
+```
+
+This function takes as arguments a JWT payload, a RSA public key for encryption, and an optional object, `options`, containing either a secret key for signing a HS256 JWS, or a RSA private key for signing a RS256 JWS before encrypting it. It will then return a JWE based on a non-signed JWT or a JWS, according to arguments provided.
 
 ### default JWS composition objects
 
@@ -254,8 +271,7 @@ const key = {
   e: "AQAB",
   kty: "RSA",
   kid: "d6512f53-9774-4a58-830c-981886c8bb43",
-  n:
-    "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
+  n: "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
   alg: "RS256",
 };
 

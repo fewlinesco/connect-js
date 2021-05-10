@@ -26,6 +26,7 @@ import {
   defaultPayload,
   defaultSecret,
 } from "./src/utils/defaultObjects";
+import { generateJWE } from "./src/utils/generateJWE";
 import { generateHS256JWS, generateRS256JWS } from "./src/utils/generateJWS";
 import { rsaPublicKeyToPEM } from "./src/utils/rsaPublicKeyToPEM";
 
@@ -207,7 +208,7 @@ class OAuth2Client {
     };
 
     const tokenEndpointResponse = await this.fetch(
-      openIDConfiguration.userinfo_endpoint,
+      openIDConfiguration.token_endpoint,
       {
         method: "POST",
         headers: {
@@ -282,7 +283,7 @@ class OAuth2Client {
     const { payload } = decryptedJWEToken;
 
     if (isSigned) {
-      return (payload.toString() as unknown) as T;
+      return payload.toString() as unknown as T;
     } else {
       return JSON.parse(payload.toString()) as T;
     }
@@ -316,7 +317,9 @@ class OAuth2Client {
       });
   }
 
-  async getUserInfo(accessToken: string): Promise<Record<string, unknown>> {
+  async getUserInfo<T = Record<string, unknown>>(
+    accessToken: string,
+  ): Promise<T> {
     const openIDConfiguration = await this.getOpenIDConfiguration();
 
     return await this.fetch(openIDConfiguration.userinfo_endpoint, {
@@ -353,6 +356,7 @@ export {
   OAuth2Tokens,
   JWTPayload,
   CustomPayload,
+  generateJWE,
   generateHS256JWS,
   generateRS256JWS,
   defaultPayload,
