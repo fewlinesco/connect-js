@@ -61,6 +61,8 @@ type RefreshTokenResponse = {
 
 type CustomPayload = Record<string, unknown>;
 
+type x = string;
+
 export type {
   OpenIDConfiguration,
   OAuth2ClientConstructor,
@@ -69,4 +71,5 @@ export type {
   JWTPayload,
   RefreshTokenResponse,
   CustomPayload,
+  x,
 };
