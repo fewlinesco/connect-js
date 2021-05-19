@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+    paths:
+      - "management/**"
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - uses: actions/cache@v2
+      id: yarn-cache
+      with:
+        path: |
+          ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          **/management/node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: dependencies
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: cd management/ && yarn install
+
+    - name: linter
+      run: cd management/ && yarn lint
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - uses: actions/cache@v2
+      id: yarn-cache
+      with:
+        path: |
+          ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          **/management/node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    
+    - name: dependencies
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: cd management/ && yarn install
+
+    - name: test
+      run: cd management/ && yarn test
+      env:
+        PROFILE_MOCK_SERVER_URL: "http://localhost:29712"
