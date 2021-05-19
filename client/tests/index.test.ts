@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import fetch from "jest-fetch-mock";
 import { enableFetchMocks } from "jest-fetch-mock";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
@@ -17,6 +16,7 @@ import OAuth2Client, {
 } from "../index";
 import { generateJWE } from "../src/utils/generateJWE";
 import { generateRS256JWS } from "../src/utils/generateJWS";
+import { generateRSAKeyPair } from "../src/utils/generateRSAKeyPair";
 
 enableFetchMocks();
 
@@ -61,7 +61,8 @@ describe("OAuth2Client", () => {
         e: "AQAB",
         kty: "RSA",
         kid: "d6512f53-9774-4a58-830c-981886c8bb43",
-        n: "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
+        n:
+          "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
         alg: "RS256",
       },
     ],
@@ -183,7 +184,7 @@ describe("OAuth2Client", () => {
   describe("verifyJWT", () => {
     const HS256JWT = generateHS256JWS();
 
-    test("is should throw an error if wrong audience", async () => {
+    test("it should throw an error if wrong audience", async () => {
       expect.assertions(2);
 
       fetch
@@ -264,13 +265,14 @@ describe("OAuth2Client", () => {
         audience: "connect-account",
       });
 
-      test("It should return a decoded jwt if valid", async () => {
+      test("it should return a decoded jwt if valid", async () => {
         expect.assertions(2);
 
         const mockedDecodedJWT = {
           aud: ["connect-account"],
           exp: 2524651200,
-          iss: "https://bs-provider.prod.connect.connect.aws.eu-west-2.k8s.fewlines.net",
+          iss:
+            "https://bs-provider.prod.connect.connect.aws.eu-west-2.k8s.fewlines.net",
           scope: "profile email",
           sub: "c4b1cb59-1c50-494a-87e5-32a5fe6e7caa",
         };
@@ -285,7 +287,7 @@ describe("OAuth2Client", () => {
         expect(decodedJWT).toEqual(expect.objectContaining(mockedDecodedJWT));
       });
 
-      test("should throw an error if invalid key id", async () => {
+      test("it should throw an error if invalid key id", async () => {
         expect.assertions(2);
 
         const wrongKidJWKS = {
@@ -294,7 +296,8 @@ describe("OAuth2Client", () => {
               e: "AQAB",
               kty: "RSA",
               kid: "wrongKid",
-              n: "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
+              n:
+                "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
               alg: "RS256",
             },
           ],
@@ -318,13 +321,14 @@ describe("OAuth2Client", () => {
         });
       });
 
-      test("should refetch and get the new JWKS if first fetch fails", async () => {
+      test("it should refetch and get the new JWKS if first fetch fails", async () => {
         expect.assertions(2);
 
         const mockedDecodedJWT = {
           aud: ["connect-account"],
           exp: 2524651200,
-          iss: "https://bs-provider.prod.connect.connect.aws.eu-west-2.k8s.fewlines.net",
+          iss:
+            "https://bs-provider.prod.connect.connect.aws.eu-west-2.k8s.fewlines.net",
           scope: "profile email",
           sub: "c4b1cb59-1c50-494a-87e5-32a5fe6e7caa",
         };
@@ -335,7 +339,8 @@ describe("OAuth2Client", () => {
               e: "AQAB",
               kty: "RSA",
               kid: "wrongKid",
-              n: "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
+              n:
+                "y3M7JqY49JeL/ornP7ZY2QlO76akS36Rj1iKVSIlFH754NnqmtGwMrCVZzCWrc882trbGuDhml2psOmCIBjKBpnghNLBZALGNRelCqfV7Cy+EMrQvQ+UWbogT7xfPoL+VYjCZKTeXosfzMNMZFum/Vnk/vYBKilXZfQH1t4sohU=",
               alg: "RS256",
             },
           ],
@@ -356,23 +361,11 @@ describe("OAuth2Client", () => {
         expect(decodedJWT).toEqual(expect.objectContaining(mockedDecodedJWT));
       });
 
-      test("should throw an error if missing key id", async () => {
+      test("it should throw an error if missing key id", async () => {
         expect.assertions(2);
 
         const passphrase = "top secret";
-        const { privateKey } = crypto.generateKeyPairSync("rsa", {
-          modulusLength: 2048,
-          publicKeyEncoding: {
-            type: "spki",
-            format: "pem",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "pem",
-            cipher: "aes-256-cbc",
-            passphrase,
-          },
-        });
+        const { privateKey } = generateRSAKeyPair();
 
         fetch
           .once(JSON.stringify(mockedOpenIdConf))
@@ -419,35 +412,12 @@ describe("OAuth2Client", () => {
 
       const oauthClient = new OAuth2Client(oauthClientConstructorProps);
 
-      const { privateKey: privateKeyForSignature } = crypto.generateKeyPairSync(
-        "rsa",
-        {
-          modulusLength: 2048,
-          publicKeyEncoding: {
-            type: "spki",
-            format: "pem",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "pem",
-          },
-        },
-      );
+      const { privateKey: privateKeyForSignature } = generateRSAKeyPair();
 
       const {
         publicKey: publicKeyForEncryption,
         privateKey: privateKeyForEncryption,
-      } = crypto.generateKeyPairSync("rsa", {
-        modulusLength: 2048,
-        publicKeyEncoding: {
-          type: "spki",
-          format: "pem",
-        },
-        privateKeyEncoding: {
-          type: "pkcs8",
-          format: "pem",
-        },
-      });
+      } = generateRSAKeyPair();
 
       const mockedSignedJWT = generateRS256JWS(
         defaultPayload,
@@ -477,29 +447,18 @@ describe("OAuth2Client", () => {
       const {
         publicKey: publicKeyForEncryption,
         privateKey: privateKeyForEncryption,
-      } = crypto.generateKeyPairSync("rsa", {
-        modulusLength: 2048,
-        publicKeyEncoding: {
-          type: "spki",
-          format: "pem",
-        },
-        privateKeyEncoding: {
-          type: "pkcs8",
-          format: "pem",
-        },
-      });
+      } = generateRSAKeyPair();
 
       const mockedJWEWithJWTPayload = await generateJWE(
         defaultPayload,
         publicKeyForEncryption,
       );
 
-      const decryptedMockedJWEAccessToken =
-        await oauthClient.decryptJWE<string>(
-          mockedJWEWithJWTPayload,
-          privateKeyForEncryption,
-          false,
-        );
+      const decryptedMockedJWEAccessToken = await oauthClient.decryptJWE<string>(
+        mockedJWEWithJWTPayload,
+        privateKeyForEncryption,
+        false,
+      );
 
       expect(decryptedMockedJWEAccessToken).toStrictEqual(defaultPayload);
     });
