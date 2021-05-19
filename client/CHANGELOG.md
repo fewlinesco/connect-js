@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.7] - 2021-05-19
+## [0.5.0] - 2021-05-19
 
 - Added new util function to generate RSA key pair in PEM format (`generateRSAKeyPair`).
 
