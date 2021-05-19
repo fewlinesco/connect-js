@@ -67,7 +67,7 @@ Returns a list containing the `access_token`, `refresh_token`, and `id_token` if
 
 ```typescript
 const tokens = await oauthClient.getTokensFromAuthorizationCode(
-  "authorization_code",
+  "authorization_code"
 );
 ```
 
@@ -101,7 +101,7 @@ const decrypted = oauthClient.decryptJWE<string>(JWE, privateKey, true);
 const decrypted = oauthClient.decryptJWE<{ [key: string]: string }>(
   JWE,
   privateKey,
-  false,
+  false
 );
 ```
 
@@ -115,7 +115,7 @@ Returns a refreshed `access_token` along with a new `refresh_token`.
 
 ```typescript
 const { refresh_token, access_token } = await oauthClient.refreshTokens(
-  refresh_token,
+  refresh_token
 );
 ```
 
@@ -277,6 +277,23 @@ const key = {
 
 const { e, n } = key;
 const publicKey = rsaPublicKeyToPEM(n, e);
+```
+
+### generateRSAKeyPair
+
+This function will generate and return a RSA public and private key pair in PEM format.
+
+```typescript
+import { generateRSAKeyPair } from "@fewlines/connect-client";
+
+const { publicKey, privateKey } = generateRSAKeyPair();
+```
+
+> Note that we can also run this command in your terminal to generate a RSA public/private key pair in PEM format :
+
+```bash
+openssl genrsa -out private.pem 2048
+openssl rsa -in private.pem -outform PEM -pubout -out public.pem
 ```
 
 ## Exceptions
