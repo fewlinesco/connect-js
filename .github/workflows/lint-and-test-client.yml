@@ -5,7 +5,7 @@ on:
     paths:
       - "client/**"
 jobs:
-  lint:
+  client-linter:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
     - name: linter
       run: cd client/ && yarn lint
 
-  test:
+  client-tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: cd client/ && yarn install
 
-    - name: test
+    - name: tests
       run: cd client/ && yarn test
       env:
         PROFILE_MOCK_SERVER_URL: "http://localhost:29712"

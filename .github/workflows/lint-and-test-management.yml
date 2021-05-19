@@ -5,7 +5,7 @@ on:
     paths:
       - "management/**"
 jobs:
-  lint:
+  management-linter:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,7 +32,7 @@ jobs:
     - name: linter
       run: cd management/ && yarn lint
 
-  test:
+  management-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -56,7 +56,7 @@ jobs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: cd management/ && yarn install
 
-    - name: test
+    - name: tests
       run: cd management/ && yarn test
       env:
         PROFILE_MOCK_SERVER_URL: "http://localhost:29712"
