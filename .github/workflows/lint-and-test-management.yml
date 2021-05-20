@@ -27,10 +27,12 @@ jobs:
 
     - name: dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
-      run: cd management/ && yarn install
+      run: yarn install
+      working-directory: management
 
     - name: linter
-      run: cd management/ && yarn lint
+      run: yarn lint
+      working-directory: management
 
   management-test:
     runs-on: ubuntu-latest
@@ -54,9 +56,11 @@ jobs:
     
     - name: dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
-      run: cd management/ && yarn install
+      run: yarn install
+      working-directory: management
 
     - name: tests
-      run: cd management/ && yarn test
+      run: yarn test
+      working-directory: management
       env:
         PROFILE_MOCK_SERVER_URL: "http://localhost:29712"

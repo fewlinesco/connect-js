@@ -29,6 +29,8 @@ jobs:
     - name: dependencies
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install
+      working-directory: popup
 
     - name: linter
-      run: cd popup/ && yarn lint
+      run: yarn lint
+      working-directory: popup
