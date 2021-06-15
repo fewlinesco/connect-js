@@ -67,7 +67,7 @@ Returns a list containing the `access_token`, `refresh_token`, and `id_token` if
 
 ```typescript
 const tokens = await oauthClient.getTokensFromAuthorizationCode(
-  "authorization_code",
+  "authorization_code"
 );
 ```
 
@@ -101,7 +101,7 @@ const decrypted = oauthClient.decryptJWE<string>(JWE, privateKey, true);
 const decrypted = oauthClient.decryptJWE<{ [key: string]: string }>(
   JWE,
   privateKey,
-  false,
+  false
 );
 ```
 
@@ -115,7 +115,7 @@ Returns a refreshed `access_token` along with a new `refresh_token`.
 
 ```typescript
 const { refresh_token, access_token } = await oauthClient.refreshTokens(
-  refresh_token,
+  refresh_token
 );
 ```
 
@@ -186,6 +186,7 @@ The following exported objects are used when generating a **JWS** using `generat
 const defaultPayload: JWTPayload = {
   aud: ["oauth2"],
   exp: Date.now() + 3600,
+  iat: Date.now(),
   iss: "https://fwl.test",
   scope: "email",
   sub: "2a14bdd2-3628-4912-a76e-fd514b5c27a8",
