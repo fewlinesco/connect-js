@@ -1,0 +1,47 @@
+version: 2.1
+
+commands: 
+  install-dependencies:
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn install
+      - save_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - ./node_modules
+
+jobs:
+  client-lint-and-tests:
+    working_directory: ~/client
+    docker:
+      - image: cimg/node:14.17.0
+    steps:
+      - install-dependencies
+      - run:
+          name: Run lint
+          command: yarn lint
+      - run:
+          name: Run tests
+          command: yarn test
+
+  management-lint-and-tests:
+    working_directory: ~/management
+    docker:
+      - image: cimg/node:14.17.0
+    steps:
+      - install-dependencies
+      - run:
+          name: Run lint
+          command: yarn lint
+      - run:
+          name: Run tests
+          command: yarn test
+
+workflows:
+  test-on-push:
+    jobs:
+      - client-lint-and-tests
+      - management-lint-and-tests
