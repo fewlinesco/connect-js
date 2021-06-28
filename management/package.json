@@ -19,6 +19,7 @@
     "prepublishOnly": "yarn lint",
     "experimental-publish": "yarn publish --new-version \"0.0.0-experimental-$(git rev-parse --short HEAD)\" --access public --tag experimental",
     "preversion": "yarn lint",
+    "start-test-server": "ts-node ./tests/mock-server/server.ts",
     "test": "jest"
   },
   "dependencies": {
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@fewlines/eslint-config": "3.1.2",
+    "@types/express": "4.17.12",
     "@types/jest": "26.0.23",
     "@types/node": "15.12.4",
     "@types/node-fetch": "2.5.10",
@@ -40,6 +42,7 @@
     "eslint-config-prettier": "8.3.0",
     "eslint-plugin-import": "2.23.4",
     "eslint-plugin-prettier": "3.4.0",
+    "express": "4.17.1",
     "jest": "27.0.5",
     "prettier": "2.3.1",
     "ts-jest": "27.0.3",
