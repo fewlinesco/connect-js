@@ -57,6 +57,4 @@ app.post("/update-identity", (request, response) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Server started on http://localhost:3000");
-});
+export { app };

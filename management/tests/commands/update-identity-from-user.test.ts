@@ -1,3 +1,5 @@
+import { Server } from "http";
+
 import { updateIdentityFromUser } from "../../src/commands";
 import * as addIdentityToUser from "../../src/commands/add-identity-to-user";
 import * as markIdentityAsPrimary from "../../src/commands/mark-identity-as-primary";
@@ -8,8 +10,21 @@ import {
   nonPrimaryIdentityToUpdate,
   nonPrimaryNewIdentity,
 } from "../mocks/identities";
+import { app } from "../mocks/server";
 
 describe("Update identity from user", () => {
+  let server: Server;
+
+  beforeAll(async () => {
+    await new Promise(
+      (resolve) => (server = app.listen(3000, resolve as () => void)),
+    );
+  });
+
+  afterAll(() => {
+    server.close();
+  });
+
   test("Happy path", async () => {
     expect.assertions(5);
 
