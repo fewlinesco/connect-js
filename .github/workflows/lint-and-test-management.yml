@@ -59,6 +59,10 @@ jobs:
       run: yarn install
       working-directory: management
 
+    - name: Launching Express mock server
+      run: yarn start-test-server
+      working-directory: management
+
     - name: tests
       run: yarn test
       working-directory: management
