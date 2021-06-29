@@ -25,12 +25,12 @@ describe("Update identity from user", () => {
     server.close();
   });
 
-  test("Happy path", async () => {
+  test("happy path with a non primary identity", async () => {
     expect.assertions(5);
 
     const mockedUpdateIdentityManagementCredentials = {
       URI: "http://localhost:3000/update-identity",
-      APIKey: "something",
+      APIKey: "APIKey",
     };
 
     const spiedOnGetIdentity = jest.spyOn(getIdentity, "getIdentity");
