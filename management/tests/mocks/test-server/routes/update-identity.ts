@@ -3,26 +3,43 @@ import express from "express";
 import {
   nonPrimaryIdentityToUpdate,
   nonPrimaryNewIdentity,
-} from "./identities";
+  primaryIdentityToUpdate,
+} from "../../identities";
 
-const app = express();
+const updateIdentityRouter = express.Router();
 
-app.use(express.json());
-
-app.post("/update-identity", (request, response) => {
-  switch (request.body.operationName) {
+updateIdentityRouter.post("/", (request, response) => {
+  const { body } = request;
+  console.log(body);
+  switch (body.operationName) {
     case "getUserIdentityQuery":
-      return response.status(200).json({
-        data: {
-          provider: {
-            user: {
-              identity: {
-                ...nonPrimaryIdentityToUpdate,
+      if (body.variables.id === nonPrimaryIdentityToUpdate.id) {
+        return response.status(200).json({
+          data: {
+            provider: {
+              user: {
+                identity: {
+                  ...nonPrimaryIdentityToUpdate,
+                },
               },
             },
           },
-        },
-      });
+        });
+      } else if (body.variables.id === primaryIdentityToUpdate.id) {
+        return response.status(200).json({
+          data: {
+            provider: {
+              user: {
+                identity: {
+                  ...primaryIdentityToUpdate,
+                },
+              },
+            },
+          },
+        });
+      } else {
+        return response.status(500).json("Something's wrong");
+      }
     case "checkVerificationCodeQuery":
       return response.status(200).json({
         data: {
@@ -57,4 +74,4 @@ app.post("/update-identity", (request, response) => {
   }
 });
 
-export { app };
+export default updateIdentityRouter;
