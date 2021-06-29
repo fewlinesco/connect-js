@@ -9,8 +9,10 @@ import * as getIdentity from "../../src/queries/get-identity";
 import {
   nonPrimaryIdentityToUpdate,
   nonPrimaryNewIdentity,
+  primaryIdentityToUpdate,
+  primaryNewIdentity,
 } from "../mocks/identities";
-import { app } from "../mocks/server";
+import { app } from "../mocks/test-server/server";
 
 describe("Update identity from user", () => {
   let server: Server;
@@ -21,42 +23,46 @@ describe("Update identity from user", () => {
     );
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   afterAll(() => {
     server.close();
   });
 
+  const mockedUpdateIdentityManagementCredentials = {
+    URI: "http://localhost:3000/update-identity",
+    APIKey: "APIKey",
+  };
+
+  const spiedOnGetIdentity = jest.spyOn(getIdentity, "getIdentity");
+  const spiedOnCheckVerificationCode = jest.spyOn(
+    checkVerificationCode,
+    "checkVerificationCode",
+  );
+  const spiedOnAddIdentityToUser = jest.spyOn(
+    addIdentityToUser,
+    "addIdentityToUser",
+  );
+  const spiedOnRemoveIdentityFromUser = jest.spyOn(
+    removeIdentityFromUser,
+    "removeIdentityFromUser",
+  );
+
+  const spiedOnMarkIdentityAsPrimary = jest.spyOn(
+    markIdentityAsPrimary,
+    "markIdentityAsPrimary",
+  );
+
   test("happy path with a non primary identity", async () => {
     expect.assertions(5);
-
-    const mockedUpdateIdentityManagementCredentials = {
-      URI: "http://localhost:3000/update-identity",
-      APIKey: "APIKey",
-    };
-
-    const spiedOnGetIdentity = jest.spyOn(getIdentity, "getIdentity");
-    const spiedOnCheckVerificationCode = jest.spyOn(
-      checkVerificationCode,
-      "checkVerificationCode",
-    );
-    const spiedOnAddIdentityToUser = jest.spyOn(
-      addIdentityToUser,
-      "addIdentityToUser",
-    );
-    const spiedOnRemoveIdentityFromUser = jest.spyOn(
-      removeIdentityFromUser,
-      "removeIdentityFromUser",
-    );
-
-    const spiedOnMarkIdentityAsPrimary = jest.spyOn(
-      markIdentityAsPrimary,
-      "markIdentityAsPrimary",
-    );
 
     await updateIdentityFromUser(
       mockedUpdateIdentityManagementCredentials,
       "f3acadc9-4491-44c4-bd78-077a166751af",
       "424242",
-      ["eventId1"],
+      ["nonPrimaryEventId"],
       nonPrimaryNewIdentity.value,
       nonPrimaryIdentityToUpdate.id,
     );
@@ -75,7 +81,7 @@ describe("Update identity from user", () => {
       {
         ...mockedUpdateIdentityManagementCredentials,
       },
-      { code: "424242", eventId: "eventId1" },
+      { code: "424242", eventId: "nonPrimaryEventId" },
     );
     expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
       1,
@@ -83,7 +89,7 @@ describe("Update identity from user", () => {
         ...mockedUpdateIdentityManagementCredentials,
       },
       "424242",
-      ["eventId1"],
+      ["nonPrimaryEventId"],
       {
         identityType: nonPrimaryNewIdentity.type,
         identityValue: nonPrimaryNewIdentity.value,
@@ -102,5 +108,66 @@ describe("Update identity from user", () => {
       },
     );
     expect(spiedOnMarkIdentityAsPrimary).not.toHaveBeenCalled();
+  });
+
+  test("happy path with a primary identity", async () => {
+    expect.assertions(5);
+
+    await updateIdentityFromUser(
+      mockedUpdateIdentityManagementCredentials,
+      "f3acadc9-4491-44c4-bd78-077a166751af",
+      "424242",
+      ["primaryEventId"],
+      primaryNewIdentity.value,
+      primaryIdentityToUpdate.id,
+    );
+
+    expect(spiedOnGetIdentity).toHaveBeenCalledWith(
+      {
+        ...mockedUpdateIdentityManagementCredentials,
+      },
+      {
+        userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+        identityId: primaryIdentityToUpdate.id,
+      },
+    );
+    expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
+      1,
+      {
+        ...mockedUpdateIdentityManagementCredentials,
+      },
+      { code: "424242", eventId: "primaryEventId" },
+    );
+    expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
+      1,
+      {
+        ...mockedUpdateIdentityManagementCredentials,
+      },
+      "424242",
+      ["primaryEventId"],
+      {
+        identityType: primaryNewIdentity.type,
+        identityValue: primaryNewIdentity.value,
+        userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+      },
+    );
+    expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
+      1,
+      {
+        ...mockedUpdateIdentityManagementCredentials,
+      },
+      primaryNewIdentity.id,
+    );
+    expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
+      1,
+      {
+        ...mockedUpdateIdentityManagementCredentials,
+      },
+      {
+        identityType: primaryIdentityToUpdate.type,
+        identityValue: primaryIdentityToUpdate.value,
+        userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+      },
+    );
   });
 });

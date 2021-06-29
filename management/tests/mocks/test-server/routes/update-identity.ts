@@ -4,16 +4,17 @@ import {
   nonPrimaryIdentityToUpdate,
   nonPrimaryNewIdentity,
   primaryIdentityToUpdate,
+  primaryNewIdentity,
 } from "../../identities";
 
 const updateIdentityRouter = express.Router();
 
 updateIdentityRouter.post("/", (request, response) => {
-  const { body } = request;
-  console.log(body);
-  switch (body.operationName) {
+  const { variables, operationName } = request.body;
+
+  switch (operationName) {
     case "getUserIdentityQuery":
-      if (body.variables.id === nonPrimaryIdentityToUpdate.id) {
+      if (variables.id === nonPrimaryIdentityToUpdate.id) {
         return response.status(200).json({
           data: {
             provider: {
@@ -25,7 +26,7 @@ updateIdentityRouter.post("/", (request, response) => {
             },
           },
         });
-      } else if (body.variables.id === primaryIdentityToUpdate.id) {
+      } else if (variables.id === primaryIdentityToUpdate.id) {
         return response.status(200).json({
           data: {
             provider: {
@@ -41,36 +42,90 @@ updateIdentityRouter.post("/", (request, response) => {
         return response.status(500).json("Something's wrong");
       }
     case "checkVerificationCodeQuery":
-      return response.status(200).json({
-        data: {
-          checkVerificationCode: {
-            identityType: nonPrimaryNewIdentity.type,
-            identityValue: nonPrimaryNewIdentity.value,
-            nonce: "nonce",
-            status: "VALID",
-          },
-        },
-      });
-    case "addIdentityToUser":
-      return response.status(200).json({
-        data: {
-          addIdentityToUser: {
-            ...nonPrimaryNewIdentity,
-          },
-        },
-      });
-    case "removeIdentityFromUser":
-      return response.status(200).json({
-        data: {
-          removeIdentityFromUser: {
-            identity: {
-              value: nonPrimaryIdentityToUpdate.value,
+      if (variables.eventId === "nonPrimaryEventId") {
+        return response.status(200).json({
+          data: {
+            checkVerificationCode: {
+              identityType: nonPrimaryNewIdentity.type,
+              identityValue: nonPrimaryNewIdentity.value,
+              nonce: "nonce",
+              status: "VALID",
             },
           },
-        },
-      });
+        });
+      } else if (variables.eventId === "primaryEventId") {
+        return response.status(200).json({
+          data: {
+            checkVerificationCode: {
+              identityType: primaryNewIdentity.type,
+              identityValue: primaryNewIdentity.value,
+              nonce: "nonce",
+              status: "VALID",
+            },
+          },
+        });
+      } else {
+        return response.status(500).json("Something's wrong");
+      }
+    case "addIdentityToUser":
+      if (variables.value === nonPrimaryNewIdentity.value) {
+        return response.status(200).json({
+          data: {
+            addIdentityToUser: {
+              ...nonPrimaryNewIdentity,
+            },
+          },
+        });
+      } else if (variables.value === primaryNewIdentity.value) {
+        return response.status(200).json({
+          data: {
+            addIdentityToUser: {
+              ...primaryNewIdentity,
+            },
+          },
+        });
+      } else {
+        return response.status(500).json("Something's wrong");
+      }
+    case "removeIdentityFromUser":
+      if (variables.value === nonPrimaryIdentityToUpdate.value) {
+        return response.status(200).json({
+          data: {
+            removeIdentityFromUser: {
+              identity: {
+                value: nonPrimaryIdentityToUpdate.value,
+              },
+            },
+          },
+        });
+      } else if (variables.value === primaryIdentityToUpdate.value) {
+        return response.status(200).json({
+          data: {
+            removeIdentityFromUser: {
+              identity: {
+                value: primaryIdentityToUpdate.value,
+              },
+            },
+          },
+        });
+      } else {
+        return response.status(500).json("Something's wrong");
+      }
+    case "markIdentityAsPrimary":
+      if (variables.identityId === primaryNewIdentity.id) {
+        return response.status(200).json({
+          data: {
+            markIdentityAsPrimary: {
+              ...primaryNewIdentity,
+              primary: true,
+            },
+          },
+        });
+      } else {
+        return response.status(500).json("Something's wrong");
+      }
     default:
-      return response.status(500).json("BOOM");
+      return response.status(500).json("No corresponding operation name found");
   }
 });
 
