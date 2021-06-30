@@ -247,7 +247,7 @@ describe("Update identity from user", () => {
     }
   });
 
-  test("should rollback if an error occurs when trying to remove the old identity", async () => {
+  test("should rollback if an error occurs when trying to remove the old primary identity", async () => {
     expect.assertions(7);
 
     jest.mock("../../src/fetch-management");
@@ -333,6 +333,87 @@ describe("Update identity from user", () => {
         {
           identityType: primaryNewIdentity.type,
           identityValue: primaryNewIdentity.value,
+          userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+        },
+      );
+    }
+  });
+
+  test("should rollback if an error occurs when trying to remove the old non primary identity", async () => {
+    expect.assertions(6);
+
+    jest.mock("../../src/fetch-management");
+
+    jest
+      .spyOn(fetchManagement, "fetchManagement")
+      .mockImplementation((credentials, operation) =>
+        mockFetchManagement(credentials, operation, {
+          behaviour: "rollback",
+          targetedFailure: "remove",
+        }),
+      );
+
+    try {
+      await updateIdentityFromUser(
+        mockedUpdateIdentityManagementCredentials,
+        "f3acadc9-4491-44c4-bd78-077a166751af",
+        "424242",
+        ["primaryEventId"],
+        nonPrimaryNewIdentity.value,
+        nonPrimaryIdentityToUpdate.id,
+      );
+    } catch (error) {
+      expect(spiedOnGetIdentity).toHaveBeenCalledWith(
+        {
+          ...mockedUpdateIdentityManagementCredentials,
+        },
+        {
+          userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+          identityId: nonPrimaryIdentityToUpdate.id,
+        },
+      );
+      expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
+        1,
+        {
+          ...mockedUpdateIdentityManagementCredentials,
+        },
+        { code: "424242", eventId: "primaryEventId" },
+      );
+      expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
+        1,
+        {
+          ...mockedUpdateIdentityManagementCredentials,
+        },
+        "424242",
+        ["primaryEventId"],
+        {
+          identityType: nonPrimaryNewIdentity.type,
+          identityValue: nonPrimaryNewIdentity.value,
+          userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+        },
+      );
+
+      expect(spiedOnMarkIdentityAsPrimary).not.toHaveBeenCalled();
+
+      expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
+        1,
+        {
+          ...mockedUpdateIdentityManagementCredentials,
+        },
+        {
+          identityType: nonPrimaryIdentityToUpdate.type,
+          identityValue: nonPrimaryIdentityToUpdate.value,
+          userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+        },
+      );
+      expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
+        2,
+        {
+          ...mockedUpdateIdentityManagementCredentials,
+        },
+        {
+          identityType: nonPrimaryNewIdentity.type,
+          identityValue: nonPrimaryNewIdentity.value,
           userId: "f3acadc9-4491-44c4-bd78-077a166751af",
         },
       );

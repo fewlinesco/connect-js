@@ -92,7 +92,8 @@ updateIdentityRouter.post("/", (request, response) => {
       if (
         headers.behaviour === "rollback" &&
         headers["targeted-failure"] === "remove" &&
-        variables.value === primaryIdentityToUpdate.value
+        (variables.value === primaryIdentityToUpdate.value ||
+          variables.value === nonPrimaryIdentityToUpdate.value)
       ) {
         return response.status(200).json({
           data: {},
