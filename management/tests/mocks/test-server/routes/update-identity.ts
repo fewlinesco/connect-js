@@ -11,6 +11,7 @@ const updateIdentityRouter = express.Router();
 
 updateIdentityRouter.post("/", (request, response) => {
   const { variables, operationName } = request.body;
+  const { headers } = request;
 
   switch (operationName) {
     case "getUserIdentityQuery":
@@ -88,7 +89,16 @@ updateIdentityRouter.post("/", (request, response) => {
         return response.status(500).json("Something's wrong");
       }
     case "removeIdentityFromUser":
-      if (variables.value === nonPrimaryIdentityToUpdate.value) {
+      if (
+        headers.behaviour === "rollback" &&
+        headers["targeted-failure"] === "remove" &&
+        variables.value === primaryIdentityToUpdate.value
+      ) {
+        return response.status(200).json({
+          data: {},
+          errors: [{ message: "Internal server error" }],
+        });
+      } else if (variables.value === nonPrimaryIdentityToUpdate.value) {
         return response.status(200).json({
           data: {
             removeIdentityFromUser: {
@@ -108,16 +118,42 @@ updateIdentityRouter.post("/", (request, response) => {
             },
           },
         });
+      } else if (variables.value === primaryNewIdentity.value) {
+        return response.status(200).json({
+          data: {
+            removeIdentityFromUser: {
+              identity: {
+                value: primaryNewIdentity.value,
+              },
+            },
+          },
+        });
       } else {
         return response.status(500).json("Something's wrong");
       }
     case "markIdentityAsPrimary":
-      if (variables.identityId === primaryNewIdentity.id) {
+      if (
+        headers.behaviour === "rollback" &&
+        headers["targeted-failure"] === "mark"
+      ) {
+        return response.status(200).json({
+          data: {},
+          errors: [{ message: "Internal server error" }],
+        });
+      } else if (variables.identityId === primaryNewIdentity.id) {
         return response.status(200).json({
           data: {
             markIdentityAsPrimary: {
               ...primaryNewIdentity,
               primary: true,
+            },
+          },
+        });
+      } else if (variables.identityId === primaryIdentityToUpdate.id) {
+        return response.status(200).json({
+          data: {
+            markIdentityAsPrimary: {
+              ...primaryIdentityToUpdate,
             },
           },
         });
