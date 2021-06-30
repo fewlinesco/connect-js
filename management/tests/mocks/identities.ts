@@ -6,7 +6,7 @@ const nonPrimaryIdentityToUpdate: Identity = {
   primary: false,
   status: "validated",
   type: getIdentityType("EMAIL"),
-  value: "nonprimary@random.email",
+  value: "nonprimary_old@random.email",
 };
 
 const nonPrimaryNewIdentity: Identity = {
@@ -14,7 +14,7 @@ const nonPrimaryNewIdentity: Identity = {
   primary: false,
   status: "validated",
   type: getIdentityType("EMAIL"),
-  value: "nonprimary2@random.email",
+  value: "nonprimary_new@random.email",
 };
 
 const primaryIdentityToUpdate: Identity = {
@@ -22,7 +22,7 @@ const primaryIdentityToUpdate: Identity = {
   primary: true,
   status: "validated",
   type: getIdentityType("EMAIL"),
-  value: "primary@random.email",
+  value: "primary_old@random.email",
 };
 
 const primaryNewIdentity: Identity = {
@@ -30,7 +30,7 @@ const primaryNewIdentity: Identity = {
   primary: false,
   status: "validated",
   type: getIdentityType("EMAIL"),
-  value: "primary@random.email",
+  value: "primary_new@random.email",
 };
 
 export {

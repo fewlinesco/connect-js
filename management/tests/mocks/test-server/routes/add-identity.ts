@@ -23,8 +23,7 @@ addIdentityRouter.post("/", (request, response) => {
             },
           },
         });
-      }
-      if (variables.eventId === "nonPrimaryEventId") {
+      } else if (variables.eventId === "nonPrimaryEventId") {
         return response.status(200).json({
           data: {
             checkVerificationCode: {
