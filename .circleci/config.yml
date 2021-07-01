@@ -15,7 +15,7 @@ commands:
 
 jobs:
   client-lint-and-tests:
-    working_directory: ~/client
+    working_directory: /client
     docker:
       - image: cimg/node:14.17.0
     steps:
@@ -28,7 +28,7 @@ jobs:
           command: yarn test
 
   management-lint-and-tests:
-    working_directory: ~/management
+    working_directory: /management
     docker:
       - image: cimg/node:14.17.0
     steps:
