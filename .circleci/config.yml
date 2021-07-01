@@ -15,33 +15,36 @@ commands:
 
 jobs:
   client-lint-and-tests:
-    working_directory: /client
     docker:
       - image: cimg/node:14.17.0
     steps:
       - install-dependencies
+        working_directory: ~/project/management
       - run:
           name: Run lint
           command: yarn lint
+          working_directory: ~/project/client
       - run:
           name: Run tests
           command: yarn test
+          working_directory: ~/project/client
 
   management-lint-and-tests:
-    working_directory: /management
     docker:
       - image: cimg/node:14.17.0
     steps:
       - install-dependencies
+        working_directory: ~/project/management
       - run:
           name: Run lint
           command: yarn lint
+          working_directory: ~/project/management
       - run:
           name: Run tests
           command: yarn test
+          working_directory: ~/project/management
 
   popup-lint: 
-    working_directory: /popup
     docker:
       - image: cimg/node:14.17.0
     steps:
@@ -49,9 +52,11 @@ jobs:
       - run:
           name: Run lint
           command: yarn lint
+          working_directory: ~/project/popup
 
 workflows:
   test-on-push:
     jobs:
       - client-lint-and-tests
       - management-lint-and-tests
+      - popup-lint
