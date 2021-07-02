@@ -1,6 +1,13 @@
 version: 2.1
 
 jobs:
+  trigger-workflow:
+    docker:
+      - image: cimg/node:14.17.0
+    steps: 
+      - checkout
+      - run : git diff --no-commit-id --name-only -r `git log -n 2 --oneline --pretty=format:"%h" | tail -n1` | cut -d/ -f1 | sort -u
+
   lint-and-tests:
     parameters:
       package: 
@@ -37,6 +44,7 @@ jobs:
 workflows:
   test-on-push:
     jobs:
+      - trigger-workflow
       - lint-and-tests:
           name: client-lint-and-tests
           package: client
