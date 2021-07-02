@@ -5,16 +5,18 @@ jobs:
     parameters:
       package: 
         type: string
+    working_directory: ~/project/<< parameters.package >>
     docker:
       - image: cimg/node:14.17.0
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - restore_cache:
           keys:
             - yarn-packages-<< parameters.package >>
       - run: 
           command: yarn install
-          working_directory: << parameters.package >>
+          
       - save_cache:
           key: yarn-packages-<< parameters.package >>
           paths:
@@ -22,7 +24,7 @@ jobs:
       - run:
           name: Run lint
           command: yarn lint
-          working_directory: << parameters.package >>
+
       - unless: 
           condition:
             equal: ["popup", << parameters.package >>]
@@ -30,7 +32,7 @@ jobs:
             - run: 
                 name: Run tests
                 command: yarn test
-                working_directory: << parameters.package >>
+
 
 workflows:
   test-on-push:
