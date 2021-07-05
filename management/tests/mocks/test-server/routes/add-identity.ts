@@ -41,9 +41,7 @@ addIdentityRouter.post("/", (request, response) => {
       if (variables.value === nonPrimaryNewIdentity.value) {
         return response.status(200).json({
           data: {
-            addIdentityToUser: {
-              ...nonPrimaryNewIdentity,
-            },
+            addIdentityToUser: nonPrimaryNewIdentity,
           },
         });
       } else {

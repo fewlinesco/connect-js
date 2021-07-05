@@ -20,9 +20,7 @@ updateIdentityRouter.post("/", (request, response) => {
           data: {
             provider: {
               user: {
-                identity: {
-                  ...nonPrimaryIdentityToUpdate,
-                },
+                identity: nonPrimaryIdentityToUpdate,
               },
             },
           },
@@ -32,9 +30,7 @@ updateIdentityRouter.post("/", (request, response) => {
           data: {
             provider: {
               user: {
-                identity: {
-                  ...primaryIdentityToUpdate,
-                },
+                identity: primaryIdentityToUpdate,
               },
             },
           },
@@ -72,17 +68,13 @@ updateIdentityRouter.post("/", (request, response) => {
       if (variables.value === nonPrimaryNewIdentity.value) {
         return response.status(200).json({
           data: {
-            addIdentityToUser: {
-              ...nonPrimaryNewIdentity,
-            },
+            addIdentityToUser: nonPrimaryNewIdentity,
           },
         });
       } else if (variables.value === primaryNewIdentity.value) {
         return response.status(200).json({
           data: {
-            addIdentityToUser: {
-              ...primaryNewIdentity,
-            },
+            addIdentityToUser: primaryNewIdentity,
           },
         });
       } else {
@@ -153,9 +145,7 @@ updateIdentityRouter.post("/", (request, response) => {
       } else if (variables.identityId === primaryIdentityToUpdate.id) {
         return response.status(200).json({
           data: {
-            markIdentityAsPrimary: {
-              ...primaryIdentityToUpdate,
-            },
+            markIdentityAsPrimary: primaryIdentityToUpdate,
           },
         });
       } else {

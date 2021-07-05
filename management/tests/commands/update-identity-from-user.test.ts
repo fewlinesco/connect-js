@@ -20,8 +20,8 @@ describe("Update identity from user", () => {
   let server: Server;
 
   beforeAll(async () => {
-    await new Promise(
-      (resolve) => (server = app.listen(3000, resolve as () => void)),
+    await new Promise<void>(
+      (resolve) => (server = app.listen(3000, () => resolve())),
     );
   });
 
