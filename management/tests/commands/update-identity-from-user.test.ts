@@ -20,6 +20,7 @@ describe("Update identity from user", () => {
       (resolve) => (server = app.listen(3000, resolve as () => void)),
     );
   });
+
   afterAll(() => {
     server.close();
   });
