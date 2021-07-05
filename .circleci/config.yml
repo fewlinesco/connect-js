@@ -1,12 +1,26 @@
 version: 2.1
 
+parameters: 
+  client:
+    type: boolean
+    default: false
+  management:
+    type: boolean
+    default: false
+  popup:
+    type: boolean
+    default: false
+  trigger: 
+    type: boolean
+    default: true
+
 jobs:
   trigger-workflow:
     docker:
       - image: cimg/node:14.17.0
     steps: 
       - checkout
-      - run : git diff --no-commit-id --name-only -r `git log -n 2 --oneline --pretty=format:"%h" | tail -n1` | cut -d/ -f1 | sort -u
+      - run : ./.circleci/trigger-workflow.sh
 
   lint-and-tests:
     parameters:
@@ -40,17 +54,23 @@ jobs:
                 name: Run tests
                 command: yarn test
 
-
 workflows:
-  test-on-push:
+  trigger:
+    when: << pipeline.parameters.trigger >>
     jobs:
       - trigger-workflow
+  client-lint-and-tests:
+    when: << pipeline.parameters.client >>
+    jobs:
       - lint-and-tests:
-          name: client-lint-and-tests
           package: client
+  management-lint-and-tests:
+    when: << pipeline.parameters.management >>
+    jobs:
       - lint-and-tests:
-          name: management-lint-and-tests
           package: management
+  popup-lint:
+    when: << pipeline.parameters.popup >>
+    jobs:
       - lint-and-tests:
-          name: popup-lint
           package: popup
