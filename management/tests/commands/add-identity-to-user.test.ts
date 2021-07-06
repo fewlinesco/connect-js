@@ -4,17 +4,26 @@ import { AddressInfo } from "net";
 import { addIdentityToUser } from "../../src/commands";
 import { InvalidValidationCodeError } from "../../src/errors";
 import * as checkVerificationCode from "../../src/queries/check-verification-code";
+import { ManagementCredentials } from "../../src/types";
 import { getIdentityType } from "../../src/utils/get-identity-type";
 import { nonPrimaryNewIdentity } from "../mocks/identities";
 import { app } from "../mocks/test-server/server";
 
 describe("Add identity to user", () => {
   let server: Server;
+  let mockedAddIdentityManagementCredentials: ManagementCredentials;
 
   beforeAll(async () => {
     await new Promise<void>((resolve) => {
       server = app.listen(0, () => resolve());
     });
+
+    mockedAddIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/add-identity`,
+      APIKey: "APIKey",
+    };
   });
 
   afterEach(() => {
@@ -34,13 +43,6 @@ describe("Add identity to user", () => {
 
   test("happy path", async () => {
     expect.assertions(2);
-
-    const mockedAddIdentityManagementCredentials = {
-      URI: `http://localhost:${
-        (server.address() as AddressInfo).port
-      }/add-identity`,
-      APIKey: "APIKey",
-    };
 
     const { id: addedIdentityId } = await addIdentityToUser(
       mockedAddIdentityManagementCredentials,
@@ -62,13 +64,6 @@ describe("Add identity to user", () => {
   });
 
   test("should throw Invalid validation code error", async () => {
-    const mockedAddIdentityManagementCredentials = {
-      URI: `http://localhost:${
-        (server.address() as AddressInfo).port
-      }/add-identity`,
-      APIKey: "APIKey",
-    };
-
     try {
       await addIdentityToUser(
         mockedAddIdentityManagementCredentials,

@@ -19,11 +19,19 @@ import { app } from "../mocks/test-server/server";
 
 describe("Update identity from user", () => {
   let server: Server;
+  let mockedUpdateIdentityManagementCredentials: ManagementCredentials;
 
   beforeAll(async () => {
     await new Promise<void>((resolve) => {
       server = app.listen(0, () => resolve());
     });
+
+    mockedUpdateIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/update-identity`,
+      APIKey: "APIKey",
+    };
   });
 
   afterEach(() => {
@@ -57,13 +65,6 @@ describe("Update identity from user", () => {
 
   test("happy path with a non primary identity", async () => {
     expect.assertions(5);
-
-    const mockedUpdateIdentityManagementCredentials = {
-      URI: `http://localhost:${
-        (server.address() as AddressInfo).port
-      }/update-identity`,
-      APIKey: "APIKey",
-    };
 
     await updateIdentityFromUser(
       mockedUpdateIdentityManagementCredentials,
@@ -111,13 +112,6 @@ describe("Update identity from user", () => {
 
   test("happy path with a primary identity", async () => {
     expect.assertions(5);
-
-    const mockedUpdateIdentityManagementCredentials = {
-      URI: `http://localhost:${
-        (server.address() as AddressInfo).port
-      }/update-identity`,
-      APIKey: "APIKey",
-    };
 
     await updateIdentityFromUser(
       mockedUpdateIdentityManagementCredentials,
@@ -169,13 +163,6 @@ describe("Update identity from user", () => {
 
   test("should rollback if an error occurs when trying to mark the new identity as primary", async () => {
     expect.assertions(5);
-
-    const mockedUpdateIdentityManagementCredentials = {
-      URI: `http://localhost:${
-        (server.address() as AddressInfo).port
-      }/update-identity`,
-      APIKey: "APIKey",
-    };
 
     jest
       .spyOn(fetchManagementConfig, "contextSetter")
@@ -244,13 +231,6 @@ describe("Update identity from user", () => {
 
   test("should rollback if an error occurs when trying to remove the old primary identity", async () => {
     expect.assertions(7);
-
-    const mockedUpdateIdentityManagementCredentials = {
-      URI: `http://localhost:${
-        (server.address() as AddressInfo).port
-      }/update-identity`,
-      APIKey: "APIKey",
-    };
 
     jest
       .spyOn(fetchManagementConfig, "contextSetter")
@@ -333,13 +313,6 @@ describe("Update identity from user", () => {
 
   test("should rollback if an error occurs when trying to remove the old non primary identity", async () => {
     expect.assertions(6);
-
-    const mockedUpdateIdentityManagementCredentials = {
-      URI: `http://localhost:${
-        (server.address() as AddressInfo).port
-      }/update-identity`,
-      APIKey: "APIKey",
-    };
 
     jest
       .spyOn(fetchManagementConfig, "contextSetter")
