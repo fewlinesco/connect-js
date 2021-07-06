@@ -1,26 +1,17 @@
 version: 2.1
 
-parameters: 
-  client:
-    type: boolean
-    default: false
-  management:
-    type: boolean
-    default: false
-  popup:
-    type: boolean
-    default: false
-  trigger: 
-    type: boolean
-    default: true
-
 jobs:
-  trigger-workflow:
+  select-jobs-to-run:
     docker:
       - image: cimg/node:14.17.0
     steps: 
       - checkout
-      - run : ./.circleci/trigger-workflow.sh
+      - run: git diff --no-commit-id --name-only -r `git log -n 2 --oneline --pretty=format:"%h" | tail -n1` | cut -d/ -f1 | sort -u > manifest.txt
+      - run: cat manifest.txt
+      - persist_to_workspace:
+          root: ./
+          paths: 
+            - manifest.txt
 
   lint-and-tests:
     parameters:
@@ -32,12 +23,20 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: 
+          name: Check if the job need to be run
+          command: |
+            manifestPath=/tmp/workspace/manifest.txt
+            if ! grep -q --extended-regexp "^<< parameters.package >>\$" ${manifestPath}
+            then
+              circleci-agent step halt
+            fi
       - restore_cache:
           keys:
             - yarn-packages-<< parameters.package >>
-      - run: 
-          command: yarn install
-          
+      - run: yarn install
       - save_cache:
           key: yarn-packages-<< parameters.package >>
           paths:
@@ -45,7 +44,6 @@ jobs:
       - run:
           name: Run lint
           command: yarn lint
-
       - unless: 
           condition:
             equal: ["popup", << parameters.package >>]
@@ -55,22 +53,21 @@ jobs:
                 command: yarn test
 
 workflows:
-  trigger:
-    when: << pipeline.parameters.trigger >>
+  lint-and-tests: 
     jobs:
-      - trigger-workflow
-  client-lint-and-tests:
-    when: << pipeline.parameters.client >>
-    jobs:
+      - select-jobs-to-run
       - lint-and-tests:
+          name: client-lint-and-tests
           package: client
-  management-lint-and-tests:
-    when: << pipeline.parameters.management >>
-    jobs:
+          requires: 
+            - select-jobs-to-run
       - lint-and-tests:
+          name: management-lint-and-tests
           package: management
-  popup-lint:
-    when: << pipeline.parameters.popup >>
-    jobs:
+          requires: 
+            - select-jobs-to-run
       - lint-and-tests:
+          name: popup-lint
           package: popup
+          requires: 
+            - select-jobs-to-run
