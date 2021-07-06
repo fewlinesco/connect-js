@@ -1,13 +1,14 @@
 import { Server } from "http";
+import { AddressInfo } from "net";
 
 import { updateIdentityFromUser } from "../../src/commands";
 import * as addIdentityToUser from "../../src/commands/add-identity-to-user";
 import * as markIdentityAsPrimary from "../../src/commands/mark-identity-as-primary";
 import * as removeIdentityFromUser from "../../src/commands/remove-identity-from-user";
-import * as fetchManagement from "../../src/fetch-management";
+import * as fetchManagementConfig from "../../src/fetch-management/config";
 import * as checkVerificationCode from "../../src/queries/check-verification-code";
 import * as getIdentity from "../../src/queries/get-identity";
-import { mockFetchManagement } from "../mocks/fetch-management";
+import { ManagementCredentials } from "../../src/types";
 import {
   nonPrimaryIdentityToUpdate,
   nonPrimaryNewIdentity,
@@ -21,7 +22,7 @@ describe("Update identity from user", () => {
 
   beforeAll(async () => {
     await new Promise<void>((resolve) => {
-      server = app.listen(3000, () => resolve());
+      server = app.listen(0, () => resolve());
     });
   });
 
@@ -29,14 +30,11 @@ describe("Update identity from user", () => {
     jest.clearAllMocks();
   });
 
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await new Promise<void>((resolve) => {
+      server.close(() => resolve());
+    });
   });
-
-  const mockedUpdateIdentityManagementCredentials = {
-    URI: "http://localhost:3000/update-identity",
-    APIKey: "APIKey",
-  };
 
   const spiedOnGetIdentity = jest.spyOn(getIdentity, "getIdentity");
   const spiedOnCheckVerificationCode = jest.spyOn(
@@ -59,6 +57,13 @@ describe("Update identity from user", () => {
 
   test("happy path with a non primary identity", async () => {
     expect.assertions(5);
+
+    const mockedUpdateIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/update-identity`,
+      APIKey: "APIKey",
+    };
 
     await updateIdentityFromUser(
       mockedUpdateIdentityManagementCredentials,
@@ -114,6 +119,13 @@ describe("Update identity from user", () => {
 
   test("happy path with a primary identity", async () => {
     expect.assertions(5);
+
+    const mockedUpdateIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/update-identity`,
+      APIKey: "APIKey",
+    };
 
     await updateIdentityFromUser(
       mockedUpdateIdentityManagementCredentials,
@@ -176,16 +188,27 @@ describe("Update identity from user", () => {
   test("should rollback if an error occurs when trying to mark the new identity as primary", async () => {
     expect.assertions(5);
 
-    jest.mock("../../src/fetch-management");
+    const mockedUpdateIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/update-identity`,
+      APIKey: "APIKey",
+    };
 
     jest
-      .spyOn(fetchManagement, "fetchManagement")
-      .mockImplementation((credentials, operation) =>
-        mockFetchManagement(credentials, operation, {
-          behaviour: "rollback",
-          targetedFailure: "mark",
-        }),
-      );
+      .spyOn(fetchManagementConfig, "contextSetter")
+      .mockImplementation((managementCredentials: ManagementCredentials) => {
+        return (_, { headers }) => {
+          return {
+            headers: {
+              ...headers,
+              behaviour: "rollback",
+              "targeted-failure": "mark",
+              authorization: `API_KEY ${managementCredentials.APIKey}`,
+            },
+          };
+        };
+      });
 
     try {
       await updateIdentityFromUser(
@@ -250,16 +273,27 @@ describe("Update identity from user", () => {
   test("should rollback if an error occurs when trying to remove the old primary identity", async () => {
     expect.assertions(7);
 
-    jest.mock("../../src/fetch-management");
+    const mockedUpdateIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/update-identity`,
+      APIKey: "APIKey",
+    };
 
     jest
-      .spyOn(fetchManagement, "fetchManagement")
-      .mockImplementation((credentials, operation) =>
-        mockFetchManagement(credentials, operation, {
-          behaviour: "rollback",
-          targetedFailure: "remove",
-        }),
-      );
+      .spyOn(fetchManagementConfig, "contextSetter")
+      .mockImplementation((managementCredentials: ManagementCredentials) => {
+        return (_, { headers }) => {
+          return {
+            headers: {
+              ...headers,
+              behaviour: "rollback",
+              "targeted-failure": "remove",
+              authorization: `API_KEY ${managementCredentials.APIKey}`,
+            },
+          };
+        };
+      });
 
     try {
       await updateIdentityFromUser(
@@ -342,16 +376,27 @@ describe("Update identity from user", () => {
   test("should rollback if an error occurs when trying to remove the old non primary identity", async () => {
     expect.assertions(6);
 
-    jest.mock("../../src/fetch-management");
+    const mockedUpdateIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/update-identity`,
+      APIKey: "APIKey",
+    };
 
     jest
-      .spyOn(fetchManagement, "fetchManagement")
-      .mockImplementation((credentials, operation) =>
-        mockFetchManagement(credentials, operation, {
-          behaviour: "rollback",
-          targetedFailure: "remove",
-        }),
-      );
+      .spyOn(fetchManagementConfig, "contextSetter")
+      .mockImplementation((managementCredentials: ManagementCredentials) => {
+        return (_, { headers }) => {
+          return {
+            headers: {
+              ...headers,
+              behaviour: "rollback",
+              "targeted-failure": "remove",
+              authorization: `API_KEY ${managementCredentials.APIKey}`,
+            },
+          };
+        };
+      });
 
     try {
       await updateIdentityFromUser(

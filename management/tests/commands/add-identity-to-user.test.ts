@@ -1,4 +1,5 @@
 import { Server } from "http";
+import { AddressInfo } from "net";
 
 import { addIdentityToUser } from "../../src/commands";
 import { InvalidValidationCodeError } from "../../src/errors";
@@ -12,7 +13,7 @@ describe("Add identity to user", () => {
 
   beforeAll(async () => {
     await new Promise<void>((resolve) => {
-      server = app.listen(3000, () => resolve());
+      server = app.listen(0, () => resolve());
     });
   });
 
@@ -20,14 +21,11 @@ describe("Add identity to user", () => {
     jest.clearAllMocks();
   });
 
-  afterAll(() => {
-    server.close();
+  afterAll(async () => {
+    await new Promise<void>((resolve) => {
+      server.close(() => resolve());
+    });
   });
-
-  const mockedAddIdentityManagementCredentials = {
-    URI: "http://localhost:3000/add-identity",
-    APIKey: "APIKey",
-  };
 
   const spiedOnCheckVerificationCode = jest.spyOn(
     checkVerificationCode,
@@ -36,6 +34,13 @@ describe("Add identity to user", () => {
 
   test("happy path", async () => {
     expect.assertions(2);
+
+    const mockedAddIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/add-identity`,
+      APIKey: "APIKey",
+    };
 
     const { id: addedIdentityId } = await addIdentityToUser(
       mockedAddIdentityManagementCredentials,
@@ -59,6 +64,13 @@ describe("Add identity to user", () => {
   });
 
   test("should throw Invalid validation code error", async () => {
+    const mockedAddIdentityManagementCredentials = {
+      URI: `http://localhost:${
+        (server.address() as AddressInfo).port
+      }/add-identity`,
+      APIKey: "APIKey",
+    };
+
     try {
       await addIdentityToUser(
         mockedAddIdentityManagementCredentials,
