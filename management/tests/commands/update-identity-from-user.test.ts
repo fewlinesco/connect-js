@@ -75,9 +75,7 @@ describe("Update identity from user", () => {
     );
 
     expect(spiedOnGetIdentity).toHaveBeenCalledWith(
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       {
         userId: "f3acadc9-4491-44c4-bd78-077a166751af",
         identityId: nonPrimaryIdentityToUpdate.id,
@@ -85,16 +83,12 @@ describe("Update identity from user", () => {
     );
     expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       { code: "424242", eventId: "nonPrimaryEventId" },
     );
     expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       "424242",
       ["nonPrimaryEventId"],
       {
@@ -105,9 +99,7 @@ describe("Update identity from user", () => {
     );
     expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       {
         identityType: nonPrimaryIdentityToUpdate.type,
         identityValue: nonPrimaryIdentityToUpdate.value,
@@ -137,9 +129,7 @@ describe("Update identity from user", () => {
     );
 
     expect(spiedOnGetIdentity).toHaveBeenCalledWith(
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       {
         userId: "f3acadc9-4491-44c4-bd78-077a166751af",
         identityId: primaryIdentityToUpdate.id,
@@ -147,16 +137,12 @@ describe("Update identity from user", () => {
     );
     expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       { code: "424242", eventId: "primaryEventId" },
     );
     expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       "424242",
       ["primaryEventId"],
       {
@@ -167,16 +153,12 @@ describe("Update identity from user", () => {
     );
     expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       primaryNewIdentity.id,
     );
     expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedUpdateIdentityManagementCredentials,
-      },
+      mockedUpdateIdentityManagementCredentials,
       {
         identityType: primaryIdentityToUpdate.type,
         identityValue: primaryIdentityToUpdate.value,
@@ -221,9 +203,7 @@ describe("Update identity from user", () => {
       );
     } catch (error) {
       expect(spiedOnGetIdentity).toHaveBeenCalledWith(
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           userId: "f3acadc9-4491-44c4-bd78-077a166751af",
           identityId: primaryIdentityToUpdate.id,
@@ -231,16 +211,12 @@ describe("Update identity from user", () => {
       );
       expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         { code: "424242", eventId: "primaryEventId" },
       );
       expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         "424242",
         ["primaryEventId"],
         {
@@ -251,16 +227,12 @@ describe("Update identity from user", () => {
       );
       expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         primaryNewIdentity.id,
       );
       expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           identityType: primaryNewIdentity.type,
           identityValue: primaryNewIdentity.value,
@@ -306,9 +278,7 @@ describe("Update identity from user", () => {
       );
     } catch (error) {
       expect(spiedOnGetIdentity).toHaveBeenCalledWith(
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           userId: "f3acadc9-4491-44c4-bd78-077a166751af",
           identityId: primaryIdentityToUpdate.id,
@@ -316,16 +286,12 @@ describe("Update identity from user", () => {
       );
       expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         { code: "424242", eventId: "primaryEventId" },
       );
       expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         "424242",
         ["primaryEventId"],
         {
@@ -336,23 +302,17 @@ describe("Update identity from user", () => {
       );
       expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         primaryNewIdentity.id,
       );
       expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
         2,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         primaryIdentityToUpdate.id,
       );
       expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           identityType: primaryIdentityToUpdate.type,
           identityValue: primaryIdentityToUpdate.value,
@@ -361,9 +321,7 @@ describe("Update identity from user", () => {
       );
       expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
         2,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           identityType: primaryNewIdentity.type,
           identityValue: primaryNewIdentity.value,
@@ -409,9 +367,7 @@ describe("Update identity from user", () => {
       );
     } catch (error) {
       expect(spiedOnGetIdentity).toHaveBeenCalledWith(
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           userId: "f3acadc9-4491-44c4-bd78-077a166751af",
           identityId: nonPrimaryIdentityToUpdate.id,
@@ -419,16 +375,12 @@ describe("Update identity from user", () => {
       );
       expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         { code: "424242", eventId: "primaryEventId" },
       );
       expect(spiedOnAddIdentityToUser).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         "424242",
         ["primaryEventId"],
         {
@@ -442,9 +394,7 @@ describe("Update identity from user", () => {
 
       expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
         1,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           identityType: nonPrimaryIdentityToUpdate.type,
           identityValue: nonPrimaryIdentityToUpdate.value,
@@ -453,9 +403,7 @@ describe("Update identity from user", () => {
       );
       expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
         2,
-        {
-          ...mockedUpdateIdentityManagementCredentials,
-        },
+        mockedUpdateIdentityManagementCredentials,
         {
           identityType: nonPrimaryNewIdentity.type,
           identityValue: nonPrimaryNewIdentity.value,

@@ -55,9 +55,7 @@ describe("Add identity to user", () => {
 
     expect(spiedOnCheckVerificationCode).toHaveBeenNthCalledWith(
       1,
-      {
-        ...mockedAddIdentityManagementCredentials,
-      },
+      mockedAddIdentityManagementCredentials,
       { code: "424242", eventId: "nonPrimaryEventId" },
     );
     expect(addedIdentityId).toEqual(nonPrimaryNewIdentity.id);
