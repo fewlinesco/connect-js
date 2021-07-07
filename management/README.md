@@ -35,7 +35,6 @@ const managementCredentials: ManagementCredentials = {
 ```ts
 enum IdentityTypes {
   APPLE = "APPLE",
-  DECATHLON = "DECATHLON",
   EMAIL = "EMAIL",
   FACEBOOK = "FACEBOOK",
   GITHUB = "GITHUB",
@@ -107,7 +106,7 @@ import { getProviderApplication } from "@fewlines/connect-management";
 const { id, defaultHomePage, redirectUris, name, description } =
   await getProviderApplication(
     managementCredentials,
-    "a3e64872-6326-4813-948d-db8d8fc81bc8",
+    "a3e64872-6326-4813-948d-db8d8fc81bc8"
   );
 ```
 
@@ -120,7 +119,7 @@ import { getIdentities } from "@fewlines/connect-management";
 
 const identities = await getIdentities(
   managementCredentials,
-  "d96ee314-31b2-4e19-88b7-63734b90d1d4",
+  "d96ee314-31b2-4e19-88b7-63734b90d1d4"
 );
 ```
 
@@ -138,7 +137,7 @@ const input = {
 
 const { id, primary, status, type, value } = await getIdentity(
   managementCredentials,
-  input,
+  input
 );
 ```
 
@@ -161,7 +160,7 @@ import { getUserIdFromIdentityValue } from "@fewlines/connect-management";
 
 const userID = await getUserIdFromIdentityValue(
   managementCredentials,
-  "foo@fewlines.co",
+  "foo@fewlines.co"
 );
 ```
 
@@ -174,7 +173,7 @@ import { isUserPasswordSet } from "@fewlines/connect-management";
 
 const isPasswordSet = await isUserPasswordSet(
   managementCredentials,
-  "16071981-1536-4eb2-a33e-892dc84c14a4",
+  "16071981-1536-4eb2-a33e-892dc84c14a4"
 );
 ```
 
@@ -213,7 +212,7 @@ const input = {
 
 const isPasswordSet = await createOrUpdatePassword(
   managementCredentials,
-  input,
+  input
 );
 ```
 
@@ -272,7 +271,7 @@ import { deleteUser } from "@fewlines/connect-management";
 
 const deleteStatus = await deleteUser(
   managementCredentials,
-  "f084749a-2e90-4891-a26f-65e08c4f4e69",
+  "f084749a-2e90-4891-a26f-65e08c4f4e69"
 );
 ```
 
@@ -286,7 +285,7 @@ import { markIdentityAsPrimary } from "@fewlines/connect-management";
 
 const newPrimaryIdentity = await markIdentityAsPrimary(
   managementCredentials,
-  "504c741c-f9dd-425c-912a-03fe051b0e6e",
+  "504c741c-f9dd-425c-912a-03fe051b0e6e"
 );
 ```
 
@@ -305,7 +304,7 @@ const input = {
 
 const isIdentityRemove = await removeIdentityFromUser(
   managementCredentials,
-  input,
+  input
 );
 ```
 
@@ -414,7 +413,7 @@ await updateIdentityFromUser(
   eventIds,
   validationCode,
   identityValue,
-  identityToUpdateId,
+  identityToUpdateId
 );
 ```
 
