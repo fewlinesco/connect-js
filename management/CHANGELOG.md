@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.6.7] - 2021-07-07
+## [0.7.0] - 2021-07-07
 
 - Fixed an issue with rollback case in `updateIdentityFromUser`.
 - 💥 Removed an identity from `IdentityTypes` enum.
