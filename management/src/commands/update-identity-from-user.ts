@@ -5,7 +5,7 @@ import { addIdentityToUser } from "./add-identity-to-user";
 import { markIdentityAsPrimary } from "./mark-identity-as-primary";
 import { removeIdentityFromUser } from "./remove-identity-from-user";
 
-async function updateIdentityFromUser(
+async function updateIdentity(
   managementCredentials: ManagementCredentials,
   userId: string,
   validationCode: string,
@@ -63,6 +63,44 @@ async function updateIdentityFromUser(
     await removeIdentityFromUser(managementCredentials, identity);
 
     throw error;
+  });
+}
+
+async function updateIdentityFromUser(
+  managementCredentials: ManagementCredentials,
+  userId: string,
+  validationCode: string,
+  eventIds: string[],
+  identityValue: string,
+  identityToUpdateId: string,
+  maxRetry = 2,
+): Promise<void> {
+  return await updateIdentity(
+    managementCredentials,
+    userId,
+    validationCode,
+    eventIds,
+    identityValue,
+    identityToUpdateId,
+  ).catch((error) => {
+    if (error.statusCode === 500) {
+      if (maxRetry > 0) {
+        console.log("maxRetry: ", maxRetry);
+        return updateIdentityFromUser(
+          managementCredentials,
+          userId,
+          validationCode,
+          eventIds,
+          identityValue,
+          identityToUpdateId,
+          maxRetry - 1,
+        );
+      } else {
+        throw error;
+      }
+    } else {
+      throw error;
+    }
   });
 }
 

@@ -1,4 +1,5 @@
 import express from "express";
+import { FetchError } from "node-fetch";
 
 import {
   nonPrimaryIdentityToUpdate,
@@ -9,7 +10,9 @@ import {
 
 const updateIdentityRouter = express.Router();
 
-updateIdentityRouter.post("/", (request, response) => {
+let COUNTER = 0;
+
+updateIdentityRouter.post("/", (request, response, next) => {
   const { variables, operationName } = request.body;
   const { headers } = request;
 
@@ -133,6 +136,26 @@ updateIdentityRouter.post("/", (request, response) => {
           data: {},
           errors: [{ message: "Internal server error" }],
         });
+      } else if (
+        headers.behaviour === "retry" &&
+        headers["targeted-failure"] === "mark"
+      ) {
+        if (COUNTER < Number(headers["max-retry"])) {
+          COUNTER = COUNTER + 1;
+          console.log("COUNTER AT ERROR: ", COUNTER);
+          return next(new FetchError("Internal Error", "type"));
+        } else {
+          console.log("COUNTER AT SUCCESS: ", COUNTER);
+          COUNTER = 0;
+          return response.status(200).json({
+            data: {
+              markIdentityAsPrimary: {
+                ...primaryNewIdentity,
+                primary: true,
+              },
+            },
+          });
+        }
       } else if (variables.identityId === primaryNewIdentity.id) {
         return response.status(200).json({
           data: {
