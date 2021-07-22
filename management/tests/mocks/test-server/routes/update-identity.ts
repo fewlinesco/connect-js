@@ -1,5 +1,4 @@
 import express from "express";
-import { FetchError } from "node-fetch";
 
 import {
   nonPrimaryIdentityToUpdate,
@@ -12,7 +11,7 @@ const updateIdentityRouter = express.Router();
 
 let COUNTER = 0;
 
-updateIdentityRouter.post("/", (request, response, next) => {
+updateIdentityRouter.post("/", (request, response) => {
   const { variables, operationName } = request.body;
   const { headers } = request;
 
@@ -143,7 +142,7 @@ updateIdentityRouter.post("/", (request, response, next) => {
         if (COUNTER < Number(headers["max-retry"])) {
           COUNTER = COUNTER + 1;
           console.log("COUNTER AT ERROR: ", COUNTER);
-          return next(new FetchError("Internal Error", "type"));
+          return response.status(500).json("Internal server error");
         } else {
           console.log("COUNTER AT SUCCESS: ", COUNTER);
           COUNTER = 0;

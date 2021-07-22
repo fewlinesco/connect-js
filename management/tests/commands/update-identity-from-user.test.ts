@@ -5,7 +5,6 @@ import { updateIdentityFromUser } from "../../src/commands";
 import * as addIdentityToUser from "../../src/commands/add-identity-to-user";
 import * as markIdentityAsPrimary from "../../src/commands/mark-identity-as-primary";
 import * as removeIdentityFromUser from "../../src/commands/remove-identity-from-user";
-// import * as updateIdentityFromUserRetry from "../../src/commands/update-identity-from-user";
 import * as fetchManagementConfig from "../../src/fetch-management/config";
 import * as checkVerificationCode from "../../src/queries/check-verification-code";
 import * as getIdentity from "../../src/queries/get-identity";
@@ -388,7 +387,7 @@ describe("Update identity from user", () => {
   });
 
   // test.only("should retry 3 times", async () => {
-  //   // expect.assertions(1);
+  //   expect.assertions(1);
 
   //   jest
   //     .spyOn(fetchManagementConfig, "contextSetter")
@@ -406,11 +405,6 @@ describe("Update identity from user", () => {
   //       };
   //     });
 
-  //   const spiedOnUpdateIdentity = jest.spyOn(
-  //     updateIdentityFromUserRetry,
-  //     "updateIdentityFromUser",
-  //   );
-
   //   await updateIdentityFromUser(
   //     mockedUpdateIdentityManagementCredentials,
   //     "f3acadc9-4491-44c4-bd78-077a166751af",
@@ -420,6 +414,6 @@ describe("Update identity from user", () => {
   //     primaryIdentityToUpdate.id,
   //   );
 
-  //   expect(spiedOnUpdateIdentity).toHaveBeenCalledTimes(3);
+  //   expect(spiedOnMarkIdentityAsPrimary).toHaveBeenCalledTimes(3);
   // });
 });

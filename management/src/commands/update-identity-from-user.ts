@@ -1,3 +1,4 @@
+import { ConnectUnreachableError } from "../errors";
 import { getIdentity } from "../queries/get-identity";
 import { ManagementCredentials } from "../types";
 import { getIdentityType } from "../utils/get-identity-type";
@@ -83,7 +84,8 @@ async function updateIdentityFromUser(
     identityValue,
     identityToUpdateId,
   ).catch((error) => {
-    if (error.statusCode === 500) {
+    console.log("error: ", error);
+    if (error.statusCode >= 500 || error instanceof ConnectUnreachableError) {
       if (maxRetry > 0) {
         console.log("maxRetry: ", maxRetry);
         return updateIdentityFromUser(
