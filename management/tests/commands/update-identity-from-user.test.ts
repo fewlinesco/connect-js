@@ -386,34 +386,80 @@ describe("Update identity from user", () => {
     }
   });
 
-  // test.only("should retry 3 times", async () => {
-  //   expect.assertions(1);
+  test("should retry 3 times when marking the new identity fails with server error", async () => {
+    expect.assertions(9);
 
-  //   jest
-  //     .spyOn(fetchManagementConfig, "contextSetter")
-  //     .mockImplementation((managementCredentials: ManagementCredentials) => {
-  //       return (_, { headers }) => {
-  //         return {
-  //           headers: {
-  //             ...headers,
-  //             behaviour: "retry",
-  //             "targeted-failure": "mark",
-  //             "max-retry": "2",
-  //             authorization: `API_KEY ${managementCredentials.APIKey}`,
-  //           },
-  //         };
-  //       };
-  //     });
+    jest
+      .spyOn(fetchManagementConfig, "contextSetter")
+      .mockImplementation((managementCredentials: ManagementCredentials) => {
+        return (_, { headers }) => {
+          return {
+            headers: {
+              ...headers,
+              behaviour: "retry",
+              "targeted-failure": "mark",
+              "max-retry": "2",
+              authorization: `API_KEY ${managementCredentials.APIKey}`,
+            },
+          };
+        };
+      });
 
-  //   await updateIdentityFromUser(
-  //     mockedUpdateIdentityManagementCredentials,
-  //     "f3acadc9-4491-44c4-bd78-077a166751af",
-  //     "424242",
-  //     ["primaryEventId"],
-  //     primaryNewIdentity.value,
-  //     primaryIdentityToUpdate.id,
-  //   );
+    await updateIdentityFromUser(
+      mockedUpdateIdentityManagementCredentials,
+      "f3acadc9-4491-44c4-bd78-077a166751af",
+      "424242",
+      ["primaryEventId"],
+      primaryNewIdentity.value,
+      primaryIdentityToUpdate.id,
+    );
 
-  //   expect(spiedOnMarkIdentityAsPrimary).toHaveBeenCalledTimes(3);
-  // });
+    expect(spiedOnGetIdentity).toHaveBeenCalledTimes(3);
+    expect(spiedOnAddIdentityToUser).toHaveBeenCalledTimes(3);
+    expect(spiedOnCheckVerificationCode).toHaveBeenCalledTimes(3);
+
+    expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
+      1,
+      mockedUpdateIdentityManagementCredentials,
+      primaryNewIdentity.id,
+    );
+    expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
+      2,
+      mockedUpdateIdentityManagementCredentials,
+      primaryNewIdentity.id,
+    );
+    expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
+      3,
+      mockedUpdateIdentityManagementCredentials,
+      primaryNewIdentity.id,
+    );
+
+    expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
+      1,
+      mockedUpdateIdentityManagementCredentials,
+      {
+        identityType: primaryNewIdentity.type,
+        identityValue: primaryNewIdentity.value,
+        userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+      },
+    );
+    expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
+      2,
+      mockedUpdateIdentityManagementCredentials,
+      {
+        identityType: primaryNewIdentity.type,
+        identityValue: primaryNewIdentity.value,
+        userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+      },
+    );
+    expect(spiedOnRemoveIdentityFromUser).toHaveBeenNthCalledWith(
+      3,
+      mockedUpdateIdentityManagementCredentials,
+      {
+        identityType: primaryIdentityToUpdate.type,
+        identityValue: primaryIdentityToUpdate.value,
+        userId: "f3acadc9-4491-44c4-bd78-077a166751af",
+      },
+    );
+  });
 });
