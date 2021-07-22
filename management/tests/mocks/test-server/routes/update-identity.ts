@@ -141,10 +141,8 @@ updateIdentityRouter.post("/", (request, response) => {
       ) {
         if (COUNTER < Number(headers["max-retry"])) {
           COUNTER = COUNTER + 1;
-          console.log("COUNTER AT ERROR: ", COUNTER);
           return response.status(500).json("Internal server error");
         } else {
-          console.log("COUNTER AT SUCCESS: ", COUNTER);
           COUNTER = 0;
           return response.status(200).json({
             data: {
