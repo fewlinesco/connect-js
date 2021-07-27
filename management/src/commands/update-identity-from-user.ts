@@ -93,7 +93,7 @@ async function updateIdentityFromUser(
     identityToUpdateId,
   ).catch(async (error) => {
     if (error.statusCode >= 500 || error instanceof ConnectUnreachableError) {
-      if (RETRIES_COUNT <= maxRetry) {
+      if (RETRIES_COUNT < maxRetry) {
         RETRIES_COUNT = RETRIES_COUNT + 1;
         await delay();
         return updateIdentityFromUser(
@@ -106,9 +106,9 @@ async function updateIdentityFromUser(
           maxRetry,
         );
       }
-
-      throw error;
+      RETRIES_COUNT = 0;
     }
+    throw error;
   });
 }
 
