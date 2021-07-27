@@ -123,6 +123,16 @@ updateIdentityRouter.post("/", (request, response) => {
             },
           },
         });
+      } else if (variables.value === nonPrimaryNewIdentity.value) {
+        return response.status(200).json({
+          data: {
+            removeIdentityFromUser: {
+              identity: {
+                value: nonPrimaryNewIdentity.value,
+              },
+            },
+          },
+        });
       } else {
         return response.status(500).json("Something's wrong");
       }

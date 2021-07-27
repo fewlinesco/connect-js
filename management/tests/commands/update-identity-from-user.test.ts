@@ -32,9 +32,7 @@ describe("Update identity from user", () => {
       }/update-identity`,
       APIKey: "APIKey",
     };
-  });
 
-  beforeEach(() => {
     jest.setTimeout(10000);
     jest.useRealTimers();
   });
@@ -391,8 +389,10 @@ describe("Update identity from user", () => {
     }
   });
 
-  test.only("should retry 2 times when marking the new identity fails with server error", async () => {
+  test("should retry 2 times when marking the new identity fails with server error", async () => {
     expect.assertions(9);
+
+    const maxRetry = 2;
 
     jest
       .spyOn(fetchManagementConfig, "contextSetter")
@@ -403,7 +403,7 @@ describe("Update identity from user", () => {
               ...headers,
               behaviour: "retry",
               "targeted-failure": "mark",
-              "max-retry": "2",
+              "max-retry": maxRetry,
               authorization: `API_KEY ${managementCredentials.APIKey}`,
             },
           };
@@ -419,9 +419,9 @@ describe("Update identity from user", () => {
       primaryIdentityToUpdate.id,
     );
 
-    expect(spiedOnGetIdentity).toHaveBeenCalledTimes(3);
-    expect(spiedOnAddIdentityToUser).toHaveBeenCalledTimes(3);
-    expect(spiedOnCheckVerificationCode).toHaveBeenCalledTimes(3);
+    expect(spiedOnGetIdentity).toHaveBeenCalledTimes(maxRetry + 1);
+    expect(spiedOnAddIdentityToUser).toHaveBeenCalledTimes(maxRetry + 1);
+    expect(spiedOnCheckVerificationCode).toHaveBeenCalledTimes(maxRetry + 1);
 
     expect(spiedOnMarkIdentityAsPrimary).toHaveBeenNthCalledWith(
       1,
