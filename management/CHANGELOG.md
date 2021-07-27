@@ -2,9 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.7.0] - 2021-07-27
+## [0.8.0] - 2021-07-27
 
 - `updateIdentityFromUser` has now a retry logic by default in case of server exception raised during the function flow, with increasing delay between the attempts.
+
+## [0.7.0] - 2021-07-07
+
+- Fixed an issue with rollback case in `updateIdentityFromUser`.
+- 💥 Removed an identity from `IdentityTypes` enum.
+- Updated documentation.
 
 ## [0.6.6] - 2021-06-28
 
