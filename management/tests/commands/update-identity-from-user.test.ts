@@ -34,6 +34,11 @@ describe("Update identity from user", () => {
     };
   });
 
+  beforeEach(() => {
+    jest.setTimeout(10000);
+    jest.useRealTimers();
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -386,7 +391,7 @@ describe("Update identity from user", () => {
     }
   });
 
-  test("should retry 3 times when marking the new identity fails with server error", async () => {
+  test.only("should retry 2 times when marking the new identity fails with server error", async () => {
     expect.assertions(9);
 
     jest

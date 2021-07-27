@@ -6,6 +6,14 @@ import { addIdentityToUser } from "./add-identity-to-user";
 import { markIdentityAsPrimary } from "./mark-identity-as-primary";
 import { removeIdentityFromUser } from "./remove-identity-from-user";
 
+let RETRIES_COUNT = 0;
+const MAX_DELAY = 1000;
+
+async function delay(): Promise<void> {
+  const waitTime = Math.min(Math.pow(RETRIES_COUNT, 2) * 100, MAX_DELAY);
+  return new Promise((resolve) => setTimeout(resolve, waitTime));
+}
+
 async function updateIdentity(
   managementCredentials: ManagementCredentials,
   userId: string,
@@ -83,9 +91,11 @@ async function updateIdentityFromUser(
     eventIds,
     identityValue,
     identityToUpdateId,
-  ).catch((error) => {
+  ).catch(async (error) => {
     if (error.statusCode >= 500 || error instanceof ConnectUnreachableError) {
-      if (maxRetry > 0) {
+      if (RETRIES_COUNT <= maxRetry) {
+        RETRIES_COUNT = RETRIES_COUNT + 1;
+        await delay();
         return updateIdentityFromUser(
           managementCredentials,
           userId,
@@ -93,12 +103,10 @@ async function updateIdentityFromUser(
           eventIds,
           identityValue,
           identityToUpdateId,
-          maxRetry - 1,
+          maxRetry,
         );
-      } else {
-        throw error;
       }
-    } else {
+
       throw error;
     }
   });
