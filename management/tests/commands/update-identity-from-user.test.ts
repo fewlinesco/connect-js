@@ -467,4 +467,48 @@ describe("Update identity from user", () => {
       },
     );
   });
+
+  test("should do 3 retries calls with an increasing delay between calls", async () => {
+    expect.assertions(1);
+    const maxRetry = 3;
+
+    const overallDelay = (): number => {
+      let result = 0;
+      for (let i = 1; i <= maxRetry; i++) {
+        result = result + Math.pow(i, 2) * 100;
+      }
+      return result;
+    };
+
+    jest
+      .spyOn(fetchManagementConfig, "contextSetter")
+      .mockImplementation((managementCredentials: ManagementCredentials) => {
+        return (_, { headers }) => {
+          return {
+            headers: {
+              ...headers,
+              behaviour: "retry",
+              "targeted-failure": "mark",
+              "max-retry": maxRetry,
+              authorization: `API_KEY ${managementCredentials.APIKey}`,
+            },
+          };
+        };
+      });
+
+    const startTime = Date.now();
+
+    await updateIdentityFromUser(
+      mockedUpdateIdentityManagementCredentials,
+      "f3acadc9-4491-44c4-bd78-077a166751af",
+      "424242",
+      ["primaryEventId"],
+      primaryNewIdentity.value,
+      primaryIdentityToUpdate.id,
+      3,
+    ).then(() => {
+      const endTime = Date.now();
+      expect(endTime - startTime).toBeGreaterThan(overallDelay());
+    });
+  });
 });
