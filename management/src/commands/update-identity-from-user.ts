@@ -6,11 +6,10 @@ import { addIdentityToUser } from "./add-identity-to-user";
 import { markIdentityAsPrimary } from "./mark-identity-as-primary";
 import { removeIdentityFromUser } from "./remove-identity-from-user";
 
-let RETRIES_COUNT = 0;
 const MAX_DELAY = 1000;
 
-async function delay(): Promise<void> {
-  const waitTime = Math.min(Math.pow(RETRIES_COUNT, 2) * 100, MAX_DELAY);
+async function delay(retryCount: number): Promise<void> {
+  const waitTime = Math.min(Math.pow(retryCount, 2) * 100, MAX_DELAY);
   return new Promise((resolve) => setTimeout(resolve, waitTime));
 }
 
@@ -75,14 +74,15 @@ async function updateIdentity(
   });
 }
 
-async function updateIdentityFromUser(
+async function updateIdentityWithRetry(
   managementCredentials: ManagementCredentials,
   userId: string,
   validationCode: string,
   eventIds: string[],
   identityValue: string,
   identityToUpdateId: string,
-  maxRetry = 2,
+  maxRetry,
+  retryCount = 0,
 ): Promise<void> {
   return await updateIdentity(
     managementCredentials,
@@ -93,10 +93,9 @@ async function updateIdentityFromUser(
     identityToUpdateId,
   ).catch(async (error) => {
     if (error.statusCode >= 500 || error instanceof ConnectUnreachableError) {
-      if (RETRIES_COUNT < maxRetry) {
-        RETRIES_COUNT = RETRIES_COUNT + 1;
-        await delay();
-        return updateIdentityFromUser(
+      if (retryCount < maxRetry) {
+        await delay(retryCount + 1);
+        return updateIdentityWithRetry(
           managementCredentials,
           userId,
           validationCode,
@@ -104,12 +103,33 @@ async function updateIdentityFromUser(
           identityValue,
           identityToUpdateId,
           maxRetry,
+          retryCount + 1,
         );
       }
-      RETRIES_COUNT = 0;
     }
+
     throw error;
   });
+}
+
+async function updateIdentityFromUser(
+  managementCredentials: ManagementCredentials,
+  userId: string,
+  validationCode: string,
+  eventIds: string[],
+  identityValue: string,
+  identityToUpdateId: string,
+  maxRetry = 2,
+): Promise<void> {
+  return await updateIdentityWithRetry(
+    managementCredentials,
+    userId,
+    validationCode,
+    eventIds,
+    identityValue,
+    identityToUpdateId,
+    maxRetry,
+  );
 }
 
 export { updateIdentityFromUser };
