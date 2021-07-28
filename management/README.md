@@ -418,7 +418,7 @@ await updateIdentityFromUser(
 );
 ```
 
-The function will do a rollback of any added Identity and primary Identity status in case of a failure. It also allows the use of multiple event IDs. In addition to rollback, the function will do retry if an exception occurs during the call (triggered only on exceptions corresponding to server errors). The number of retries is determined by the `maxRetry` argument passed to the function (with a default value set at 2). Each retry call will happen after a short increasing delay, with a maximum of 1000ms.
+The function will do a rollback of any added Identity and primary Identity status in case of a failure. It also allows the use of multiple event IDs. The function will also perform a number of retry if an exception occurs during the call (triggered only on exceptions corresponding to server errors). The number of retries is determined by the `maxRetry` argument passed to the function (with a default value set at `2`). Each retry call will happen after a short increasing delay, with a maximum of 1000ms.
 
 Here are the expected exception raised in case of a failure:
 
