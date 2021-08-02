@@ -8,7 +8,7 @@ import { removeIdentityFromUser } from "./remove-identity-from-user";
 
 const MAX_DELAY = 1000;
 
-async function delay(retryCount: number): Promise<void> {
+function delay(retryCount: number): Promise<void> {
   const waitTime = Math.min(Math.pow(retryCount, 2) * 100, MAX_DELAY);
   return new Promise((resolve) => setTimeout(resolve, waitTime));
 }
