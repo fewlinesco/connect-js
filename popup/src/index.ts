@@ -22,9 +22,8 @@ type Options = {
   onAuthorizationCodeReceived?: AuthorizationCodeCallback;
 };
 
-
-function utf8_to_b64( str: string ): string {
-  return window.btoa(unescape(encodeURIComponent( str )));
+function utf8_to_b64(str: string): string {
+  return window.btoa(unescape(encodeURIComponent(str)));
 }
 
 class ConnectPopup {
@@ -77,17 +76,24 @@ class ConnectPopup {
 
       const currentUrl = window.location.protocol + "//" + window.location.host;
 
-      const connectUrl = new URL(this.connectOptions.providerURL + "/oauth/authorize")
-      connectUrl.searchParams.append("client_id", this.connectOptions.clientId)
-      connectUrl.searchParams.append("redirect_uri", this.connectOptions.providerURL + "/oauth/popup/callback")
-      connectUrl.searchParams.append("scope", this.connectOptions.scopes)
-      connectUrl.searchParams.append("response_type", "code")
-      const newState = utf8_to_b64(JSON.stringify({
-          state,
+      const connectUrl = new URL(
+        this.connectOptions.providerURL + "/oauth/authorize",
+      );
+      connectUrl.searchParams.append("client_id", this.connectOptions.clientId);
+      connectUrl.searchParams.append(
+        "redirect_uri",
+        this.connectOptions.providerURL + "/oauth/popup/callback",
+      );
+      connectUrl.searchParams.append("scope", this.connectOptions.scopes);
+      connectUrl.searchParams.append("response_type", "code");
+      const newState = utf8_to_b64(
+        JSON.stringify({
+          state: state || "",
           current_url: currentUrl,
           v: this.version,
-      }))
-      connectUrl.searchParams.append("state", newState)
+        }),
+      );
+      connectUrl.searchParams.append("state", newState);
 
       const popup = window.open(
         connectUrl.toString(),
